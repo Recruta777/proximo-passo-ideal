@@ -9,7 +9,10 @@ async function mpRequest(path, method = 'GET', body = null) {
       'Authorization': `Bearer ${MP_TOKEN}`,
     },
   };
-  if (body) opts.body = JSON.stringify(body);
+  if (body) {
+    opts.body = JSON.stringify(body);
+    opts.headers['X-Idempotency-Key'] = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  }
   const res = await fetch(`${API_BASE}${path}`, opts);
   return { status: res.status, data: await res.json() };
 }
