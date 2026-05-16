@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Admin - Próximo Passo Ideal</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        .page-header {
+            padding-top: 120px;
+            padding-bottom: 40px;
+            background: linear-gradient(135deg, #1B2A4A 0%, #243B55 100%);
+            text-align: center;
+        }
+        .page-header h1 {
+            color: #fff;
+            font-size: 36px;
+            font-weight: 300;
+        }
+        .page-header h1 span {
+            color: #f39c12;
+            font-weight: 800;
+        }
+
+        .admin-section {
+            padding: 40px 0 80px;
+            background: #f8f9fa;
+            min-height: 60vh;
+        }
+
+        .admin-login {
+            max-width: 400px;
+            margin: 60px auto;
+            background: #fff;
+            border-radius: 16px;
+            padding: 50px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
+            text-align: center;
+        }
+
+        .admin-login h2 {
+            color: #1B2A4A;
+            margin-bottom: 10px;
+        }
+
+        .admin-login p {
+            color: #777;
+            margin-bottom: 30px;
+        }
+
+        .admin-login .form-group {
+            text-align: left;
+        }
+
+        .admin-login .btn {
+            margin-top: 10px;
+        }
+
+        .admin-login .logo-icon {
+            font-size: 48px;
+            color: #f39c12;
+            margin-bottom: 20px;
+        }
+
+        .admin-panel {
+            display: none;
+        }
+
+        .admin-panel.active {
+            display: block;
+        }
+
+        .admin-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .admin-toolbar h2 {
+            font-size: 24px;
+            color: #1B2A4A;
+        }
+
+        .admin-toolbar h2 span {
+            color: #f39c12;
+        }
+
+        .admin-toolbar .btn-sm {
+            padding: 10px 20px;
+            font-size: 14px;
+        }
+
+        .provider-count {
+            background: #f39c12;
+            color: #1B2A4A;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 14px;
+            margin-left: 8px;
+        }
+
+        .provider-list {
+            display: grid;
+            gap: 16px;
+        }
+
+        .provider-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 24px 28px;
+            border: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            transition: all 0.3s;
+            gap: 20px;
+        }
+
+        .provider-card:hover {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            border-color: #f39c12;
+        }
+
+        .provider-info h3 {
+            font-size: 18px;
+            color: #1B2A4A;
+            margin-bottom: 6px;
+        }
+
+        .provider-info .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .badge-pedreiro,
+        .badge-pintura,
+        .badge-marcenaria,
+        .badge-refrigeracao,
+        .badge-multiplos,
+        .badge-outro,
+        .badge-empresa,
+        .badge-default { background: #e8f0fe; color: #1a73e8; }
+        .badge-default { background: #e0f2fe; color: #0369a1; }
+        .badge-pago { background: #e8f5e9; color: #2e7d32; margin-left: 4px; }
+        .badge-naopago { background: #fde8e8; color: #c62828; margin-left: 4px; }
+        .btn-pagar {
+            color: #f39c12;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        .btn-pagar:hover { background: #fff7e6; }
+
+        .provider-info p {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .provider-info p i {
+            width: 18px;
+            color: #f39c12;
+            margin-right: 6px;
+        }
+
+        .provider-actions {
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .provider-actions button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .btn-edit {
+            color: #3498db;
+        }
+
+        .btn-edit:hover {
+            background: #e8f0fe;
+        }
+
+        .btn-delete {
+            color: #e74c3c;
+        }
+
+        .btn-delete:hover {
+            background: #fde8e8;
+        }
+
+        .btn-whatsapp {
+            color: #25d366;
+        }
+
+        .btn-whatsapp:hover {
+            background: #e8f5e9;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .empty-state i {
+            font-size: 64px;
+            margin-bottom: 20px;
+            color: #ddd;
+        }
+
+        .empty-state h3 {
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-box {
+            background: #fff;
+            border-radius: 16px;
+            padding: 40px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-box h2 {
+            margin-bottom: 24px;
+            color: #1B2A4A;
+        }
+
+        .modal-box .btn {
+            margin-top: 10px;
+        }
+
+        .admin-tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 30px;
+            background: #e8ecf1;
+            border-radius: 12px;
+            padding: 4px;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            background: transparent;
+            color: #666;
+            transition: all 0.3s;
+        }
+        .tab-btn:hover { color: #1B2A4A; }
+        .tab-btn.active {
+            background: #fff;
+            color: #1B2A4A;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .tab-count {
+            background: #1B2A4A;
+            color: #fff;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 12px;
+            margin-left: 4px;
+        }
+        .tab-btn.active .tab-count { background: #f39c12; color: #1B2A4A; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .solic-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 24px 28px;
+            border: 1px solid #eee;
+            transition: all 0.3s;
+            margin-bottom: 16px;
+        }
+        .solic-card:hover {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            border-color: #f39c12;
+        }
+        .solic-card h3 {
+            font-size: 18px;
+            color: #1B2A4A;
+            margin-bottom: 6px;
+        }
+        .solic-card .solic-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+        .solic-card .solic-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px 20px;
+        }
+        .solic-card .solic-info p {
+            color: #555;
+            font-size: 14px;
+            margin-bottom: 2px;
+        }
+        .solic-card .solic-info p i {
+            width: 18px;
+            color: #f39c12;
+            margin-right: 6px;
+        }
+        .solic-card .solic-desc {
+            grid-column: 1 / -1;
+            background: #f8f9fa;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-top: 4px;
+            color: #444;
+            font-size: 14px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+        .solic-card .solic-desc strong {
+            display: block;
+            color: #1B2A4A;
+            margin-bottom: 4px;
+            font-size: 13px;
+        }
+        .solic-card .solic-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+            justify-content: flex-end;
+        }
+        .solic-card .solic-actions button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .company-rating-summary {
+            margin-bottom: 20px;
+        }
+        .rating-summary-card {
+            background: linear-gradient(135deg, #1B2A4A, #243B55);
+            border-radius: 12px;
+            padding: 20px 28px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            color: #fff;
+        }
+        .rating-summary-card i {
+            font-size: 36px;
+            color: #f39c12;
+        }
+        .rating-summary-card strong {
+            font-size: 28px;
+            color: #f39c12;
+            display: block;
+        }
+        .rating-summary-card span {
+            font-size: 14px;
+            color: rgba(255,255,255,0.7);
+        }
+
+        .logout-btn {
+            background: none;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #fff;
+            padding: 8px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            border-color: #f39c12;
+            color: #f39c12;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            color: #666;
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            color: #f39c12;
+        }
+
+        @media (max-width: 600px) {
+            .provider-card {
+                flex-direction: column;
+            }
+            .provider-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <a href="index.html" class="logo"><span class="logo-mark"><i class="fas fa-arrow-trend-up"></i><span class="logo-ring"></span></span>Próximo Passo <span>Ideal</span></a>
+            <nav class="nav">
+                <button class="menu-toggle" aria-label="Abrir menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <ul class="nav-list">
+                    <li><a href="index.html"><i class="fas fa-home"></i> Início</a></li>
+                    <li><a href="index.html#cadastro-prestador">Cadastro Prestador</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="page-header">
+        <div class="container">
+            <h1>Painel <span>Administrativo</span></h1>
+            <p>Gerencie os prestadores de serviço cadastrados</p>
+        </div>
+    </section>
+
+    <section class="admin-section">
+        <div class="container">
+            <!-- Login -->
+            <div id="login-area" class="admin-login">
+                <div class="logo-icon"><i class="fas fa-shield-alt"></i></div>
+                <h2>Acesso Restrito</h2>
+                <p>Digite a senha para acessar o painel</p>
+                <div class="form-group">
+                    <label for="senha">Senha</label>
+                    <input type="password" id="senha" placeholder="Digite a senha" onkeydown="if(event.key==='Enter') checkPassword()">
+                </div>
+                <button class="btn btn-primary btn-full" onclick="checkPassword()">Entrar</button>
+                <div style="margin-top: 15px;">
+                    <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Voltar</a>
+                </div>
+            </div>
+
+            <!-- Admin Panel -->
+            <div id="admin-panel" class="admin-panel">
+                <div class="admin-tabs">
+                    <button class="tab-btn active" onclick="switchTab('prestadores')" id="tab-prestadores">
+                        <i class="fas fa-users"></i> Prestadores <span id="provider-count" class="tab-count">0</span>
+                    </button>
+                    <button class="tab-btn" onclick="switchTab('solicitacoes')" id="tab-solicitacoes">
+                        <i class="fas fa-clipboard-list"></i> Solicitações <span id="solicitacao-count" class="tab-count">0</span>
+                    </button>
+                    <button class="tab-btn" onclick="switchTab('avaliacoes')" id="tab-avaliacoes">
+                        <i class="fas fa-star"></i> Avaliações <span id="review-count" class="tab-count">0</span>
+                    </button>
+                </div>
+
+                <!-- Prestadores Tab -->
+                <div id="tab-content-prestadores" class="tab-content active">
+                    <div class="admin-toolbar">
+                        <h2>Prestadores <span>Cadastrados</span></h2>
+                        <div>
+                            <button class="btn btn-outline btn-sm" style="border-color:#ccc;color:#666;margin-right:8px;" onclick="sincronizarPIX()"><i class="fas fa-sync"></i> Sincronizar PIX</button>
+                            <button class="btn btn-primary btn-sm" onclick="openModal('add')"><i class="fas fa-plus"></i> Adicionar</button>
+                        </div>
+                    </div>
+
+                    <div id="provider-list" class="provider-list">
+                        <div class="empty-state">
+                            <i class="fas fa-users"></i>
+                            <h3>Nenhum prestador cadastrado</h3>
+                            <p>Os prestadores cadastrados aparecerão aqui.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Solicitações Tab -->
+                <div id="tab-content-solicitacoes" class="tab-content">
+                    <div class="admin-toolbar">
+                        <h2>Solicitações <span>de Clientes</span></h2>
+                        <div>
+                            <button class="btn btn-outline btn-sm" style="border-color:#ccc;color:#666;" onclick="exportSolicitacoes()"><i class="fas fa-download"></i> Exportar</button>
+                        </div>
+                    </div>
+
+                    <div id="solicitacao-list" class="provider-list">
+                        <div class="empty-state">
+                            <i class="fas fa-clipboard-list"></i>
+                            <h3>Nenhuma solicitação recebida</h3>
+                            <p>As solicitações de orçamento feitas pelos clientes aparecerão aqui.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Avaliações Tab -->
+                <div id="tab-content-avaliacoes" class="tab-content">
+                    <div class="admin-toolbar">
+                        <h2>Avaliações <span>dos Clientes</span></h2>
+                        <div>
+                            <button class="btn btn-outline btn-sm" style="border-color:#ccc;color:#666;" onclick="exportReviews()"><i class="fas fa-download"></i> Exportar</button>
+                        </div>
+                    </div>
+
+                    <div id="company-rating-summary" class="company-rating-summary" style="display:none;">
+                        <div class="rating-summary-card">
+                            <i class="fas fa-star"></i>
+                            <div>
+                                <strong id="company-avg-score">0.0</strong>
+                                <span>média · <span id="company-total-votes">0</span> votos</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="review-list" class="provider-list">
+                        <div class="empty-state">
+                            <i class="fas fa-star"></i>
+                            <h3>Nenhuma avaliação recebida</h3>
+                            <p>As avaliações dos clientes aparecerão aqui.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="btn btn-outline" style="border-color:#ccc;color:#666;margin-right:10px;" onclick="exportData()">
+                        <i class="fas fa-download"></i> Exportar Prestadores
+                    </button>
+                    <button class="btn btn-outline" style="border-color:#ccc;color:#666;" onclick="document.getElementById('importFile').click()">
+                        <i class="fas fa-upload"></i> Importar Prestadores
+                    </button>
+                    <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
+                    <br>
+                    <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Voltar ao site</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal -->
+    <div id="modal-overlay" class="modal-overlay">
+        <div class="modal-box">
+            <h2 id="modal-title">Adicionar Prestador</h2>
+            <form id="provider-form-modal">
+                <div style="display: grid; gap: 16px;">
+                    <div class="form-group" style="margin:0;">
+                        <label for="m-nome">Nome Completo</label>
+                        <input type="text" id="m-nome" required>
+                    </div>
+                    <div class="form-group" style="margin:0;">
+                        <label for="m-telefone">Telefone / WhatsApp</label>
+                        <input type="tel" id="m-telefone" required>
+                    </div>
+                    <div class="form-group" style="margin:0;">
+                        <label for="m-servico">Tipo de Serviço</label>
+                        <select id="m-servico" required>
+                            <option value="pedreiro">Pedreiro</option>
+                            <option value="marcenaria">Marcenaria</option>
+                            <option value="pintura">Pintura</option>
+                            <option value="refrigeracao">Refrigeração</option>
+                            <option value="multiplos">Múltiplos Serviços</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin:0;">
+                        <label for="m-cidade">Cidade</label>
+                        <input type="text" id="m-cidade" required>
+                    </div>
+                    <div class="form-group" style="margin:0;">
+                        <label for="m-descricao">Descrição</label>
+                        <textarea id="m-descricao" rows="3"></textarea>
+                    </div>
+                    <div class="form-group" style="margin:0;">
+                        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:14px;">
+                            <input type="checkbox" id="m-pago" style="width:16px;height:16px;accent-color:#f39c12;">
+                            PIX de R$ 10,00 já pago
+                        </label>
+                    </div>
+                </div>
+                <div style="display:flex; gap: 10px; margin-top: 20px;">
+                    <button type="submit" class="btn btn-primary" style="flex:1;" id="modal-save-btn">Salvar</button>
+                    <button type="button" class="btn btn-outline" style="flex:1;border-color:#ccc;color:#666;" onclick="closeModal()">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script src="js/script.js"></script>
+    <script>
+        const ADMIN_PASSWORD = 'idealserv777';
+        const STORAGE_KEY = 'proximopasso_prestadores';
+        let editingId = null;
+
+        function checkPassword() {
+            const senha = document.getElementById('senha').value;
+            if (senha === ADMIN_PASSWORD) {
+                document.getElementById('login-area').style.display = 'none';
+                document.getElementById('admin-panel').classList.add('active');
+                renderProviders();
+            } else {
+                showToast('Senha incorreta!', 'error');
+            }
+        }
+
+        function getProviders() {
+            const data = localStorage.getItem(STORAGE_KEY);
+            return data ? JSON.parse(data) : [];
+        }
+
+        function saveProviders(providers) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(providers));
+            updateCount();
+        }
+
+        function updateCount() {
+            const count = getProviders().length;
+            document.getElementById('provider-count').textContent = count;
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById('tab-content-' + tab).classList.add('active');
+            document.getElementById('tab-' + tab).classList.add('active');
+            if (tab === 'solicitacoes') renderSolicitacoes();
+            if (tab === 'avaliacoes') renderAdminReviews();
+            if (tab === 'prestadores') renderProviders();
+        }
+
+        function renderProviders() {
+            const providers = getProviders();
+            const list = document.getElementById('provider-list');
+
+            if (providers.length === 0) {
+                list.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-users"></i>
+                        <h3>Nenhum prestador cadastrado</h3>
+                        <p>Os prestadores cadastrados aparecerão aqui.</p>
+                        <p style="margin-top:16px;">Os cadastros feitos no site chegam no seu WhatsApp.<br>Use o botão "Adicionar Prestador" para incluí-los aqui.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            list.innerHTML = providers.map(p => `
+                <div class="provider-card">
+                    <div class="provider-info">
+                        <span class="badge badge-default">${getServicoLabel(p.servico)}</span>
+                        <span class="badge ${p.pago ? 'badge-pago' : 'badge-naopago'}">${p.pago ? 'PAGO' : 'NÃO PAGO'}</span>
+                        <h3>${p.nome}</h3>
+                        <p><i class="fas fa-phone"></i> ${p.telefone}</p>
+                        ${p.email ? `<p><i class="fas fa-envelope"></i> ${p.email}</p>` : ''}
+                        <p><i class="fas fa-map-marker-alt"></i> ${p.cidade}</p>
+                        ${p.descricao ? `<p><i class="fas fa-comment"></i> ${p.descricao}</p>` : ''}
+                        ${p.data ? `<p><i class="fas fa-calendar"></i> Cadastrado em: ${p.data}</p>` : ''}
+                    </div>
+                    <div class="provider-actions">
+                        <button class="btn-pagar" onclick="togglePagamento('${p.id}')" title="${p.pago ? 'Marcar como não pago' : 'Marcar como pago'}">
+                            <i class="fas ${p.pago ? 'fa-times-circle' : 'fa-check-circle'}"></i>
+                        </button>
+                        <button class="btn-whatsapp" onclick="contactProvider('${p.telefone.replace(/\D/g, '')}')" title="Chamar no WhatsApp">
+                            <i class="fab fa-whatsapp"></i>
+                        </button>
+                        <button class="btn-edit" onclick="openModal('edit', '${p.id}')" title="Editar">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn-delete" onclick="deleteProvider('${p.id}')" title="Excluir">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getServicoLabel(s) {
+            const labels = { pedreiro: 'Pedreiro', marcenaria: 'Marcenaria', pintura: 'Pintura', refrigeracao: 'Refrigeração', multiplos: 'Múltiplos' };
+            return labels[s] || s;
+        }
+
+        function openModal(mode, id) {
+            editingId = null;
+            document.getElementById('modal-title').textContent = 'Adicionar Prestador';
+            document.getElementById('modal-save-btn').textContent = 'Salvar';
+            document.getElementById('provider-form-modal').reset();
+
+            if (mode === 'edit' && id) {
+                const providers = getProviders();
+                const p = providers.find(x => x.id === id);
+                if (!p) return;
+                editingId = id;
+                document.getElementById('modal-title').textContent = 'Editar Prestador';
+                document.getElementById('modal-save-btn').textContent = 'Atualizar';
+                document.getElementById('m-nome').value = p.nome;
+                document.getElementById('m-telefone').value = p.telefone;
+                document.getElementById('m-servico').value = p.servico;
+                document.getElementById('m-cidade').value = p.cidade;
+                document.getElementById('m-descricao').value = p.descricao || '';
+                document.getElementById('m-pago').checked = p.pago || false;
+            }
+
+            document.getElementById('modal-overlay').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('modal-overlay').classList.remove('active');
+            editingId = null;
+        }
+
+        document.getElementById('provider-form-modal').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const nome = document.getElementById('m-nome').value.trim();
+            const telefone = document.getElementById('m-telefone').value.trim();
+            const servico = document.getElementById('m-servico').value;
+            const cidade = document.getElementById('m-cidade').value.trim();
+            const descricao = document.getElementById('m-descricao').value.trim();
+            const pago = document.getElementById('m-pago').checked;
+
+            if (!nome || !telefone || !servico || !cidade) {
+                showToast('Preencha todos os campos obrigatórios.', 'error');
+                return;
+            }
+
+            const providers = getProviders();
+
+            if (editingId) {
+                const idx = providers.findIndex(x => x.id === editingId);
+                if (idx !== -1) {
+                    providers[idx] = { ...providers[idx], nome, telefone, servico, cidade, descricao, pago };
+                }
+                showToast('Prestador atualizado com sucesso!');
+            } else {
+                providers.push({
+                    id: Date.now().toString(),
+                    nome,
+                    telefone,
+                    servico,
+                    cidade,
+                    descricao,
+                    data: new Date().toLocaleDateString('pt-BR'),
+                    email: '',
+                    pago
+                });
+                showToast('Prestador adicionado com sucesso!');
+                playNotificationSound();
+            }
+
+            saveProviders(providers);
+            renderProviders();
+            closeModal();
+        });
+
+        function deleteProvider(id) {
+            if (!confirm('Tem certeza que deseja excluir este prestador?')) return;
+            const providers = getProviders().filter(p => p.id !== id);
+            saveProviders(providers);
+            renderProviders();
+            showToast('Prestador excluído.');
+        }
+
+        function contactProvider(phone) {
+            if (!phone) return;
+            window.open(`https://wa.me/55${phone}`, '_blank');
+        }
+
+        function togglePagamento(id) {
+            const providers = getProviders();
+            const p = providers.find(x => x.id === id);
+            if (!p) return;
+            p.pago = !p.pago;
+            saveProviders(providers);
+            renderProviders();
+            showToast(p.pago ? 'Marcado como PAGO' : 'Marcado como NÃO PAGO');
+        }
+
+        function sincronizarPIX() {
+            fetch('/api/pix?action=listar')
+                .then(r => r.json())
+                .then(pagamentos => {
+                    if (!Array.isArray(pagamentos) || pagamentos.length === 0) {
+                        showToast('Nenhum pagamento encontrado no PIX.', 'error');
+                        return;
+                    }
+                    const providers = getProviders();
+                    let atualizados = 0;
+                    pagamentos.forEach(p => {
+                        if (p.status === 'approved') {
+                            const idx = providers.findIndex(x => x.id === p.prestador_id);
+                            if (idx !== -1 && !providers[idx].pago) {
+                                providers[idx].pago = true;
+                                atualizados++;
+                            }
+                        }
+                    });
+                    if (atualizados > 0) {
+                        saveProviders(providers);
+                        renderProviders();
+                        showToast(`${atualizados} prestador(es) liberado(s) via PIX!`);
+                    } else {
+                        showToast('Nenhum novo pagamento encontrado.');
+                    }
+                })
+                .catch(() => {
+                    showToast('Servidor PIX não disponível. Use o botão manual.', 'error');
+                });
+        }
+
+        function exportData() {
+            const data = getProviders();
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `prestadores_${new Date().toISOString().slice(0,10)}.json`;
+            a.click();
+            showToast('Dados exportados com sucesso!');
+        }
+
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    if (!Array.isArray(data)) throw new Error('Formato inválido');
+                    const existing = getProviders();
+                    const merged = [...existing, ...data];
+                    saveProviders(merged);
+                    renderProviders();
+                    showToast(`${data.length} prestador(es) importado(s) com sucesso!`);
+                } catch (err) {
+                    showToast('Erro ao importar. Verifique o arquivo.', 'error');
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+
+        // Close modal on overlay click
+        document.getElementById('modal-overlay').addEventListener('click', function (e) {
+            if (e.target === this) closeModal();
+        });
+
+        // Check if already logged in via session
+        // No session persistence for simplicity
+
+        // === SOLICITAÇÕES ===
+        function getSolicitacoes() {
+            const data = localStorage.getItem('proximopasso_solicitacoes');
+            return data ? JSON.parse(data) : [];
+        }
+
+        function saveSolicitacoes(lista) {
+            localStorage.setItem('proximopasso_solicitacoes', JSON.stringify(lista));
+            updateSolicitacaoCount();
+        }
+
+        function updateSolicitacaoCount() {
+            const count = getSolicitacoes().length;
+            document.getElementById('solicitacao-count').textContent = count;
+        }
+
+        function renderSolicitacoes() {
+            const lista = getSolicitacoes();
+            const container = document.getElementById('solicitacao-list');
+
+            if (lista.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-clipboard-list"></i>
+                        <h3>Nenhuma solicitação recebida</h3>
+                        <p>As solicitações de orçamento feitas pelos clientes aparecerão aqui.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const labels = { pedreiro: 'Pedreiro', marcenaria: 'Marcenaria', pintura: 'Pintura', refrigeracao: 'Refrigeração', outro: 'Outro', empresa: '⭐ Empresa' };
+            container.innerHTML = [...lista].reverse().map(r => `
+                <div class="solic-card">
+                    <span class="solic-badge badge-${r.servico}">${labels[r.servico] || r.servico}</span>
+                    <h3><i class="fas fa-user"></i> ${r.nome}</h3>
+                    <div class="solic-info">
+                        ${r.prestador ? `<p><i class="fas fa-tools"></i> Prestador: ${r.prestador}</p>` : ''}
+                        <p><i class="fas fa-calendar"></i> ${r.data}</p>
+                    </div>
+                    <div class="solic-desc">
+                        <strong><i class="fas fa-comment-dots"></i> Experiência</strong>
+                        ${r.descricao}
+                    </div>
+                    <div class="solic-actions">
+                        <button class="btn-delete" onclick="deleteSolicitacao('${r.id}')" title="Excluir">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function deleteSolicitacao(id) {
+            if (!confirm('Excluir esta solicitação?')) return;
+            const lista = getSolicitacoes().filter(r => r.id !== id);
+            saveSolicitacoes(lista);
+            renderSolicitacoes();
+            showToast('Solicitação excluída.');
+        }
+
+        function deleteReview(id) {
+            if (!confirm('Excluir esta avaliação?')) return;
+            const lista = getReviews().filter(r => r.id !== id);
+            localStorage.setItem(REVIEWS_KEY, JSON.stringify(lista));
+            renderAdminReviews();
+            updateReviewCount();
+            showToast('Avaliação excluída.');
+        }
+
+        function exportSolicitacoes() {
+            const data = getSolicitacoes();
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `solicitacoes_${new Date().toISOString().slice(0,10)}.json`;
+            a.click();
+            showToast('Solicitações exportadas!');
+        }
+
+        function exportReviews() {
+            const data = getReviews();
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `avaliacoes_${new Date().toISOString().slice(0,10)}.json`;
+            a.click();
+            showToast('Avaliações exportadas!');
+        }
+
+        function updateReviewCount() {
+            const count = getReviews().length;
+            const el = document.getElementById('review-count');
+            if (el) el.textContent = count;
+        }
+
+        function renderAdminReviews() {
+            const lista = getReviews();
+            const container = document.getElementById('review-list');
+
+            if (!container) return;
+
+            if (lista.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-star"></i>
+                        <h3>Nenhuma avaliação recebida</h3>
+                        <p>As avaliações dos clientes aparecerão aqui.</p>
+                    </div>
+                `;
+                document.getElementById('company-rating-summary').style.display = 'none';
+                return;
+            }
+
+            const labels = { pedreiro: 'Pedreiro', marcenaria: 'Marcenaria', pintura: 'Pintura', refrigeracao: 'Refrigeração', outro: 'Outro', empresa: '⭐ Empresa' };
+            container.innerHTML = [...lista].reverse().map(r => `
+                <div class="solic-card">
+                    <span class="solic-badge badge-${r.servico}">${labels[r.servico] || r.servico}</span>
+                    <h3><i class="fas fa-user"></i> ${r.nome} <span style="color:#f39c12;font-size:14px;">${'★'.repeat(r.stars)}${'☆'.repeat(5-r.stars)}</span></h3>
+                    <div class="solic-info">
+                        ${r.prestador ? `<p><i class="fas fa-tools"></i> Prestador: ${r.prestador}</p>` : ''}
+                        <p><i class="fas fa-calendar"></i> ${r.data}</p>
+                    </div>
+                    <div class="solic-desc">
+                        <strong><i class="fas fa-comment-dots"></i> Experiência</strong>
+                        ${r.descricao}
+                    </div>
+                    <div class="solic-actions">
+                        <button class="btn-delete" onclick="deleteReview('${r.id}')" title="Excluir">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('company-rating-summary').style.display = 'flex';
+            const total = lista.reduce((s, r) => s + (r.stars || 0), 0);
+            const avg = (total / lista.length).toFixed(1);
+            document.getElementById('company-avg-score').textContent = avg;
+            document.getElementById('company-total-votes').textContent = lista.length;
+            updateReviewCount();
+        }
+    </script>
+</body>
+</html>

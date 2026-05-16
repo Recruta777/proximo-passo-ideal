@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Próximo Passo Ideal - Pedreiro, Marcenaria e Pintura</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <a href="#" class="logo"><span class="logo-mark"><i class="fas fa-arrow-trend-up"></i><span class="logo-ring"></span></span><span class="logo-title">Próximo Passo <span>Ideal</span></span> <span class="logo-tagline">ajuda para você realizar seu projeto com confiança e qualidade</span></a>
+        </div>
+    </header>
+
+    <section id="inicio" class="hero">
+        <div class="container">
+            <nav class="nav">
+                <button class="menu-toggle" aria-label="Abrir menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <ul class="nav-list">
+                    <li><a href="#inicio">Início</a></li>
+                    <li><a href="#servicos">Serviços</a></li>
+                    <li><a href="#como-funciona">Como Funciona</a></li>
+                    <li><a href="#avaliacoes">Avaliações</a></li>
+                    <li><a href="#contato">Contato</a></li>
+                    <li><a href="#cadastro-prestador">Cadastro de Prestador</a></li>
+                    <li><a href="admin.html"><i class="fas fa-lock"></i> <span id="nav-badge" class="nav-badge" style="display:none;"></span><span id="sol-badge" class="nav-badge" style="background:#f39c12;color:#1B2A4A;display:none;"></span></a></li>
+                    <li class="nav-rating-item">
+                        <span class="header-rating">
+                            <span class="hr-label">Avalie</span>
+                            <span class="hr-stars" id="header-company-stars">
+                                <i class="fas fa-star" data-val="1"></i>
+                                <i class="fas fa-star" data-val="2"></i>
+                                <i class="fas fa-star" data-val="3"></i>
+                                <i class="fas fa-star" data-val="4"></i>
+                                <i class="fas fa-star" data-val="5"></i>
+                            </span>
+                            <span class="hr-score" id="header-company-rating-score">0.0</span>
+                        </span>
+                    </li>
+                </ul>
+            </nav>
+            <div class="hero-content">
+                <h1>O melhor profissional <br><span>para o seu serviço</span></h1>
+                <p>Você descreve o serviço, nós encontramos o profissional ideal para você.</p>
+                <a href="#contato" class="btn btn-primary">Solicitar Orçamento</a>
+                <a href="#servicos" class="btn btn-outline">Ver Serviços</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="servicos" class="services">
+        <div class="container">
+            <h2 class="section-title">Nossos Principais <span>Serviços</span></h2>
+            <p class="section-subtitle">Confiança e qualidade em cada serviço realizado</p>
+            <div class="services-grid">
+                <div class="service-card" onclick="location.href='#contato'">
+                    <div class="service-icon">
+                        <i class="fas fa-trowel"></i>
+                    </div>
+                    <h3>Pedreiro</h3>
+                    <p>Construção, reforma, levantamento de paredes, assentar pisos e azulejos, concretagem e muito mais.</p>
+                    <span class="service-link">Solicitar <i class="fas fa-arrow-right"></i></span>
+                </div>
+                <div class="service-card" onclick="location.href='#contato'">
+                    <div class="service-icon">
+                        <i class="fas fa-chair"></i>
+                    </div>
+                    <h3>Marcenaria</h3>
+                    <p>Móveis planejados, armários embutidos, cozinhas, dormitórios, restauração e reparos em geral.</p>
+                    <span class="service-link">Solicitar <i class="fas fa-arrow-right"></i></span>
+                </div>
+                <div class="service-card" onclick="location.href='#contato'">
+                    <div class="service-icon">
+                        <i class="fas fa-paint-roller"></i>
+                    </div>
+                    <h3>Pintura</h3>
+                    <p>Pintura residencial e comercial, texturas, acabamentos finos, pintura de fachadas e interiores.</p>
+                    <span class="service-link">Solicitar <i class="fas fa-arrow-right"></i></span>
+                </div>
+                <div class="service-card" onclick="location.href='#contato'">
+                    <div class="service-icon">
+                        <i class="fas fa-snowflake"></i>
+                    </div>
+                    <h3>Refrigeração</h3>
+                    <p>Ar condicionado, geladeira, lavadora, micro-ondas e toda linha branca. Instalação, manutenção e reparo.</p>
+                    <span class="service-link">Solicitar <i class="fas fa-arrow-right"></i></span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="como-funciona" class="how-it-works">
+        <div class="container">
+            <h2 class="section-title">Como <span>Funciona</span></h2>
+            <p class="section-subtitle">Em 3 passos simples você encontra o profissional ideal</p>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Descreva o Serviço</h3>
+                    <p>Nos conte detalhadamente o que precisa ser feito. Quanto mais detalhes, melhor o orçamento.</p>
+                </div>
+                <div class="step-arrow"><i class="fas fa-chevron-right"></i></div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Analisamos e Indicamos</h3>
+                    <p>Verificamos seu serviço e encontramos o melhor profissional disponível para você.</p>
+                </div>
+                <div class="step-arrow"><i class="fas fa-chevron-right"></i></div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Serviço Realizado</h3>
+                    <p>O profissional executa o serviço com qualidade e profissionalismo.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section id="contato" class="contact">
+        <div class="container">
+            <h2 class="section-title">Solicite seu <span>Orçamento</span></h2>
+            <p class="section-subtitle">Preencha o formulário que entraremos em contato em até 24 horas</p>
+            <div class="contact-wrapper">
+                <div class="contact-info">
+                    <h3>Informações de Contato</h3>
+                    <div class="info-item">
+                        <i class="fas fa-phone"></i>
+                        <div>
+                            <strong>WhatsApp</strong>
+                            <p>(19) 98302-5082</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-clock"></i>
+                        <div>
+                            <strong>Horário de Atendimento</strong>
+                            <p>Seg a Sex: 8h - 18h</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <strong>Área de Atendimento</strong>
+                            <p>Campinas e Região</p>
+                        </div>
+                    </div>
+                </div>
+                <form id="contact-form" class="contact-form">
+                    <div class="form-group">
+                        <label for="nome">Nome Completo</label>
+                        <input type="text" id="nome" name="nome" placeholder="Seu nome" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="telefone">Telefone / WhatsApp</label>
+                        <input type="tel" id="telefone" name="telefone" placeholder="(11) 99999-9999" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">E-mail</label>
+                        <input type="email" id="email" name="email" placeholder="seu@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="servico">Tipo de Serviço</label>
+                        <select id="servico" name="servico" required>
+                            <option value="">Selecione...</option>
+                            <option value="pedreiro">Pedreiro</option>
+                            <option value="marcenaria">Marcenaria</option>
+                            <option value="pintura">Pintura</option>
+                            <option value="refrigeracao">Refrigeração</option>
+                            <option value="outro">Outro</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="descricao">Descrição do Serviço</label>
+                        <textarea id="descricao" name="descricao" rows="5" placeholder="Descreva detalhadamente o serviço que precisa..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-full">Solicitar Orçamento</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <section id="cadastro-prestador" class="contact" style="background:#fff;">
+        <div class="container">
+            <h2 class="section-title">Cadastro de <span>Prestador</span></h2>
+            <p class="section-subtitle">É profissional? Cadastre-se para receber oportunidades na sua região</p>
+            <div class="contact-wrapper">
+                <div class="contact-info">
+                    <h3>Vantagens de se cadastrar</h3>
+                    <div class="info-item">
+                        <i class="fas fa-check-circle"></i>
+                        <div>
+                            <strong>Oportunidades</strong>
+                            <p>Receba serviços compatíveis com seu perfil</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-check-circle"></i>
+                        <div>
+                            <strong>Mensalidade de R$ 10,00</strong>
+                            <p>Mantenha seu cadastro ativo e apareça para receber clientes</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-check-circle"></i>
+                        <div>
+                            <strong>Divulgação</strong>
+                            <p>Seu trabalho visto por quem precisa</p>
+                        </div>
+                    </div>
+                </div>
+                <form id="provider-form" class="contact-form">
+                    <div class="form-group">
+                        <label for="prov-nome">Nome Completo</label>
+                        <input type="text" id="prov-nome" name="prov-nome" placeholder="Seu nome completo" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="prov-telefone">Telefone / WhatsApp</label>
+                        <input type="tel" id="prov-telefone" name="prov-telefone" placeholder="(19) 99999-9999" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="prov-servico">Sua Profissão</label>
+                        <input type="text" id="prov-servico" name="prov-servico" placeholder="Ex: Pedreiro, Pintor, Eletricista..." required>
+                    </div>
+                    <div class="form-group">
+                        <label for="prov-cidade">Cidade / Região de Atuação</label>
+                        <select id="prov-cidade" name="prov-cidade" required>
+                            <option value="">Selecione sua cidade</option>
+                            <optgroup label="Região Metropolitana de Campinas">
+                                <option value="Americana">Americana</option>
+                                <option value="Artur Nogueira">Artur Nogueira</option>
+                                <option value="Campinas">Campinas</option>
+                                <option value="Cosmópolis">Cosmópolis</option>
+                                <option value="Engenheiro Coelho">Engenheiro Coelho</option>
+                                <option value="Holambra">Holambra</option>
+                                <option value="Hortolândia">Hortolândia</option>
+                                <option value="Indaiatuba">Indaiatuba</option>
+                                <option value="Itatiba">Itatiba</option>
+                                <option value="Jaguariúna">Jaguariúna</option>
+                                <option value="Monte Mor">Monte Mor</option>
+                                <option value="Morungaba">Morungaba</option>
+                                <option value="Nova Odessa">Nova Odessa</option>
+                                <option value="Paulínia">Paulínia</option>
+                                <option value="Pedreira">Pedreira</option>
+                                <option value="Santa Bárbara d'Oeste">Santa Bárbara d'Oeste</option>
+                                <option value="Santo Antônio de Posse">Santo Antônio de Posse</option>
+                                <option value="Sumaré">Sumaré</option>
+                                <option value="Valinhos">Valinhos</option>
+                                <option value="Vinhedo">Vinhedo</option>
+                            </optgroup>
+                            <optgroup label="Demais Regiões">
+                                <option value="Águas de Lindóia">Águas de Lindóia</option>
+                                <option value="Amparo">Amparo</option>
+                                <option value="Atibaia">Atibaia</option>
+                                <option value="Bragança Paulista">Bragança Paulista</option>
+                                <option value="Cabreúva">Cabreúva</option>
+                                <option value="Campo Limpo Paulista">Campo Limpo Paulista</option>
+                                <option value="Elias Fausto">Elias Fausto</option>
+                                <option value="Itupeva">Itupeva</option>
+                                <option value="Jarinu">Jarinu</option>
+                                <option value="Jundiaí">Jundiaí</option>
+                                <option value="Limeira">Limeira</option>
+                                <option value="Louveira">Louveira</option>
+                                <option value="Mogi Guaçu">Mogi Guaçu</option>
+                                <option value="Mogi Mirim">Mogi Mirim</option>
+                                <option value="Serra Negra">Serra Negra</option>
+                                <option value="Socorro">Socorro</option>
+                                <option value="Vargem">Vargem</option>
+                                <option value="Várzea Paulista">Várzea Paulista</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="prov-descricao">Sobre você e seus trabalhos</label>
+                        <textarea id="prov-descricao" name="prov-descricao" rows="4" placeholder="Conte um pouco sobre sua experiência..." required></textarea>
+                    </div>
+                    <div class="fee-notice">
+                        <i class="fas fa-info-circle"></i>
+                        <div>
+                            <strong>Taxa de R$ 10,00/mês</strong> para manutenção do cadastro ativo.<br>
+                            Após o cadastro, você poderá pagar via <strong>Mercado Pago</strong> (PIX) para liberação automática.
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-full"><i class="fas fa-credit-card"></i> Cadastrar e Pagar via Mercado Pago</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <section id="avaliacoes" class="reviews">
+        <div class="container">
+            <h2 class="section-title">Avaliações <span>dos Clientes</span></h2>
+            <p class="section-subtitle">Compartilhe sua experiência com o prestador de serviço</p>
+            <div class="reviews-grid">
+                <div class="review-form-card">
+                    <h3><i class="fas fa-star"></i> Deixe sua Avaliação</h3>
+                    <form id="review-form">
+                        <div class="form-group">
+                            <label for="rev-nome">Seu Nome</label>
+                            <input type="text" id="rev-nome" placeholder="Seu nome" required>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="rev-servico">Tipo de Serviço</label>
+                                <select id="rev-servico" required>
+                                    <option value="">Selecione...</option>
+                                    <option value="pedreiro">Pedreiro</option>
+                                    <option value="marcenaria">Marcenaria</option>
+                                    <option value="pintura">Pintura</option>
+                                    <option value="outro">Outro</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="rev-prestador">Prestador (opcional)</label>
+                                <input type="text" id="rev-prestador" placeholder="Nome do profissional">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Avaliação</label>
+                            <div class="star-rating" id="star-rating">
+                                <i class="fas fa-star" data-star="1"></i>
+                                <i class="fas fa-star" data-star="2"></i>
+                                <i class="fas fa-star" data-star="3"></i>
+                                <i class="fas fa-star" data-star="4"></i>
+                                <i class="fas fa-star" data-star="5"></i>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="rev-descricao">Como foi sua experiência?</label>
+                            <textarea id="rev-descricao" rows="4" placeholder="Conte como foi o serviço, a qualidade, o atendimento..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-full"><i class="fas fa-paper-plane"></i> Enviar Avaliação</button>
+                    </form>
+                </div>
+                <div class="reviews-list" id="reviews-list">
+                    <div class="empty-state">
+                        <i class="fas fa-comments"></i>
+                        <h3>Nenhuma avaliação ainda</h3>
+                        <p>Seja o primeiro a compartilhar sua experiência!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>© 2026 Próximo Passo Ideal. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <div id="toast" class="toast"></div>
+
+    <script src="js/script.js"></script>
+    <script src="js/pix.js"></script>
+    <script>updateAdminBadge(); updateSolicitacaoBadge();</script>
+</body>
+</html>

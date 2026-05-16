@@ -1,0 +1,12 @@
+[build]
+  functions = "netlify/functions"
+
+[[redirects]]
+  from = "/api/pix"
+  to = "/.netlify/functions/pix"
+  status = 200
+
+[[redirects]]
+  from = "/api/pix-webhook"
+  to = "/.netlify/functions/pix-webhook"
+  status = 200
