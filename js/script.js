@@ -104,7 +104,7 @@ function updateSolicitacaoBadge() {
 
 // Form submission
 const form = document.getElementById('contact-form');
-form.addEventListener('submit', function (e) {
+form.addEventListener('submit', async function (e) {
     e.preventDefault();
 
     const nome = document.getElementById('nome').value.trim();
@@ -133,18 +133,23 @@ form.addEventListener('submit', function (e) {
     solicitacoes.push(novaSolic);
     saveSolicitacoes(solicitacoes);
 
-    // Save to API (banco de dados)
-    try {
-        fetch('/api/dados', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                action: 'salvar',
-                tipo: 'clientes',
-                dados: novaSolic
-            })
-        });
-    } catch(e) {}
+    // Save to API (banco de dados) com retry
+    for (let tentativa = 0; tentativa < 3; tentativa++) {
+        try {
+            const resp = await fetch('/api/dados', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action: 'salvar',
+                    tipo: 'clientes',
+                    dados: novaSolic
+                })
+            });
+            if (resp.ok) break;
+        } catch(e) {
+            if (tentativa === 2) console.warn('API indisponível após 3 tentativas');
+        }
+    }
 
     const message = `Olá! Gostaria de solicitar um orçamento.\n\n` +
         `*Nome:* ${nome}\n` +
@@ -186,7 +191,7 @@ telefoneInputs.forEach(applyPhoneMask);
 // Provider registration form
 const providerForm = document.getElementById('provider-form');
 if (providerForm) {
-    providerForm.addEventListener('submit', function (e) {
+    providerForm.addEventListener('submit', async function (e) {
         e.preventDefault();
 
         const nome = document.getElementById('prov-nome').value.trim();
@@ -227,18 +232,23 @@ if (providerForm) {
         providers.push(novoProv);
         localStorage.setItem(STORAGE_KEY, JSON.stringify(providers));
 
-        // Save to API (banco de dados)
-        try {
-            fetch('/api/dados', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    action: 'salvar',
-                    tipo: 'prestadores',
-                    dados: novoProv
-                })
-            });
-        } catch(e) {}
+        // Save to API (banco de dados) com retry
+        for (let tentativa = 0; tentativa < 3; tentativa++) {
+            try {
+                const resp = await fetch('/api/dados', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'salvar',
+                        tipo: 'prestadores',
+                        dados: novoProv
+                    })
+                });
+                if (resp.ok) break;
+            } catch(e) {
+                if (tentativa === 2) console.warn('API indisponível após 3 tentativas');
+            }
+        }
 
         updateAdminBadge();
         showToast('Cadastro enviado com sucesso!');
@@ -362,7 +372,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Review form
         const reviewForm = document.getElementById('review-form');
         if (reviewForm) {
-            reviewForm.addEventListener('submit', function(e) {
+            reviewForm.addEventListener('submit', async function(e) {
                 e.preventDefault();
                 const nome = document.getElementById('rev-nome').value.trim();
                 const servico = document.getElementById('rev-servico').value;
@@ -387,13 +397,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 reviews.push(novaRev);
                 saveReviews(reviews);
                 // Salva no banco
-                try {
-                    fetch('/api/dados', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ action: 'salvar', tipo: 'avaliacoes', dados: novaRev })
-                    });
-                } catch(e) {}
+                for (let tentativa = 0; tentativa < 3; tentativa++) {
+                    try {
+                        const resp = await fetch('/api/dados', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ action: 'salvar', tipo: 'avaliacoes', dados: novaRev })
+                        });
+                        if (resp.ok) break;
+                    } catch(e) {
+                        if (tentativa === 2) console.warn('API indisponível após 3 tentativas');
+                    }
+                }
                 showToast('Avaliação enviada com sucesso! Obrigado!');
                 this.reset();
                 selectedStar = 0;

@@ -504,7 +504,8 @@
                     <div class="admin-toolbar">
                         <h2>Prestadores <span>Cadastrados</span></h2>
                         <div>
-                            <button class="btn btn-outline btn-sm" style="border-color:#ccc;color:#666;margin-right:8px;" onclick="sincronizarPIX()"><i class="fas fa-sync"></i> Sincronizar PIX</button>
+                            <button class="btn btn-outline btn-sm" style="border-color:#ccc;color:#666;margin-right:8px;" onclick="forcarSync()"><i class="fas fa-sync"></i> Sincronizar</button>
+                            <button class="btn btn-outline btn-sm" style="border-color:#ccc;color:#666;margin-right:8px;" onclick="sincronizarPIX()"><i class="fas fa-money-bill"></i> PIX</button>
                             <button class="btn btn-primary btn-sm" onclick="openModal('add')"><i class="fas fa-plus"></i> Adicionar</button>
                         </div>
                     </div>
@@ -523,6 +524,7 @@
                     <div class="admin-toolbar">
                         <h2>Solicitações <span>de Clientes</span></h2>
                         <div>
+                            <button class="btn btn-outline btn-sm" style="border-color:#ccc;color:#666;margin-right:8px;" onclick="forcarSync()"><i class="fas fa-sync"></i> Sincronizar</button>
                             <button class="btn btn-outline btn-sm" style="border-color:#ccc;color:#666;" onclick="exportSolicitacoes()"><i class="fas fa-download"></i> Exportar</button>
                         </div>
                     </div>
@@ -541,6 +543,7 @@
                     <div class="admin-toolbar">
                         <h2>Avaliações <span>dos Clientes</span></h2>
                         <div>
+                            <button class="btn btn-outline btn-sm" style="border-color:#ccc;color:#666;margin-right:8px;" onclick="forcarSync()"><i class="fas fa-sync"></i> Sincronizar</button>
                             <button class="btn btn-outline btn-sm" style="border-color:#ccc;color:#666;" onclick="exportReviews()"><i class="fas fa-download"></i> Exportar</button>
                         </div>
                     </div>
@@ -634,9 +637,9 @@
 
     <script src="js/script.js"></script>
     <script>
+        // Usa as mesmas chaves do script.js (evita redeclarar const)
         const STORAGE_KEY = 'proximopasso_prestadores';
         const SOLIC_KEY = 'proximopasso_solicitacoes';
-        const REVIEWS_KEY = 'proximopasso_avaliacoes';
         const API_DADOS = '/api/dados';
         let editingId = null;
 
@@ -654,37 +657,68 @@
         }
 
         async function syncFromAPI() {
-            // Sincroniza prestadores
-            const resP = await apiDados('substituir', { tipo: 'prestadores', dados: getProviders() });
-            // Busca clientes do servidor
-            const resC = await fetch(`${API_DADOS}?tipo=clientes`);
-            if (resC.ok) {
-                const data = await resC.json();
-                if (data.dados && data.dados.length > 0) {
-                    // Mescla com localStorage (evita perdas)
-                    const locais = JSON.parse(localStorage.getItem(SOLIC_KEY) || '[]');
-                    const merged = [...data.dados];
-                    locais.forEach(l => {
-                        if (!merged.find(m => m.id === l.id)) merged.push(l);
+            let erros = [];
+
+            // Para cada tipo de dado: busca do servidor, mescla com local, salva ambos
+            for (const tipo of ['prestadores', 'clientes', 'avaliacoes']) {
+                const storageKey = tipo === 'prestadores' ? STORAGE_KEY :
+                                   tipo === 'clientes' ? SOLIC_KEY : REVIEWS_KEY;
+
+                // 1) Busca dados do servidor
+                let servidor = [];
+                try {
+                    const res = await fetch(`${API_DADOS}?tipo=${tipo}`);
+                    if (res.ok) {
+                        const data = await res.json();
+                        servidor = data.dados || [];
+                    } else {
+                        erros.push(`Servidor retornou ${res.status} para ${tipo}`);
+                    }
+                } catch (e) {
+                    erros.push(`API indisponível ao buscar ${tipo}`);
+                }
+
+                // 2) Lê dados locais
+                const locais = JSON.parse(localStorage.getItem(storageKey) || '[]');
+
+                // 3) Mescla: locais têm prioridade (ids iguais = versão local vence)
+                const merged = [...servidor];
+                let alterou = false;
+                locais.forEach(local => {
+                    const idx = merged.findIndex(m => m.id === local.id);
+                    if (idx !== -1) {
+                        merged[idx] = local; // local vence
+                    } else {
+                        merged.push(local);
+                    }
+                });
+
+                // 4) Salva no localStorage
+                localStorage.setItem(storageKey, JSON.stringify(merged));
+
+                // 5) Envia merged de volta pro servidor
+                try {
+                    const resp = await fetch(API_DADOS, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ action: 'substituir', tipo, dados: merged })
                     });
-                    localStorage.setItem(SOLIC_KEY, JSON.stringify(merged));
+                    if (!resp.ok) erros.push(`Erro ao salvar ${tipo} no servidor`);
+                } catch (e) {
+                    erros.push(`API indisponível ao salvar ${tipo}`);
                 }
             }
-            // Busca prestadores do servidor
-            const resP2 = await fetch(`${API_DADOS}?tipo=prestadores`);
-            if (resP2.ok) {
-                const data = await resP2.json();
-                if (data.dados && data.dados.length > 0) {
-                    localStorage.setItem(STORAGE_KEY, JSON.stringify(data.dados));
-                }
-            }
-            // Busca avaliações do servidor
-            const resR = await fetch(`${API_DADOS}?tipo=avaliacoes`);
-            if (resR.ok) {
-                const data = await resR.json();
-                if (data.dados && data.dados.length > 0) {
-                    localStorage.setItem(REVIEWS_KEY, JSON.stringify(data.dados));
-                }
+
+            // Atualiza todos os contadores
+            updateCount();
+            updateSolicitacaoCount();
+            updateReviewCount();
+
+            if (erros.length > 0) {
+                console.warn('Erros na sincronização:', erros);
+                showToast('Sincronização parcial. Alguns dados podem não estar disponíveis.', 'error');
+            } else {
+                showToast('Sincronizado com o servidor!');
             }
         }
 
@@ -885,7 +919,15 @@
             showToast(p.pago ? 'Marcado como PAGO' : 'Marcado como NÃO PAGO');
         }
 
-        async function sincronizarPIX() {
+        async function forcarSync() {
+            showToast('Sincronizando com o servidor...');
+            await syncFromAPI();
+            renderProviders();
+            renderSolicitacoes();
+            renderAdminReviews();
+        }
+
+        function sincronizarPIX() {
             // Verifica localStorage (pagamentos iniciados no navegador)
             const pagamentos = JSON.parse(localStorage.getItem('proximopasso_pagamentos') || '[]');
             const providers = getProviders();
@@ -1001,6 +1043,7 @@
         function renderSolicitacoes() {
             const lista = getSolicitacoes();
             const container = document.getElementById('solicitacao-list');
+            updateSolicitacaoCount();
 
             if (lista.length === 0) {
                 container.innerHTML = `
@@ -1082,6 +1125,7 @@
         function renderAdminReviews() {
             const lista = getReviews();
             const container = document.getElementById('review-list');
+            updateReviewCount();
 
             if (!container) return;
 
