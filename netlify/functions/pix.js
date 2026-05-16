@@ -1,12 +1,19 @@
-const MP_TOKEN = process.env.MP_ACCESS_TOKEN || 'APP_USR-3845023863916739-051604-0e1b98a3c164e637660bda6175efd33a-1913458460';
 const API_BASE = 'https://api.mercadopago.com';
+
+function getToken() {
+  const token = process.env.MP_ACCESS_TOKEN;
+  if (!token) {
+    throw new Error('MP_ACCESS_TOKEN não configurado. Defina a variável de ambiente no Netlify.');
+  }
+  return token;
+}
 
 async function mpRequest(path, method = 'GET', body = null) {
   const opts = {
     method,
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${MP_TOKEN}`,
+      'Authorization': `Bearer ${getToken()}`,
     },
   };
   if (body) {
@@ -65,6 +72,18 @@ exports.handler = async (event) => {
       }
       const { data } = await mpRequest(`/v1/payments/${payment_id}`);
       return { statusCode: 200, headers, body: JSON.stringify({ status: data.status, status_detail: data.status_detail }) };
+    }
+
+    // LISTAR CONFIRMADOS (via webhook)
+    if (event.httpMethod === 'POST' && action === 'listar_confirmados') {
+      try {
+        const { getStore } = require('@netlify/blobs');
+        const store = getStore('pix-pagamentos');
+        const dados = JSON.parse(await store.get('confirmados') || '[]');
+        return { statusCode: 200, headers, body: JSON.stringify(dados) };
+      } catch (e) {
+        return { statusCode: 200, headers, body: JSON.stringify([]) };
+      }
     }
 
     return { statusCode: 404, headers, body: JSON.stringify({ erro: 'rota não encontrada' }) };

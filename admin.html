@@ -594,6 +594,10 @@
                         <input type="tel" id="m-telefone" required>
                     </div>
                     <div class="form-group" style="margin:0;">
+                        <label for="m-email">E-mail (opcional)</label>
+                        <input type="email" id="m-email" placeholder="prestador@email.com">
+                    </div>
+                    <div class="form-group" style="margin:0;">
                         <label for="m-servico">Tipo de Serviço</label>
                         <select id="m-servico" required>
                             <option value="pedreiro">Pedreiro</option>
@@ -630,18 +634,27 @@
 
     <script src="js/script.js"></script>
     <script>
-        const ADMIN_PASSWORD = 'idealserv777';
         const STORAGE_KEY = 'proximopasso_prestadores';
         let editingId = null;
 
-        function checkPassword() {
+        async function checkPassword() {
             const senha = document.getElementById('senha').value;
-            if (senha === ADMIN_PASSWORD) {
-                document.getElementById('login-area').style.display = 'none';
-                document.getElementById('admin-panel').classList.add('active');
-                renderProviders();
-            } else {
-                showToast('Senha incorreta!', 'error');
+            try {
+                const res = await fetch('/api/admin-auth', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password: senha })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    document.getElementById('login-area').style.display = 'none';
+                    document.getElementById('admin-panel').classList.add('active');
+                    renderProviders();
+                } else {
+                    showToast('Senha incorreta!', 'error');
+                }
+            } catch (e) {
+                showToast('Erro de conexão com o servidor.', 'error');
             }
         }
 
@@ -736,6 +749,7 @@
                 document.getElementById('modal-save-btn').textContent = 'Atualizar';
                 document.getElementById('m-nome').value = p.nome;
                 document.getElementById('m-telefone').value = p.telefone;
+                document.getElementById('m-email').value = p.email || '';
                 document.getElementById('m-servico').value = p.servico;
                 document.getElementById('m-cidade').value = p.cidade;
                 document.getElementById('m-descricao').value = p.descricao || '';
@@ -754,6 +768,7 @@
             e.preventDefault();
             const nome = document.getElementById('m-nome').value.trim();
             const telefone = document.getElementById('m-telefone').value.trim();
+            const email = document.getElementById('m-email').value.trim();
             const servico = document.getElementById('m-servico').value;
             const cidade = document.getElementById('m-cidade').value.trim();
             const descricao = document.getElementById('m-descricao').value.trim();
@@ -769,7 +784,7 @@
             if (editingId) {
                 const idx = providers.findIndex(x => x.id === editingId);
                 if (idx !== -1) {
-                    providers[idx] = { ...providers[idx], nome, telefone, servico, cidade, descricao, pago };
+                    providers[idx] = { ...providers[idx], nome, telefone, email, servico, cidade, descricao, pago };
                 }
                 showToast('Prestador atualizado com sucesso!');
             } else {
@@ -777,11 +792,11 @@
                     id: Date.now().toString(),
                     nome,
                     telefone,
+                    email,
                     servico,
                     cidade,
                     descricao,
                     data: new Date().toLocaleDateString('pt-BR'),
-                    email: '',
                     pago
                 });
                 showToast('Prestador adicionado com sucesso!');
@@ -816,14 +831,12 @@
             showToast(p.pago ? 'Marcado como PAGO' : 'Marcado como NÃO PAGO');
         }
 
-        function sincronizarPIX() {
+        async function sincronizarPIX() {
+            // Verifica localStorage (pagamentos iniciados no navegador)
             const pagamentos = JSON.parse(localStorage.getItem('proximopasso_pagamentos') || '[]');
-            if (pagamentos.length === 0) {
-                showToast('Nenhum pagamento encontrado.', 'error');
-                return;
-            }
             const providers = getProviders();
             let atualizados = 0;
+
             pagamentos.forEach(p => {
                 if (p.status === 'approved') {
                     const idx = providers.findIndex(x => x.id === p.prestador_id);
@@ -833,6 +846,30 @@
                     }
                 }
             });
+
+            // Verifica confirmações do servidor (webhook)
+            try {
+                const res = await fetch('/api/pix', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'listar_confirmados' })
+                });
+                const confirmados = await res.json();
+                if (Array.isArray(confirmados)) {
+                    confirmados.forEach(c => {
+                        if (c.status === 'approved' && c.prestador_id) {
+                            const idx = providers.findIndex(x => x.id === c.prestador_id);
+                            if (idx !== -1 && !providers[idx].pago) {
+                                providers[idx].pago = true;
+                                atualizados++;
+                            }
+                        }
+                    });
+                }
+            } catch (e) {
+                // Servidor indisponível, apenas localStorage
+            }
+
             if (atualizados > 0) {
                 saveProviders(providers);
                 renderProviders();
@@ -878,8 +915,17 @@
             if (e.target === this) closeModal();
         });
 
-        // Check if already logged in via session
-        // No session persistence for simplicity
+        // Mobile menu toggle
+        document.querySelector('.menu-toggle')?.addEventListener('click', function () {
+            document.querySelector('.nav-list')?.classList.toggle('active');
+        });
+
+        // Close mobile menu on link click
+        document.querySelectorAll('.nav-list a').forEach(link => {
+            link.addEventListener('click', () => {
+                document.querySelector('.nav-list')?.classList.remove('active');
+            });
+        });
 
         // === SOLICITAÇÕES ===
         function getSolicitacoes() {

@@ -10,3 +10,8 @@
   from = "/api/pix-webhook"
   to = "/.netlify/functions/pix-webhook"
   status = 200
+
+[[redirects]]
+  from = "/api/admin-auth"
+  to = "/.netlify/functions/admin-auth"
+  status = 200
