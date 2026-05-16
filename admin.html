@@ -635,7 +635,58 @@
     <script src="js/script.js"></script>
     <script>
         const STORAGE_KEY = 'proximopasso_prestadores';
+        const SOLIC_KEY = 'proximopasso_solicitacoes';
+        const REVIEWS_KEY = 'proximopasso_avaliacoes';
+        const API_DADOS = '/api/dados';
         let editingId = null;
+
+        async function apiDados(action, extra = {}) {
+            try {
+                const res = await fetch(API_DADOS, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action, ...extra })
+                });
+                return await res.json();
+            } catch (e) {
+                return { erro: true };
+            }
+        }
+
+        async function syncFromAPI() {
+            // Sincroniza prestadores
+            const resP = await apiDados('substituir', { tipo: 'prestadores', dados: getProviders() });
+            // Busca clientes do servidor
+            const resC = await fetch(`${API_DADOS}?tipo=clientes`);
+            if (resC.ok) {
+                const data = await resC.json();
+                if (data.dados && data.dados.length > 0) {
+                    // Mescla com localStorage (evita perdas)
+                    const locais = JSON.parse(localStorage.getItem(SOLIC_KEY) || '[]');
+                    const merged = [...data.dados];
+                    locais.forEach(l => {
+                        if (!merged.find(m => m.id === l.id)) merged.push(l);
+                    });
+                    localStorage.setItem(SOLIC_KEY, JSON.stringify(merged));
+                }
+            }
+            // Busca prestadores do servidor
+            const resP2 = await fetch(`${API_DADOS}?tipo=prestadores`);
+            if (resP2.ok) {
+                const data = await resP2.json();
+                if (data.dados && data.dados.length > 0) {
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(data.dados));
+                }
+            }
+            // Busca avaliações do servidor
+            const resR = await fetch(`${API_DADOS}?tipo=avaliacoes`);
+            if (resR.ok) {
+                const data = await resR.json();
+                if (data.dados && data.dados.length > 0) {
+                    localStorage.setItem(REVIEWS_KEY, JSON.stringify(data.dados));
+                }
+            }
+        }
 
         async function checkPassword() {
             const senha = document.getElementById('senha').value;
@@ -649,6 +700,7 @@
                 if (data.success) {
                     document.getElementById('login-area').style.display = 'none';
                     document.getElementById('admin-panel').classList.add('active');
+                    await syncFromAPI();
                     renderProviders();
                 } else {
                     showToast('Senha incorreta!', 'error');
@@ -666,6 +718,8 @@
         function saveProviders(providers) {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(providers));
             updateCount();
+            // Sincroniza com o banco (assíncrono)
+            apiDados('substituir', { tipo: 'prestadores', dados: providers });
         }
 
         function updateCount() {
@@ -929,13 +983,14 @@
 
         // === SOLICITAÇÕES ===
         function getSolicitacoes() {
-            const data = localStorage.getItem('proximopasso_solicitacoes');
+            const data = localStorage.getItem(SOLIC_KEY);
             return data ? JSON.parse(data) : [];
         }
 
         function saveSolicitacoes(lista) {
-            localStorage.setItem('proximopasso_solicitacoes', JSON.stringify(lista));
+            localStorage.setItem(SOLIC_KEY, JSON.stringify(lista));
             updateSolicitacaoCount();
+            apiDados('substituir', { tipo: 'clientes', dados: lista });
         }
 
         function updateSolicitacaoCount() {
@@ -995,6 +1050,7 @@
             renderAdminReviews();
             updateReviewCount();
             showToast('Avaliação excluída.');
+            apiDados('substituir', { tipo: 'avaliacoes', dados: lista });
         }
 
         function exportSolicitacoes() {

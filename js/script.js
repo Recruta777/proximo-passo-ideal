@@ -120,7 +120,7 @@ form.addEventListener('submit', function (e) {
 
     // Save to localStorage
     const solicitacoes = getSolicitacoes();
-    solicitacoes.push({
+    const novaSolic = {
         id: Date.now().toString(),
         nome,
         telefone,
@@ -129,8 +129,22 @@ form.addEventListener('submit', function (e) {
         descricao,
         data: new Date().toLocaleString('pt-BR'),
         lida: false
-    });
+    };
+    solicitacoes.push(novaSolic);
     saveSolicitacoes(solicitacoes);
+
+    // Save to API (banco de dados)
+    try {
+        fetch('/api/dados', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                action: 'salvar',
+                tipo: 'clientes',
+                dados: novaSolic
+            })
+        });
+    } catch(e) {}
 
     const message = `Olá! Gostaria de solicitar um orçamento.\n\n` +
         `*Nome:* ${nome}\n` +
@@ -200,7 +214,7 @@ if (providerForm) {
         // Save to localStorage
         const STORAGE_KEY = 'proximopasso_prestadores';
         const providers = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-        providers.push({
+        const novoProv = {
             id: Date.now().toString(),
             nome,
             telefone,
@@ -209,8 +223,22 @@ if (providerForm) {
             descricao,
             data: new Date().toLocaleDateString('pt-BR'),
             pago: false,
-        });
+        };
+        providers.push(novoProv);
         localStorage.setItem(STORAGE_KEY, JSON.stringify(providers));
+
+        // Save to API (banco de dados)
+        try {
+            fetch('/api/dados', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action: 'salvar',
+                    tipo: 'prestadores',
+                    dados: novoProv
+                })
+            });
+        } catch(e) {}
 
         updateAdminBadge();
         showToast('Cadastro enviado com sucesso!');
@@ -347,7 +375,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
 
                 const reviews = getReviews();
-                reviews.push({
+                const novaRev = {
                     id: Date.now().toString(),
                     nome,
                     servico,
@@ -355,8 +383,17 @@ document.addEventListener('DOMContentLoaded', function() {
                     stars: selectedStar,
                     descricao,
                     data: new Date().toLocaleDateString('pt-BR')
-                });
+                };
+                reviews.push(novaRev);
                 saveReviews(reviews);
+                // Salva no banco
+                try {
+                    fetch('/api/dados', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ action: 'salvar', tipo: 'avaliacoes', dados: novaRev })
+                    });
+                } catch(e) {}
                 showToast('Avaliação enviada com sucesso! Obrigado!');
                 this.reset();
                 selectedStar = 0;
@@ -382,7 +419,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Salva também na lista de avaliações para aparecer no admin
         const reviews = getReviews();
-        reviews.push({
+        const revEmp = {
             id: 'emp_' + Date.now().toString(),
             nome: 'Cliente',
             servico: 'empresa',
@@ -390,8 +427,16 @@ document.addEventListener('DOMContentLoaded', function() {
             stars: val,
             descricao: 'Avaliação da empresa Próximo Passo Ideal',
             data: new Date().toLocaleDateString('pt-BR')
-        });
+        };
+        reviews.push(revEmp);
         saveReviews(reviews);
+        try {
+            fetch('/api/dados', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'salvar', tipo: 'avaliacoes', dados: revEmp })
+            });
+        } catch(e) {}
 
         showToast('Obrigado por avaliar a Próximo Passo Ideal!');
     }

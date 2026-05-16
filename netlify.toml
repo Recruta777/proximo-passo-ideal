@@ -15,3 +15,8 @@
   from = "/api/admin-auth"
   to = "/.netlify/functions/admin-auth"
   status = 200
+
+[[redirects]]
+  from = "/api/dados"
+  to = "/.netlify/functions/dados"
+  status = 200
