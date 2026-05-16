@@ -640,6 +640,7 @@
         // Usa as mesmas chaves do script.js (evita redeclarar const)
         const STORAGE_KEY = 'proximopasso_prestadores';
         const SOLIC_KEY = 'proximopasso_solicitacoes';
+        const REVIEWS_KEY = 'proximopasso_avaliacoes';
         const API_DADOS = '/api/dados';
         let editingId = null;
 
@@ -927,7 +928,7 @@
             renderAdminReviews();
         }
 
-        function sincronizarPIX() {
+        async function sincronizarPIX() {
             // Verifica localStorage (pagamentos iniciados no navegador)
             const pagamentos = JSON.parse(localStorage.getItem('proximopasso_pagamentos') || '[]');
             const providers = getProviders();

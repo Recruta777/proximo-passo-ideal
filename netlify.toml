@@ -1,24 +1,9 @@
 [build]
-  command = "npm install"
+  command = "npm install && node scripts/build.js"
   functions = "netlify/functions"
-  publish = "."
+  publish = "dist"
 
 [[redirects]]
-  from = "/api/pix"
-  to = "/.netlify/functions/pix"
-  status = 200
-
-[[redirects]]
-  from = "/api/pix-webhook"
-  to = "/.netlify/functions/pix-webhook"
-  status = 200
-
-[[redirects]]
-  from = "/api/admin-auth"
-  to = "/.netlify/functions/admin-auth"
-  status = 200
-
-[[redirects]]
-  from = "/api/dados"
-  to = "/.netlify/functions/dados"
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
   status = 200
