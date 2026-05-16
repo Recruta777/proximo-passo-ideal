@@ -1,13 +1,5 @@
-const { getStore } = require('@netlify/blobs');
-
 const MP_TOKEN = process.env.MP_ACCESS_TOKEN || 'APP_USR-3845023863916739-051604-0e1b98a3c164e637660bda6175efd33a-1913458460';
 const API_BASE = 'https://api.mercadopago.com';
-
-function criarStore() {
-  return getStore({
-    name: 'pix-pagamentos',
-  });
-}
 
 async function mpRequest(path, method = 'GET', body = null) {
   const opts = {
@@ -34,7 +26,6 @@ exports.handler = async (event) => {
   }
 
   try {
-    const store = criarStore();
     const body = event.body ? JSON.parse(event.body) : {};
     const { action, prestador_id, nome, email, payment_id } = body;
 
@@ -51,11 +42,6 @@ exports.handler = async (event) => {
       if (status !== 201 || data.error) {
         return { statusCode: 400, headers, body: JSON.stringify({ erro: data.message || 'Erro ao gerar PIX' }) };
       }
-
-      // Salva no blob store
-      const existing = JSON.parse(await store.get('pagamentos', { type: 'json' }) || '[]');
-      existing.push({ payment_id: data.id, prestador_id, nome, status: 'pending' });
-      await store.setJSON('pagamentos', existing);
 
       return {
         statusCode: 200,
@@ -76,12 +62,6 @@ exports.handler = async (event) => {
       }
       const { data } = await mpRequest(`/v1/payments/${payment_id}`);
       return { statusCode: 200, headers, body: JSON.stringify({ status: data.status, status_detail: data.status_detail }) };
-    }
-
-    // LISTAR (para admin sincronizar)
-    if (event.httpMethod === 'GET' && event.queryStringParameters?.action === 'listar') {
-      const pagamentos = JSON.parse(await store.get('pagamentos', { type: 'json' }) || '[]');
-      return { statusCode: 200, headers, body: JSON.stringify(pagamentos) };
     }
 
     return { statusCode: 404, headers, body: JSON.stringify({ erro: 'rota não encontrada' }) };

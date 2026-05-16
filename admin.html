@@ -817,35 +817,29 @@
         }
 
         function sincronizarPIX() {
-            fetch('/api/pix?action=listar')
-                .then(r => r.json())
-                .then(pagamentos => {
-                    if (!Array.isArray(pagamentos) || pagamentos.length === 0) {
-                        showToast('Nenhum pagamento encontrado no PIX.', 'error');
-                        return;
+            const pagamentos = JSON.parse(localStorage.getItem('proximopasso_pagamentos') || '[]');
+            if (pagamentos.length === 0) {
+                showToast('Nenhum pagamento encontrado.', 'error');
+                return;
+            }
+            const providers = getProviders();
+            let atualizados = 0;
+            pagamentos.forEach(p => {
+                if (p.status === 'approved') {
+                    const idx = providers.findIndex(x => x.id === p.prestador_id);
+                    if (idx !== -1 && !providers[idx].pago) {
+                        providers[idx].pago = true;
+                        atualizados++;
                     }
-                    const providers = getProviders();
-                    let atualizados = 0;
-                    pagamentos.forEach(p => {
-                        if (p.status === 'approved') {
-                            const idx = providers.findIndex(x => x.id === p.prestador_id);
-                            if (idx !== -1 && !providers[idx].pago) {
-                                providers[idx].pago = true;
-                                atualizados++;
-                            }
-                        }
-                    });
-                    if (atualizados > 0) {
-                        saveProviders(providers);
-                        renderProviders();
-                        showToast(`${atualizados} prestador(es) liberado(s) via PIX!`);
-                    } else {
-                        showToast('Nenhum novo pagamento encontrado.');
-                    }
-                })
-                .catch(() => {
-                    showToast('Servidor PIX não disponível. Use o botão manual.', 'error');
-                });
+                }
+            });
+            if (atualizados > 0) {
+                saveProviders(providers);
+                renderProviders();
+                showToast(`${atualizados} prestador(es) liberado(s) via PIX!`);
+            } else {
+                showToast('Nenhum novo pagamento encontrado.');
+            }
         }
 
         function exportData() {

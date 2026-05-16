@@ -254,6 +254,8 @@ function abrirPix(prestadorId, nome) {
             showToast('Erro ao gerar PIX: ' + pixData.erro, 'error');
             return;
         }
+        // Salva pagamento no localStorage para o admin
+        salvarPagamentoLocal(pixData.payment_id, prestadorId);
         // Fecha overlay atual e abre o do PIX
         document.querySelector('.pix-overlay').remove();
         formatarPix(pixData);

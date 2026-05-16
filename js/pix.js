@@ -1,5 +1,5 @@
-// PIX Integration - Mercado Pago + Netlify Functions
 const PIX_API_URL = '/api/pix';
+const STORAGE_KEY = 'proximopasso_prestadores';
 
 function gerarPix(prestadorId, nome, email) {
     return fetch(PIX_API_URL, {
@@ -23,6 +23,30 @@ function consultarPix(paymentId) {
             payment_id: paymentId
         })
     }).then(r => r.json());
+}
+
+function salvarPagamentoLocal(paymentId, prestadorId) {
+    const pagamentos = JSON.parse(localStorage.getItem('proximopasso_pagamentos') || '[]');
+    if (!pagamentos.find(p => p.payment_id === paymentId)) {
+        pagamentos.push({ payment_id: paymentId, prestador_id: prestadorId, status: 'pending' });
+        localStorage.setItem('proximopasso_pagamentos', JSON.stringify(pagamentos));
+    }
+}
+
+function marcarPagoLocal(paymentId) {
+    const pagamentos = JSON.parse(localStorage.getItem('proximopasso_pagamentos') || '[]');
+    const p = pagamentos.find(p => p.payment_id === paymentId);
+    if (p) {
+        p.status = 'approved';
+        localStorage.setItem('proximopasso_pagamentos', JSON.stringify(pagamentos));
+    }
+    // Marca o prestador como pago
+    const providers = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    const idx = providers.findIndex(x => x.id === (p ? p.prestador_id : null));
+    if (idx !== -1) {
+        providers[idx].pago = true;
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(providers));
+    }
 }
 
 function formatarPix(pixData) {
@@ -55,6 +79,7 @@ function formatarPix(pixData) {
             const statusEl = document.getElementById(`pix-status-${pixData.payment_id}`);
             if (statusEl) {
                 if (status.status === 'approved') {
+                    marcarPagoLocal(pixData.payment_id);
                     statusEl.innerHTML = '<i class="fas fa-check-circle" style="color:#27ae60;"></i> Pagamento confirmado! Cadastro liberado!';
                     statusEl.style.color = '#27ae60';
                     clearInterval(interval);
