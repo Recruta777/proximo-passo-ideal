@@ -220,12 +220,13 @@ if (providerForm) {
         const providerNome = nome;
         const pixOverlay = document.createElement('div');
         pixOverlay.className = 'pix-overlay';
+        const escapedNome = providerNome.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
         pixOverlay.innerHTML = `
             <div class="pix-modal">
                 <button class="pix-close" onclick="this.closest('.pix-overlay').remove()">&times;</button>
                 <h3><i class="fas fa-check-circle" style="color:#27ae60;"></i> Cadastro enviado!</h3>
                 <p style="color:#666;margin:16px 0;">Pague <strong>R$ 10,00</strong> via PIX para liberar automaticamente:</p>
-                <button class="btn btn-primary btn-full" onclick="abrirPix('${providerId}','${providerNome}')" style="margin-bottom:10px;">
+                <button class="btn btn-primary btn-full" data-prestador-id="${providerId}" data-prestador-nome="${escapedNome}" style="margin-bottom:10px;">
                     <i class="fas fa-qrcode"></i> Pagar com PIX agora
                 </button>
                 <button class="btn btn-outline btn-full" onclick="this.closest('.pix-overlay').remove();window.open('${url}','_blank');" style="border-color:#25d366;color:#25d366;">
@@ -235,6 +236,14 @@ if (providerForm) {
             </div>
         `;
         document.body.appendChild(pixOverlay);
+
+        // Attach PIX event via dataset (evita injeção no onclick)
+        const pixBtn = pixOverlay.querySelector('[data-prestador-id]');
+        if (pixBtn) {
+            pixBtn.addEventListener('click', function() {
+                abrirPix(this.dataset.prestadorId, this.dataset.prestadorNome);
+            });
+        }
         this.reset();
     });
 }

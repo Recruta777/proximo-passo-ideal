@@ -3,6 +3,12 @@ const { getStore } = require('@netlify/blobs');
 const MP_TOKEN = process.env.MP_ACCESS_TOKEN || 'APP_USR-3845023863916739-051604-0e1b98a3c164e637660bda6175efd33a-1913458460';
 const API_BASE = 'https://api.mercadopago.com';
 
+function criarStore() {
+  return getStore({
+    name: 'pix-pagamentos',
+  });
+}
+
 async function mpRequest(path, method = 'GET', body = null) {
   const opts = {
     method,
@@ -28,7 +34,7 @@ exports.handler = async (event) => {
   }
 
   try {
-    const store = getStore('pix-pagamentos');
+    const store = criarStore();
     const body = event.body ? JSON.parse(event.body) : {};
     const { action, prestador_id, nome, email, payment_id } = body;
 

@@ -2,6 +2,12 @@ const { getStore } = require('@netlify/blobs');
 
 const MP_TOKEN = process.env.MP_ACCESS_TOKEN || 'APP_USR-3845023863916739-051604-0e1b98a3c164e637660bda6175efd33a-1913458460';
 
+function criarStore() {
+  return getStore({
+    name: 'pix-pagamentos',
+  });
+}
+
 exports.handler = async (event) => {
   if (event.httpMethod === 'OPTIONS') {
     return { statusCode: 204, headers: { 'Access-Control-Allow-Origin': '*' }, body: '' };
@@ -22,7 +28,7 @@ exports.handler = async (event) => {
     const payment = await res.json();
 
     if (payment.status === 'approved') {
-      const store = getStore('pix-pagamentos');
+      const store = criarStore();
       const pagamentos = JSON.parse(await store.get('pagamentos', { type: 'json' }) || '[]');
       const idx = pagamentos.findIndex(p => p.payment_id == paymentId);
 
