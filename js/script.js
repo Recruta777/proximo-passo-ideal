@@ -229,7 +229,7 @@ if (providerForm) {
             cidade,
             descricao,
             data: new Date().toLocaleDateString('pt-BR'),
-            pago: false,
+            pago: true,
         };
         providers.push(novoProv);
         localStorage.setItem(STORAGE_KEY, JSON.stringify(providers));
@@ -254,36 +254,6 @@ if (providerForm) {
 
         updateAdminBadge();
         showToast('Cadastro enviado com sucesso!');
-
-        // Mostra opção de pagamento PIX
-        const providerId = providers[providers.length - 1].id;
-        const providerNome = nome;
-        const pixOverlay = document.createElement('div');
-        pixOverlay.className = 'pix-overlay';
-        const escapedNome = providerNome.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-        pixOverlay.innerHTML = `
-            <div class="pix-modal">
-                <button class="pix-close" onclick="this.closest('.pix-overlay').remove()">&times;</button>
-                <h3><i class="fas fa-check-circle" style="color:#27ae60;"></i> Cadastro enviado!</h3>
-                <p style="color:#666;margin:16px 0;">Pague <strong>R$ 10,00</strong> via PIX para liberar automaticamente:</p>
-                <button class="btn btn-primary btn-full" data-prestador-id="${providerId}" data-prestador-nome="${escapedNome}" style="margin-bottom:10px;">
-                    <i class="fas fa-qrcode"></i> Pagar com PIX agora
-                </button>
-                <button class="btn btn-outline btn-full" onclick="this.closest('.pix-overlay').remove();window.open('${url}','_blank');" style="border-color:#25d366;color:#25d366;">
-                    <i class="fab fa-whatsapp"></i> Enviar comprovante no WhatsApp
-                </button>
-                <p style="font-size:12px;color:#999;margin-top:12px;">Após o pagamento, o cadastro é liberado automaticamente.</p>
-            </div>
-        `;
-        document.body.appendChild(pixOverlay);
-
-        // Attach PIX event via dataset (evita injeção no onclick)
-        const pixBtn = pixOverlay.querySelector('[data-prestador-id]');
-        if (pixBtn) {
-            pixBtn.addEventListener('click', function() {
-                abrirPix(this.dataset.prestadorId, this.dataset.prestadorNome);
-            });
-        }
         this.reset();
     });
 }
