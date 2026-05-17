@@ -4,14 +4,15 @@
 // Nav-links active state (silhueta ao clicar)
 const navLinks = document.querySelectorAll('.nav-links a');
 navLinks.forEach(link => {
-    link.addEventListener('click', function(e) {
-        e.stopPropagation();
+    link.addEventListener('click', function() {
         navLinks.forEach(l => l.classList.remove('active'));
         this.classList.add('active');
     });
 });
-document.addEventListener('click', function() {
-    navLinks.forEach(l => l.classList.remove('active'));
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('.nav-links')) {
+        navLinks.forEach(l => l.classList.remove('active'));
+    }
 });
 
 // Header shadow on scroll
