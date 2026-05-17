@@ -563,6 +563,10 @@
                         <input type="text" id="m-nome" required>
                     </div>
                     <div class="form-group" style="margin:0;">
+                        <label for="m-empresa">Nome da Empresa (opcional)</label>
+                        <input type="text" id="m-empresa" placeholder="Nome da empresa">
+                    </div>
+                    <div class="form-group" style="margin:0;">
                         <label for="m-telefone">Telefone / WhatsApp</label>
                         <input type="tel" id="m-telefone" required>
                     </div>
@@ -764,11 +768,13 @@
                     <div class="provider-info">
                         <span class="badge badge-default">${getServicoLabel(p.servico)}</span>
                         <span class="badge ${p.pago ? 'badge-pago' : 'badge-naopago'}">${p.pago ? 'PAGO' : 'NÃO PAGO'}</span>
-                        <h3>${p.nome}</h3>
+                        <h3>${p.empresa ? p.empresa : p.nome}</h3>
+                        ${p.empresa ? `<p><strong>${p.nome}</strong></p>` : ''}
                         <p><i class="fas fa-phone"></i> ${p.telefone}</p>
                         ${p.email ? `<p><i class="fas fa-envelope"></i> ${p.email}</p>` : ''}
                         <p><i class="fas fa-map-marker-alt"></i> ${p.cidade}</p>
                         ${p.descricao ? `<p><i class="fas fa-comment"></i> ${p.descricao}</p>` : ''}
+                        ${p.cartao ? `<p><a href="${p.cartao}" target="_blank"><i class="fas fa-id-card"></i> Ver cartão de visita</a></p>` : ''}
                         ${p.data ? `<p><i class="fas fa-calendar"></i> Cadastrado em: ${p.data}</p>` : ''}
                     </div>
                     <div class="provider-actions">
@@ -808,6 +814,7 @@
                 document.getElementById('modal-title').textContent = 'Editar Prestador';
                 document.getElementById('modal-save-btn').textContent = 'Atualizar';
                 document.getElementById('m-nome').value = p.nome;
+                document.getElementById('m-empresa').value = p.empresa || '';
                 document.getElementById('m-telefone').value = p.telefone;
                 document.getElementById('m-email').value = p.email || '';
                 document.getElementById('m-servico').value = p.servico;
@@ -827,6 +834,7 @@
         document.getElementById('provider-form-modal').addEventListener('submit', function (e) {
             e.preventDefault();
             const nome = document.getElementById('m-nome').value.trim();
+            const empresa = document.getElementById('m-empresa').value.trim();
             const telefone = document.getElementById('m-telefone').value.trim();
             const email = document.getElementById('m-email').value.trim();
             const servico = document.getElementById('m-servico').value;
@@ -843,9 +851,8 @@
 
             if (editingId) {
                 const idx = providers.findIndex(x => x.id === editingId);
-                if (idx !== -1) {
-                    providers[idx] = { ...providers[idx], nome, telefone, email, servico, cidade, descricao, pago };
-                }
+                if (idx === -1) return;
+                providers[idx] = { ...providers[idx], nome, empresa, telefone, email, servico, cidade, descricao, pago };
                 showToast('Prestador atualizado com sucesso!');
             } else {
                 providers.push({

@@ -197,6 +197,7 @@ if (providerForm) {
         e.preventDefault();
 
         const nome = document.getElementById('prov-nome').value.trim();
+        const empresa = document.getElementById('prov-empresa').value.trim();
         const telefone = document.getElementById('prov-telefone').value.trim();
         const servico = document.getElementById('prov-servico').value;
         const cidade = document.getElementById('prov-cidade').value.trim();
@@ -209,6 +210,7 @@ if (providerForm) {
 
         const message = `*NOVO PRESTADOR CADASTRADO!*\n\n` +
             `*Nome:* ${nome}\n` +
+            (empresa ? `*Empresa:* ${empresa}\n` : '') +
             `*Telefone:* ${telefone}\n` +
             `*Serviço:* ${servico}\n` +
             `*Cidade:* ${cidade}\n` +
@@ -218,16 +220,29 @@ if (providerForm) {
         const whatsappNumber = '5519983025082';
         const url = `whatsapp://send?phone=${whatsappNumber}&text=${encodeURIComponent(message)}`;
 
+        // Cartão de visita
+        const cartaoInput = document.getElementById('prov-cartao');
+        let cartaoData = null;
+        if (cartaoInput && cartaoInput.files[0]) {
+            const reader = new FileReader();
+            cartaoData = await new Promise(resolve => {
+                reader.onload = e => resolve(e.target.result);
+                reader.readAsDataURL(cartaoInput.files[0]);
+            });
+        }
+
         // Save to localStorage
         const STORAGE_KEY = 'proximopasso_prestadores';
         const providers = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
         const novoProv = {
             id: Date.now().toString(),
             nome,
+            empresa,
             telefone,
             servico,
             cidade,
             descricao,
+            cartao: cartaoData,
             data: new Date().toLocaleDateString('pt-BR'),
             pago: true,
         };
