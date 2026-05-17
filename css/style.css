@@ -42,9 +42,14 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-wrap: wrap;
-    gap: 20px;
     width: 100%;
+    position: relative;
+}
+.header-top .nav-list {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 .logo {
