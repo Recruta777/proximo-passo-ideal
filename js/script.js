@@ -274,6 +274,35 @@ function abrirPix(prestadorId, nome) {
     });
 }
 
+// Like/dislike review
+function votarReview(reviewId, tipo) {
+    const reviews = getReviews();
+    const review = reviews.find(r => r.id === reviewId);
+    if (!review) return;
+    const userVotes = JSON.parse(localStorage.getItem('proximopasso_review_votes') || '{}');
+    const votoAtual = userVotes[reviewId];
+    if (votoAtual === tipo) {
+        review[tipo === 'like' ? 'likes' : 'dislikes'] = Math.max(0, (review[tipo === 'like' ? 'likes' : 'dislikes'] || 0) - 1);
+        delete userVotes[reviewId];
+    } else {
+        if (votoAtual) {
+            review[votoAtual === 'like' ? 'likes' : 'dislikes'] = Math.max(0, (review[votoAtual === 'like' ? 'likes' : 'dislikes'] || 0) - 1);
+        }
+        review[tipo === 'like' ? 'likes' : 'dislikes'] = (review[tipo === 'like' ? 'likes' : 'dislikes'] || 0) + 1;
+        userVotes[reviewId] = tipo;
+    }
+    localStorage.setItem('proximopasso_review_votes', JSON.stringify(userVotes));
+    localStorage.setItem(REVIEWS_KEY, JSON.stringify(reviews));
+    renderReviews();
+    try {
+        fetch('/api/dados', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'substituir', tipo: 'avaliacoes', dados: reviews })
+        });
+    } catch(e) {}
+}
+
 // === AVALIAÇÕES ===
 var REVIEWS_KEY = 'proximopasso_avaliacoes';
 
@@ -303,7 +332,11 @@ function renderReviews() {
     }
 
     const labels = { pedreiro: 'Pedreiro', marcenaria: 'Marcenaria', pintura: 'Pintura', refrigeracao: 'Refrigeração', outro: 'Outro', empresa: '⭐ Empresa' };
-    container.innerHTML = [...lista].reverse().map(r => `
+    const userVotes = JSON.parse(localStorage.getItem('proximopasso_review_votes') || '{}');
+    container.innerHTML = [...lista].reverse().map(r => {
+        const liked = userVotes[r.id] === 'like';
+        const disliked = userVotes[r.id] === 'dislike';
+        return `
         <div class="review-card">
             <div class="review-header">
                 <span class="review-name"><i class="fas fa-user"></i> ${r.nome}</span>
@@ -315,8 +348,16 @@ function renderReviews() {
                 <i class="fas fa-calendar"></i> ${r.data}
             </div>
             <div class="review-text">${r.descricao}</div>
-        </div>
-    `).join('');
+            <div class="review-actions">
+                <button class="review-like-btn ${liked ? 'active' : ''}" onclick="votarReview('${r.id}','like')">
+                    <i class="fas fa-thumbs-up"></i> <span class="like-count">${r.likes || 0}</span>
+                </button>
+                <button class="review-dislike-btn ${disliked ? 'active' : ''}" onclick="votarReview('${r.id}','dislike')">
+                    <i class="fas fa-thumbs-down"></i> <span class="dislike-count">${r.dislikes || 0}</span>
+                </button>
+            </div>
+        </div>`;
+    }).join('');
 }
 
 // Star rating
@@ -364,7 +405,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     prestador: prestador || '',
                     stars: selectedStar,
                     descricao,
-                    data: new Date().toLocaleDateString('pt-BR')
+                    data: new Date().toLocaleDateString('pt-BR'),
+                    likes: 0,
+                    dislikes: 0
                 };
                 reviews.push(novaRev);
                 saveReviews(reviews);
@@ -413,7 +456,9 @@ document.addEventListener('DOMContentLoaded', function() {
             prestador: '',
             stars: val,
             descricao: 'Avaliação da empresa Próximo Passo Ideal',
-            data: new Date().toLocaleDateString('pt-BR')
+            data: new Date().toLocaleDateString('pt-BR'),
+            likes: 0,
+            dislikes: 0
         };
         reviews.push(revEmp);
         saveReviews(reviews);
