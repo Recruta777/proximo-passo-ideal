@@ -379,7 +379,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const photoLabel = document.querySelector('.form-photo-label');
             fotoInput.addEventListener('change', function() {
                 const file = this.files[0];
-                if (!file) { fotoData = null; document.getElementById('form-photo-btn').classList.remove('has-photo'); if (photoLabel) photoLabel.textContent = 'Adicione sua foto opcional'; return; }
+                if (!file) { fotoData = null; document.getElementById('form-photo-btn').classList.remove('has-photo'); if (photoLabel) photoLabel.textContent = 'Adicione sua foto (opcional)'; return; }
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     fotoData = e.target.result;
