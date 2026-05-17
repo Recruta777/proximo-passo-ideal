@@ -160,13 +160,13 @@ form.addEventListener('submit', async function (e) {
         `*Descrição:* ${descricao}`;
 
     const whatsappNumber = '5519983025082';
-    const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+    const url = `whatsapp://send?phone=${whatsappNumber}&text=${encodeURIComponent(message)}`;
 
     showToast('Novo orçamento recebido! Redirecionando para o WhatsApp...');
     this.reset();
 
     setTimeout(() => {
-        window.open(url, '_blank');
+        window.location.href = url;
     }, 1500);
 });
 }
@@ -216,7 +216,7 @@ if (providerForm) {
             `*PIX R$10:* PENDENTE`;
 
         const whatsappNumber = '5519983025082';
-        const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+        const url = `whatsapp://send?phone=${whatsappNumber}&text=${encodeURIComponent(message)}`;
 
         // Save to localStorage
         const STORAGE_KEY = 'proximopasso_prestadores';

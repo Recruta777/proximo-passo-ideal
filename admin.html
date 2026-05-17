@@ -878,7 +878,7 @@
 
         function contactProvider(phone) {
             if (!phone) return;
-            window.open(`https://wa.me/55${phone}`, '_blank');
+            window.location.href = `whatsapp://send?phone=55${phone}`;
         }
 
         function togglePagamento(id) {
