@@ -143,8 +143,8 @@ body {
     gap: 8px;
     padding: 4px 12px;
     margin-top: 2px;
-    background: linear-gradient(135deg, #1B2A4A, #243B55);
-    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(243, 156, 18, 0.15);
+    border: 1px solid rgba(243, 156, 18, 0.3);
     border-radius: 20px;
     color: #fff;
     font-size: 13px;
