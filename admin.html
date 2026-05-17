@@ -661,15 +661,17 @@
             }
         }
 
-        async function syncFromAPI() {
+        async function syncFromAPI(silent) {
             let erros = [];
+            let totalNovos = 0;
 
-            // Para cada tipo de dado: busca do servidor, mescla com local, salva ambos
             for (const tipo of ['prestadores', 'clientes', 'avaliacoes']) {
                 const storageKey = tipo === 'prestadores' ? STORAGE_KEY :
                                    tipo === 'clientes' ? SOLIC_KEY : REVIEWS_KEY;
 
-                // 1) Busca dados do servidor
+                const antigos = JSON.parse(localStorage.getItem(storageKey) || '[]');
+                const idsAntigos = new Set(antigos.map(x => x.id));
+
                 let servidor = [];
                 try {
                     const res = await fetch(`${API_DADOS}?tipo=${tipo}`);
@@ -683,25 +685,22 @@
                     erros.push(`API indisponível ao buscar ${tipo}`);
                 }
 
-                // 2) Lê dados locais
-                const locais = JSON.parse(localStorage.getItem(storageKey) || '[]');
-
-                // 3) Mescla: locais têm prioridade (ids iguais = versão local vence)
+                const locais = antigos;
                 const merged = [...servidor];
-                let alterou = false;
                 locais.forEach(local => {
                     const idx = merged.findIndex(m => m.id === local.id);
                     if (idx !== -1) {
-                        merged[idx] = local; // local vence
+                        merged[idx] = local;
                     } else {
                         merged.push(local);
                     }
                 });
 
-                // 4) Salva no localStorage
                 localStorage.setItem(storageKey, JSON.stringify(merged));
 
-                // 5) Envia merged de volta pro servidor
+                const novos = merged.filter(x => !idsAntigos.has(x.id));
+                totalNovos += novos.length;
+
                 try {
                     const resp = await fetch(API_DADOS, {
                         method: 'POST',
@@ -714,15 +713,18 @@
                 }
             }
 
-            // Atualiza todos os contadores
             updateCount();
             updateSolicitacaoCount();
             updateReviewCount();
 
+            if (!silent && totalNovos > 0 && typeof playNotificationSound === 'function') {
+                playNotificationSound();
+            }
+
             if (erros.length > 0) {
                 console.warn('Erros na sincronização:', erros);
                 showToast('Sincronização parcial. Alguns dados podem não estar disponíveis.', 'error');
-            } else {
+            } else if (!silent) {
                 showToast('Sincronizado com o servidor!');
             }
         }
@@ -739,7 +741,7 @@
                 if (data.success) {
                     document.getElementById('login-area').style.display = 'none';
                     document.getElementById('admin-panel').classList.add('active');
-                    await syncFromAPI();
+                    await syncFromAPI(true);
                     renderProviders();
                 } else {
                     showToast('Senha incorreta!', 'error');
@@ -926,7 +928,7 @@
 
         async function forcarSync() {
             showToast('Sincronizando com o servidor...');
-            await syncFromAPI();
+            await syncFromAPI(true);
             renderProviders();
             renderSolicitacoes();
             renderAdminReviews();
