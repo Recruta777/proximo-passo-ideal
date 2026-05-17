@@ -216,7 +216,8 @@ body {
     background: linear-gradient(135deg, #1B2A4A 0%, #1B2A4A 50%, #1B2A4A 100%);
     position: relative;
     overflow: hidden;
-    padding-top: 0;
+    margin-top: -50px;
+    padding-top: 50px;
 }
 
 .hero::before {
