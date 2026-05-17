@@ -221,14 +221,12 @@ body {
     -webkit-text-fill-color: transparent;
     animation: glowLine 10s linear infinite;
     padding: 4px 8px;
-    border: 1px solid transparent;
+    border: none;
     border-radius: 6px;
     transition: border-color 0.3s;
     cursor: pointer;
 }
-.nav-links a.active {
-    border-color: rgba(255,255,255,0.4);
-}
+
 
 .nav-list {
     display: flex;

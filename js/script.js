@@ -462,16 +462,5 @@ document.addEventListener('DOMContentLoaded', function() {
 
     renderReviews();
 
-    // Nav-links active state (silhueta ao clicar)
-    var navLinks = document.querySelectorAll('.nav-links a');
-    for (var i = 0; i < navLinks.length; i++) {
-        navLinks[i].addEventListener('click', function() {
-            document.querySelectorAll('.nav-links a').forEach(function(l) { l.classList.remove('active'); });
-            var self = this;
-            setTimeout(function() { self.classList.add('active'); }, 0);
-        });
-    }
-    document.addEventListener('click', function() {
-        document.querySelectorAll('.nav-links a.active').forEach(function(l) { l.classList.remove('active'); });
-    });
+
 });
