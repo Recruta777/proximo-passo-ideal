@@ -47,7 +47,7 @@ body {
 }
 .header-top .nav-list {
     position: absolute;
-    right: 0;
+    right: 20px;
     top: 50%;
     transform: translateY(-50%);
 }
