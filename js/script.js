@@ -5,9 +5,13 @@
 const navLinks = document.querySelectorAll('.nav-links a');
 navLinks.forEach(link => {
     link.addEventListener('click', function(e) {
+        e.stopPropagation();
         navLinks.forEach(l => l.classList.remove('active'));
         this.classList.add('active');
     });
+});
+document.addEventListener('click', function() {
+    navLinks.forEach(l => l.classList.remove('active'));
 });
 
 // Header shadow on scroll
