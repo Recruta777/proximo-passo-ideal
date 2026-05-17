@@ -1050,33 +1050,7 @@ section {
 .form-like-btn.active { border-color: #27ae60; color: #fff; background: #27ae60; }
 .form-dislike-btn.active { border-color: #e74c3c; color: #fff; background: #e74c3c; }
 
-.review-actions {
-    display: flex;
-    gap: 12px;
-    margin-top: 14px;
-    padding-top: 12px;
-    border-top: 1px solid #eee;
-}
-.review-like-btn, .review-dislike-btn {
-    background: none;
-    border: 1px solid #ddd;
-    border-radius: 20px;
-    padding: 6px 14px;
-    font-size: 14px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    transition: all 0.3s;
-    color: #888;
-}
-.review-like-btn:hover { border-color: #27ae60; color: #27ae60; background: #e8f5e9; }
-.review-dislike-btn:hover { border-color: #e74c3c; color: #e74c3c; background: #fde8e8; }
-.review-like-btn.active { border-color: #27ae60; color: #27ae60; background: #e8f5e9; }
-.review-dislike-btn.active { border-color: #e74c3c; color: #e74c3c; background: #fde8e8; }
-.review-like-btn .like-count, .review-dislike-btn .dislike-count {
-    font-weight: 700;
-}
+
 
 .site-footer {
     background: #1B2A4A;
