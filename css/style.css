@@ -213,18 +213,11 @@ body {
     font-size: 14px;
     font-weight: 600;
     white-space: nowrap;
-    background: linear-gradient(90deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.15) 30%, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0.15) 70%, rgba(255,255,255,0.15) 100%);
-    background-size: 200% 100%;
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    -webkit-text-fill-color: transparent;
-    animation: glowLine 10s linear infinite;
-    padding: 4px 8px;
+    color: rgba(255,255,255,0.7);
+    padding: 2px 4px;
     border: none;
     outline: none;
-    border-radius: 6px;
-    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
 }
 
 
