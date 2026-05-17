@@ -340,7 +340,11 @@ function renderReviews() {
         <div class="review-card">
             <div class="review-header">
                 <span class="review-name"><i class="fas fa-user"></i> ${r.nome}</span>
-                <span class="review-stars">${'<i class="fas fa-star"></i>'.repeat(r.stars)}${'<i class="far fa-star"></i>'.repeat(5 - r.stars)}</span>
+                <span class="review-stars">
+                    ${r.recomendou === 'like' ? '<i class="fas fa-thumbs-up" style="color:#27ae60;margin-right:6px;"></i>' : ''}
+                    ${r.recomendou === 'dislike' ? '<i class="fas fa-thumbs-down" style="color:#e74c3c;margin-right:6px;"></i>' : ''}
+                    ${'<i class="fas fa-star"></i>'.repeat(r.stars)}${'<i class="far fa-star"></i>'.repeat(5 - r.stars)}
+                </span>
             </div>
             <div class="review-meta">
                 <span class="review-badge badge-${r.servico}">${labels[r.servico] || r.servico}</span>
@@ -365,6 +369,34 @@ document.addEventListener('DOMContentLoaded', function() {
     // === Review Stars (avaliação do prestador) ===
     const reviewStarContainer = document.getElementById('star-rating');
     let selectedStar = 0;
+    let recomendou = null;
+
+    const formLikeBtn = document.getElementById('form-like-btn');
+    const formDislikeBtn = document.getElementById('form-dislike-btn');
+    if (formLikeBtn) {
+        formLikeBtn.addEventListener('click', () => {
+            if (recomendou === 'like') {
+                recomendou = null;
+                formLikeBtn.classList.remove('active');
+            } else {
+                recomendou = 'like';
+                formLikeBtn.classList.add('active');
+                formDislikeBtn.classList.remove('active');
+            }
+        });
+    }
+    if (formDislikeBtn) {
+        formDislikeBtn.addEventListener('click', () => {
+            if (recomendou === 'dislike') {
+                recomendou = null;
+                formDislikeBtn.classList.remove('active');
+            } else {
+                recomendou = 'dislike';
+                formDislikeBtn.classList.add('active');
+                formLikeBtn.classList.remove('active');
+            }
+        });
+    }
 
     if (reviewStarContainer) {
         const stars = reviewStarContainer.querySelectorAll('i');
@@ -406,6 +438,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     stars: selectedStar,
                     descricao,
                     data: new Date().toLocaleDateString('pt-BR'),
+                    recomendou,
                     likes: 0,
                     dislikes: 0
                 };
@@ -427,7 +460,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 showToast('Avaliação enviada com sucesso! Obrigado!');
                 this.reset();
                 selectedStar = 0;
+                recomendou = null;
                 stars.forEach(s => s.classList.remove('active'));
+                if (formLikeBtn) formLikeBtn.classList.remove('active');
+                if (formDislikeBtn) formDislikeBtn.classList.remove('active');
             });
         }
     }

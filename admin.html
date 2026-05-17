@@ -556,6 +556,10 @@
                                 <span>média · <span id="company-total-votes">0</span> votos</span>
                             </div>
                         </div>
+                        <div class="rec-summary" id="rec-summary" style="margin-top:10px;display:flex;gap:16px;align-items:center;background:linear-gradient(135deg,#1B2A4A,#243B55);border-radius:12px;padding:12px 20px;color:#fff;">
+                            <span><i class="fas fa-thumbs-up" style="color:#27ae60;"></i> <strong id="rec-like-count">0</strong></span>
+                            <span><i class="fas fa-thumbs-down" style="color:#e74c3c;"></i> <strong id="rec-dislike-count">0</strong></span>
+                        </div>
                     </div>
 
                     <div id="review-list" class="provider-list">
@@ -1145,7 +1149,10 @@
             container.innerHTML = [...lista].reverse().map(r => `
                 <div class="solic-card">
                     <span class="solic-badge badge-${r.servico}">${labels[r.servico] || r.servico}</span>
-                    <h3><i class="fas fa-user"></i> ${r.nome} <span style="color:#f39c12;font-size:14px;">${'★'.repeat(r.stars)}${'☆'.repeat(5-r.stars)}</span></h3>
+                    <h3><i class="fas fa-user"></i> ${r.nome} 
+                        ${r.recomendou === 'like' ? '<i class="fas fa-thumbs-up" style="color:#27ae60;font-size:16px;" title="Recomendou"></i>' : ''}
+                        ${r.recomendou === 'dislike' ? '<i class="fas fa-thumbs-down" style="color:#e74c3c;font-size:16px;" title="Não recomendou"></i>' : ''}
+                        <span style="color:#f39c12;font-size:14px;">${'★'.repeat(r.stars)}${'☆'.repeat(5-r.stars)}</span></h3>
                     <div class="solic-info">
                         ${r.prestador ? `<p><i class="fas fa-tools"></i> Prestador: ${r.prestador}</p>` : ''}
                         <p><i class="fas fa-calendar"></i> ${r.data}</p>
@@ -1169,6 +1176,10 @@
             const avg = (total / lista.length).toFixed(1);
             document.getElementById('company-avg-score').textContent = avg;
             document.getElementById('company-total-votes').textContent = lista.length;
+            const likesRec = lista.filter(r => r.recomendou === 'like').length;
+            const dislikesRec = lista.filter(r => r.recomendou === 'dislike').length;
+            document.getElementById('rec-like-count').textContent = likesRec;
+            document.getElementById('rec-dislike-count').textContent = dislikesRec;
             updateReviewCount();
         }
     </script>
