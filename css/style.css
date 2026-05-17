@@ -208,7 +208,7 @@ body {
     margin: 0;
     padding: 0;
     position: relative;
-    top: 100px;
+    top: 0;
 }
 .nav-links, .nav-links li, .nav-links a, .nav-links a:focus, .nav-links a:active, .nav-links a:visited {
     border: none !important;
