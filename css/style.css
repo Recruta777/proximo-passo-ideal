@@ -145,7 +145,6 @@ body {
     background: rgba(243, 156, 18, 0.12);
     border: 1px solid rgba(243, 156, 18, 0.25);
     border-radius: 20px;
-    cursor: pointer;
     transition: background 0.3s;
 }
 
@@ -159,25 +158,27 @@ body {
     font-weight: 600;
 }
 
-.hr-stars {
-    display: flex;
-    gap: 2px;
-    font-size: 13px;
+.hr-like, .hr-dislike {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    color: rgba(255,255,255,0.3);
+    padding: 2px 4px;
+    transition: all 0.3s;
+    line-height: 1;
 }
+.hr-like:hover { color: #27ae60; }
+.hr-dislike:hover { color: #e74c3c; }
+.hr-like.votou { color: #27ae60; }
+.hr-dislike.votou { color: #e74c3c; }
 
-.hr-stars i {
-    color: rgba(255,255,255,0.2);
-    transition: color 0.3s;
-}
-
-.hr-stars i.active {
-    color: #f39c12;
-}
-
-.hr-score {
-    color: #f39c12;
-    font-size: 13px;
+.hr-count {
+    color: rgba(255,255,255,0.6);
+    font-size: 12px;
     font-weight: 700;
+    min-width: 16px;
+    text-align: center;
 }
 
 .nav-list {

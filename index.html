@@ -35,16 +35,16 @@
                     <li><a href="#cadastro-prestador">Cadastro de Prestador</a></li>
                     <li><a href="admin.html"><i class="fas fa-lock"></i> <span id="nav-badge" class="nav-badge" style="display:none;"></span><span id="sol-badge" class="nav-badge" style="background:#f39c12;color:#1B2A4A;display:none;"></span></a></li>
                     <li class="nav-rating-item">
-                        <span class="header-rating">
+                        <span class="header-rating" id="header-company-rating">
                             <span class="hr-label">Avalie</span>
-                            <span class="hr-stars" id="header-company-stars">
-                                <i class="fas fa-star" data-val="1"></i>
-                                <i class="fas fa-star" data-val="2"></i>
-                                <i class="fas fa-star" data-val="3"></i>
-                                <i class="fas fa-star" data-val="4"></i>
-                                <i class="fas fa-star" data-val="5"></i>
-                            </span>
-                            <span class="hr-score" id="header-company-rating-score">0.0</span>
+                            <button type="button" class="hr-like" id="header-company-like" title="Recomendo">
+                                <i class="fas fa-thumbs-up"></i>
+                            </button>
+                            <span class="hr-count" id="header-company-like-count">0</span>
+                            <button type="button" class="hr-dislike" id="header-company-dislike" title="Não recomendo">
+                                <i class="fas fa-thumbs-down"></i>
+                            </button>
+                            <span class="hr-count" id="header-company-dislike-count">0</span>
                         </span>
                     </li>
                 </ul>

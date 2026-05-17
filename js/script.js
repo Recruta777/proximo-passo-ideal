@@ -427,30 +427,28 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // === Company Rating (avaliação da empresa) ===
-    const COMPANY_RATING_KEY = 'proximopasso_company_rating';
+    // === Company Rating (like/dislike no header) ===
+    const COMPANY_LIKES_KEY = 'proximopasso_company_likes';
 
-    function getCompanyRating() {
-        const data = JSON.parse(localStorage.getItem(COMPANY_RATING_KEY) || '{"total":0,"count":0}');
-        return data;
+    function getCompanyLikes() {
+        return JSON.parse(localStorage.getItem(COMPANY_LIKES_KEY) || '{"like":0,"dislike":0}');
     }
 
-    function saveCompanyRating(val) {
-        const data = getCompanyRating();
-        data.total += val;
-        data.count += 1;
-        localStorage.setItem(COMPANY_RATING_KEY, JSON.stringify(data));
-        updateCompanyRatingDisplay();
+    function saveCompanyLike(tipo) {
+        const data = getCompanyLikes();
+        data[tipo] += 1;
+        localStorage.setItem(COMPANY_LIKES_KEY, JSON.stringify(data));
+        updateCompanyLikeDisplay();
 
-        // Salva também na lista de avaliações para aparecer no admin
         const reviews = getReviews();
         const revEmp = {
             id: 'emp_' + Date.now().toString(),
-            nome: 'Cliente',
+            nome: 'Visitante',
             servico: 'empresa',
             prestador: '',
-            stars: val,
-            descricao: 'Avaliação da empresa Próximo Passo Ideal',
+            stars: tipo === 'like' ? 5 : 1,
+            recomendou: tipo,
+            descricao: tipo === 'like' ? 'Recomenda a empresa' : 'Não recomenda a empresa',
             data: new Date().toLocaleDateString('pt-BR'),
             likes: 0,
             dislikes: 0
@@ -468,35 +466,52 @@ document.addEventListener('DOMContentLoaded', function() {
         showToast('Obrigado por avaliar a Próximo Passo Ideal!');
     }
 
-    function updateCompanyRatingDisplay() {
-        const scoreEl = document.getElementById('header-company-rating-score');
-        if (!scoreEl) return;
-        const data = getCompanyRating();
-        const avg = data.count > 0 ? (data.total / data.count) : 0;
-        scoreEl.textContent = avg.toFixed(1);
+    function updateCompanyLikeDisplay() {
+        const data = getCompanyLikes();
+        const likeEl = document.getElementById('header-company-like-count');
+        const dislikeEl = document.getElementById('header-company-dislike-count');
+        if (likeEl) likeEl.textContent = data.like || 0;
+        if (dislikeEl) dislikeEl.textContent = data.dislike || 0;
     }
 
-    const companyStars = document.getElementById('header-company-stars');
-    if (companyStars) {
-        const stars = companyStars.querySelectorAll('i');
-        let currentVal = 0;
+    const headerLike = document.getElementById('header-company-like');
+    const headerDislike = document.getElementById('header-company-dislike');
+    if (headerLike && headerDislike) {
+        const votou = localStorage.getItem('proximopasso_company_vote') || null;
+        if (votou === 'like') headerLike.classList.add('votou');
+        if (votou === 'dislike') headerDislike.classList.add('votou');
 
-        stars.forEach(star => {
-            star.addEventListener('click', function() {
-                currentVal = parseInt(this.dataset.val);
-                saveCompanyRating(currentVal);
-                stars.forEach(s => s.classList.toggle('active', parseInt(s.dataset.val) <= currentVal));
-            });
-            star.addEventListener('mouseenter', function() {
-                const val = parseInt(this.dataset.val);
-                stars.forEach(s => s.classList.toggle('active', parseInt(s.dataset.val) <= val));
-            });
-            companyStars.addEventListener('mouseleave', function() {
-                stars.forEach(s => s.classList.toggle('active', parseInt(s.dataset.val) <= currentVal));
-            });
+        headerLike.addEventListener('click', function() {
+            const jaVotou = localStorage.getItem('proximopasso_company_vote');
+            if (jaVotou === 'like') return;
+            if (jaVotou === 'dislike') {
+                const data = getCompanyLikes();
+                data.dislike = Math.max(0, data.dislike - 1);
+                localStorage.setItem(COMPANY_LIKES_KEY, JSON.stringify(data));
+                headerDislike.classList.remove('votou');
+            }
+            saveCompanyLike('like');
+            headerLike.classList.add('votou');
+            localStorage.setItem('proximopasso_company_vote', 'like');
+            updateCompanyLikeDisplay();
         });
 
-        updateCompanyRatingDisplay();
+        headerDislike.addEventListener('click', function() {
+            const jaVotou = localStorage.getItem('proximopasso_company_vote');
+            if (jaVotou === 'dislike') return;
+            if (jaVotou === 'like') {
+                const data = getCompanyLikes();
+                data.like = Math.max(0, data.like - 1);
+                localStorage.setItem(COMPANY_LIKES_KEY, JSON.stringify(data));
+                headerLike.classList.remove('votou');
+            }
+            saveCompanyLike('dislike');
+            headerDislike.classList.add('votou');
+            localStorage.setItem('proximopasso_company_vote', 'dislike');
+            updateCompanyLikeDisplay();
+        });
+
+        updateCompanyLikeDisplay();
     }
 
     renderReviews();
