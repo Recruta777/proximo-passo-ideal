@@ -319,6 +319,7 @@ function renderReviews() {
                 <i class="fas fa-calendar"></i> ${r.data}
             </div>
             <div class="review-text">${r.descricao}</div>
+            ${r.foto ? `<img src="${r.foto}" class="review-foto" alt="Foto da avaliação">` : ''}
         </div>
     `).join('');
 }
@@ -371,6 +372,22 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
 
+        // Photo upload
+        const fotoInput = document.getElementById('rev-foto');
+        let fotoData = null;
+        if (fotoInput) {
+            fotoInput.addEventListener('change', function() {
+                const file = this.files[0];
+                if (!file) { fotoData = null; document.getElementById('form-photo-btn').classList.remove('has-photo'); return; }
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    fotoData = e.target.result;
+                    document.getElementById('form-photo-btn').classList.add('has-photo');
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
         // Review form
         const reviewForm = document.getElementById('review-form');
         if (reviewForm) {
@@ -396,6 +413,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     descricao,
                     data: new Date().toLocaleDateString('pt-BR'),
                     recomendou,
+                    foto: fotoData,
                     likes: 0,
                     dislikes: 0
                 };
@@ -419,9 +437,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 this.reset();
                 selectedStar = 0;
                 recomendou = null;
+                fotoData = null;
                 stars.forEach(s => s.classList.remove('active'));
                 if (formLikeBtn) formLikeBtn.classList.remove('active');
                 if (formDislikeBtn) formDislikeBtn.classList.remove('active');
+                document.getElementById('form-photo-btn').classList.remove('has-photo');
             });
         }
     }
