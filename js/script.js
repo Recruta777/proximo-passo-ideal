@@ -2,18 +2,23 @@
 
 
 // Nav-links active state (silhueta ao clicar)
+let navClickFlag = false;
 const navLinks = document.querySelectorAll('.nav-links a');
-navLinks.forEach(link => {
-    link.addEventListener('click', function() {
-        navLinks.forEach(l => l.classList.remove('active'));
-        this.classList.add('active');
+if (navLinks.length) {
+    navLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            navClickFlag = true;
+            navLinks.forEach(l => l.classList.remove('active'));
+            this.classList.add('active');
+        });
     });
-});
-document.addEventListener('click', function(e) {
-    if (!e.target.closest('.nav-links')) {
-        navLinks.forEach(l => l.classList.remove('active'));
-    }
-});
+    document.addEventListener('click', function() {
+        if (!navClickFlag) {
+            navLinks.forEach(l => l.classList.remove('active'));
+        }
+        navClickFlag = false;
+    });
+}
 
 // Header shadow on scroll
 const header = document.querySelector('.header');
