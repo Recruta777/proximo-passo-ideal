@@ -691,6 +691,11 @@ section {
     color: #333;
     margin-bottom: 6px;
 }
+.required-asterisk {
+    color: #1B2A4A;
+    font-weight: 700;
+    font-size: 16px;
+}
 
 .form-group input,
 .form-group select,
