@@ -224,7 +224,7 @@ body {
 
 /* Hero */
 .hero {
-    min-height: 65vh;
+    min-height: 50vh;
     display: flex;
     align-items: center;
     background: linear-gradient(135deg, #1B2A4A 0%, #1B2A4A 50%, #1B2A4A 100%);
