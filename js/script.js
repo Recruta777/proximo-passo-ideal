@@ -364,13 +364,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 selectedStar = parseInt(this.dataset.star);
                 stars.forEach(s => s.classList.toggle('active', parseInt(s.dataset.star) <= selectedStar));
             });
-            star.addEventListener('mouseenter', function() {
-                const val = parseInt(this.dataset.star);
-                stars.forEach(s => s.classList.toggle('active', parseInt(s.dataset.star) <= val));
-            });
-            reviewStarContainer.addEventListener('mouseleave', function() {
-                stars.forEach(s => s.classList.toggle('active', parseInt(s.dataset.star) <= selectedStar));
-            });
         });
 
         // Review form
