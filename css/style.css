@@ -265,7 +265,7 @@ body {
     display: flex;
     flex-wrap: nowrap;
     gap: 8px;
-    margin-top: 25px;
+    margin-top: 0;
     justify-content: center;
 }
 .hero-buttons .btn {
