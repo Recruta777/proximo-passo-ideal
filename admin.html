@@ -463,19 +463,38 @@
             <!-- Admin Panel -->
             <div id="admin-panel" class="admin-panel">
                 <div class="admin-tabs">
-                    <button class="tab-btn active" onclick="switchTab('prestadores')" id="tab-prestadores">
-                        <i class="fas fa-users"></i> Prestadores <span id="provider-count" class="tab-count">0</span>
-                    </button>
-                    <button class="tab-btn" onclick="switchTab('solicitacoes')" id="tab-solicitacoes">
+                    <button class="tab-btn active" onclick="switchTab('solicitacoes')" id="tab-solicitacoes">
                         <i class="fas fa-clipboard-list"></i> Solicitações <span id="solicitacao-count" class="tab-count">0</span>
+                    </button>
+                    <button class="tab-btn" onclick="switchTab('prestadores')" id="tab-prestadores">
+                        <i class="fas fa-users"></i> Prestadores <span id="provider-count" class="tab-count">0</span>
                     </button>
                     <button class="tab-btn" onclick="switchTab('avaliacoes')" id="tab-avaliacoes">
                         <i class="fas fa-star"></i> Avaliações <span id="review-count" class="tab-count">0</span>
                     </button>
                 </div>
 
+                <!-- Solicitações Tab -->
+                <div id="tab-content-solicitacoes" class="tab-content active">
+                    <div class="admin-toolbar">
+                        <h2>Solicitações <span>de Clientes</span></h2>
+                        <div>
+                            <button class="btn btn-outline btn-sm" style="border-color:#ccc;color:#666;margin-right:8px;" onclick="forcarSync()"><i class="fas fa-sync"></i> Sincronizar</button>
+                            <button class="btn btn-outline btn-sm" style="border-color:#ccc;color:#666;" onclick="exportSolicitacoes()"><i class="fas fa-download"></i> Exportar</button>
+                        </div>
+                    </div>
+
+                    <div id="solicitacao-list" class="provider-list">
+                        <div class="empty-state">
+                            <i class="fas fa-clipboard-list"></i>
+                            <h3>Nenhuma solicitação recebida</h3>
+                            <p>As solicitações de orçamento feitas pelos clientes aparecerão aqui.</p>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Prestadores Tab -->
-                <div id="tab-content-prestadores" class="tab-content active">
+                <div id="tab-content-prestadores" class="tab-content">
                     <div class="admin-toolbar">
                         <h2>Prestadores <span>Cadastrados</span></h2>
                         <div>
@@ -490,25 +509,6 @@
                             <i class="fas fa-users"></i>
                             <h3>Nenhum prestador cadastrado</h3>
                             <p>Os prestadores cadastrados aparecerão aqui.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Solicitações Tab -->
-                <div id="tab-content-solicitacoes" class="tab-content">
-                    <div class="admin-toolbar">
-                        <h2>Solicitações <span>de Clientes</span></h2>
-                        <div>
-                            <button class="btn btn-outline btn-sm" style="border-color:#ccc;color:#666;margin-right:8px;" onclick="forcarSync()"><i class="fas fa-sync"></i> Sincronizar</button>
-                            <button class="btn btn-outline btn-sm" style="border-color:#ccc;color:#666;" onclick="exportSolicitacoes()"><i class="fas fa-download"></i> Exportar</button>
-                        </div>
-                    </div>
-
-                    <div id="solicitacao-list" class="provider-list">
-                        <div class="empty-state">
-                            <i class="fas fa-clipboard-list"></i>
-                            <h3>Nenhuma solicitação recebida</h3>
-                            <p>As solicitações de orçamento feitas pelos clientes aparecerão aqui.</p>
                         </div>
                     </div>
                 </div>
@@ -707,7 +707,7 @@
                     document.getElementById('login-area').style.display = 'none';
                     document.getElementById('admin-panel').classList.add('active');
                     await syncFromAPI(true);
-                    renderProviders();
+                    renderSolicitacoes();
                 } else {
                     showToast('Senha incorreta!', 'error');
                 }
