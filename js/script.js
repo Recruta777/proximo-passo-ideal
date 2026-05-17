@@ -1,9 +1,5 @@
 
 
-// Close menu on scroll
-window.addEventListener('scroll', () => {
-    navList.classList.remove('active');
-});
 
 // Header shadow on scroll
 const header = document.querySelector('.header');
