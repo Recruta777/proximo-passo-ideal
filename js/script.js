@@ -114,7 +114,7 @@ form.addEventListener('submit', async function (e) {
     const descricao = document.getElementById('descricao').value.trim();
     const email = document.getElementById('email').value.trim();
 
-    if (!nome || !telefone || !servico || !descricao) {
+    if (!nome || !telefone || !servico || !descricao || !email) {
         showToast('Preencha todos os campos obrigatórios.', 'error');
         return;
     }
@@ -125,7 +125,7 @@ form.addEventListener('submit', async function (e) {
         id: Date.now().toString(),
         nome,
         telefone,
-        email: email || 'Não informado',
+        email,
         servico,
         descricao,
         data: new Date().toLocaleString('pt-BR'),
@@ -155,7 +155,7 @@ form.addEventListener('submit', async function (e) {
     const message = `Olá! Gostaria de solicitar um orçamento.\n\n` +
         `*Nome:* ${nome}\n` +
         `*Telefone:* ${telefone}\n` +
-        `*E-mail:* ${email || 'Não informado'}\n` +
+        `*E-mail:* ${email}\n` +
         `*Serviço:* ${servico}\n` +
         `*Descrição:* ${descricao}`;
 
