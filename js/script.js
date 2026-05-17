@@ -1,29 +1,6 @@
 
 
 
-// Nav-links active state (silhueta ao clicar)
-try {
-    var navLinks = document.querySelectorAll('.nav-links a');
-    for (var i = 0; i < navLinks.length; i++) {
-        navLinks[i].addEventListener('click', function() {
-            for (var j = 0; j < navLinks.length; j++) navLinks[j].classList.remove('active');
-            this.classList.add('active');
-        });
-    }
-    document.addEventListener('click', function(e) {
-        var t = e.target;
-        var inNav = false;
-        while (t) {
-            if (t.nodeType === 1 && t.classList.contains('nav-links')) { inNav = true; break; }
-            t = t.parentElement;
-        }
-        if (!inNav) {
-            var act = document.querySelectorAll('.nav-links a.active');
-            for (var k = 0; k < act.length; k++) act[k].classList.remove('active');
-        }
-    });
-} catch(er) {}
-
 // Header shadow on scroll
 const header = document.querySelector('.header');
 window.addEventListener('scroll', () => {
@@ -484,4 +461,25 @@ document.addEventListener('DOMContentLoaded', function() {
     updateHeaderRecBadge();
 
     renderReviews();
+
+    // Nav-links active state (silhueta ao clicar)
+    var navLinks = document.querySelectorAll('.nav-links a');
+    for (var i = 0; i < navLinks.length; i++) {
+        navLinks[i].addEventListener('click', function() {
+            for (var j = 0; j < navLinks.length; j++) navLinks[j].classList.remove('active');
+            this.classList.add('active');
+        });
+    }
+    document.addEventListener('click', function(e) {
+        var t = e.target;
+        var inNav = false;
+        while (t) {
+            if (t.nodeType === 1 && t.classList.contains('nav-links')) { inNav = true; break; }
+            t = t.parentElement;
+        }
+        if (!inNav) {
+            var act = document.querySelectorAll('.nav-links a.active');
+            for (var k = 0; k < act.length; k++) act[k].classList.remove('active');
+        }
+    });
 });
