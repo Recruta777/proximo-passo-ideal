@@ -208,16 +208,19 @@ body {
     margin: 6px 0 0;
     padding: 0;
 }
-.nav-links a {
+.nav-links, .nav-links li, .nav-links a, .nav-links a:focus, .nav-links a:active, .nav-links a:visited {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
     text-decoration: none;
     font-size: 14px;
     font-weight: 600;
     white-space: nowrap;
     color: rgba(255,255,255,0.7);
-    padding: 2px 4px;
-    border: none;
-    outline: none;
-    -webkit-tap-highlight-color: transparent;
+    padding: 0;
+    margin: 0;
+    -webkit-tap-highlight-color: transparent !important;
 }
 
 
