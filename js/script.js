@@ -104,6 +104,7 @@ function updateSolicitacaoBadge() {
 
 // Form submission
 const form = document.getElementById('contact-form');
+if (form) {
 form.addEventListener('submit', async function (e) {
     e.preventDefault();
 
@@ -168,6 +169,7 @@ form.addEventListener('submit', async function (e) {
         window.open(url, '_blank');
     }, 1500);
 });
+}
 
 // Phone mask helper
 function applyPhoneMask(input) {
@@ -303,7 +305,7 @@ function abrirPix(prestadorId, nome) {
 }
 
 // === AVALIAÇÕES ===
-const REVIEWS_KEY = 'proximopasso_avaliacoes';
+var REVIEWS_KEY = 'proximopasso_avaliacoes';
 
 function getReviews() {
     return JSON.parse(localStorage.getItem(REVIEWS_KEY) || '[]');
