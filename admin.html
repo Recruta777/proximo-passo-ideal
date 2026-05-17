@@ -1129,6 +1129,7 @@
                         <strong><i class="fas fa-comment-dots"></i> Experiência</strong>
                         ${r.descricao}
                     </div>
+                    ${r.foto ? `<img src="${r.foto}" class="review-foto" alt="Foto da avaliação" style="max-width:100%;max-height:200px;border-radius:8px;margin-top:10px;">` : ''}
                     <div class="solic-actions">
                         <button class="btn-delete" onclick="deleteReview('${r.id}')" title="Excluir">
                             <i class="fas fa-trash"></i>
