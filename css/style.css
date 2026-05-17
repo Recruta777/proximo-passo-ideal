@@ -35,8 +35,9 @@ body {
 
 .header .container {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 .logo {
@@ -165,7 +166,7 @@ body {
     list-style: none;
     gap: 18px;
     align-items: center;
-    margin-bottom: 10px;
+    margin: 0;
 }
 
 .nav-list a {
@@ -214,7 +215,7 @@ body {
     background: linear-gradient(135deg, #1B2A4A 0%, #1B2A4A 50%, #1B2A4A 100%);
     position: relative;
     overflow: hidden;
-    padding-top: 80px;
+    padding-top: 120px;
 }
 
 .hero::before {
