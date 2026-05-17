@@ -1,6 +1,15 @@
 
 
 
+// Nav-links active state (silhueta ao clicar)
+const navLinks = document.querySelectorAll('.nav-links a');
+navLinks.forEach(link => {
+    link.addEventListener('click', function(e) {
+        navLinks.forEach(l => l.classList.remove('active'));
+        this.classList.add('active');
+    });
+});
+
 // Header shadow on scroll
 const header = document.querySelector('.header');
 window.addEventListener('scroll', () => {
