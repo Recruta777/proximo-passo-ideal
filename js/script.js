@@ -361,7 +361,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const stars = reviewStarContainer.querySelectorAll('i');
         stars.forEach(star => {
             star.addEventListener('click', function() {
-                selectedStar = parseInt(this.dataset.star);
+                const val = parseInt(this.dataset.star);
+                if (val === selectedStar && selectedStar > 0) {
+                    selectedStar = val - 1;
+                } else {
+                    selectedStar = val;
+                }
                 stars.forEach(s => s.classList.toggle('active', parseInt(s.dataset.star) <= selectedStar));
             });
         });
