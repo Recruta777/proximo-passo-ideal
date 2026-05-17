@@ -549,12 +549,6 @@ section {
     transition: color 0.2s;
 }
 
-.star-rating i.active,
-.star-rating i:hover,
-.star-rating i:hover ~ i {
-    color: #f39c12;
-}
-
 .star-rating i.active {
     color: #f39c12;
 }
