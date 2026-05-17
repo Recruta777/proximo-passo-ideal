@@ -222,8 +222,8 @@ body {
     animation: glowLine 10s linear infinite;
     padding: 4px 8px;
     border: none;
+    outline: none;
     border-radius: 6px;
-    transition: border-color 0.3s;
     cursor: pointer;
 }
 
