@@ -137,49 +137,27 @@ body {
     align-items: center;
 }
 
-.header-rating {
-    display: flex;
+.header-rec-badge {
+    display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 4px 10px;
+    gap: 8px;
+    padding: 4px 12px;
     margin-top: 2px;
-    background: rgba(243, 156, 18, 0.12);
-    border: 1px solid rgba(243, 156, 18, 0.25);
+    background: linear-gradient(135deg, #1B2A4A, #243B55);
+    border: 1px solid rgba(255,255,255,0.1);
     border-radius: 20px;
-    transition: background 0.3s;
-}
-
-.header-rating:hover {
-    background: rgba(243, 156, 18, 0.2);
-}
-
-.hr-label {
-    color: rgba(255,255,255,0.7);
-    font-size: 12px;
-    font-weight: 600;
-}
-
-.hr-like, .hr-dislike {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 14px;
-    color: rgba(255,255,255,0.3);
-    padding: 2px 4px;
-    transition: all 0.3s;
-    line-height: 1;
-}
-.hr-like:hover { color: #27ae60; }
-.hr-dislike:hover { color: #e74c3c; }
-.hr-like.votou { color: #27ae60; }
-.hr-dislike.votou { color: #e74c3c; }
-
-.hr-count {
     color: #fff;
     font-size: 13px;
+}
+.header-rec-badge i {
+    font-size: 14px;
+}
+.header-rec-badge strong {
+    font-size: 14px;
     font-weight: 700;
-    min-width: 18px;
-    text-align: center;
+}
+.header-rec-badge .rec-sep {
+    opacity: 0.3;
 }
 
 .nav-list {

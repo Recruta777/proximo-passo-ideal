@@ -403,6 +403,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 };
                 reviews.push(novaRev);
                 saveReviews(reviews);
+                updateHeaderRecBadge();
                 // Salva no banco
                 for (let tentativa = 0; tentativa < 3; tentativa++) {
                     try {
@@ -427,116 +428,19 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // === Company Rating (like/dislike no header) ===
-    const COMPANY_LIKES_KEY = 'proximopasso_company_likes';
-
-    function getCompanyLikes() {
+    // === Header Recommendation Badge (contagem das avaliações) ===
+    function updateHeaderRecBadge() {
         try {
-            return JSON.parse(localStorage.getItem(COMPANY_LIKES_KEY) || '{"like":0,"dislike":0}');
-        } catch(e) {
-            return {like:0, dislike:0};
-        }
-    }
-
-    function saveCompanyLike(tipo) {
-        try {
-            const data = getCompanyLikes();
-            data[tipo] += 1;
-            localStorage.setItem(COMPANY_LIKES_KEY, JSON.stringify(data));
-        } catch(e) {}
-
-        try {
-            const likeEl = document.getElementById('header-company-like-count');
-            const dislikeEl = document.getElementById('header-company-dislike-count');
-            if (likeEl) likeEl.textContent = data.like;
-            if (dislikeEl) dislikeEl.textContent = data.dislike;
-        } catch(e) {}
-
-        try {
-            const reviews = getReviews();
-            const revEmp = {
-                id: 'emp_' + Date.now().toString(),
-                nome: 'Visitante',
-                servico: 'empresa',
-                prestador: '',
-                stars: tipo === 'like' ? 5 : 1,
-                recomendou: tipo,
-                descricao: tipo === 'like' ? 'Recomenda a empresa' : 'Não recomenda a empresa',
-                data: new Date().toLocaleDateString('pt-BR'),
-                likes: 0,
-                dislikes: 0
-            };
-            reviews.push(revEmp);
-            saveReviews(reviews);
-            fetch('/api/dados', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ action: 'salvar', tipo: 'avaliacoes', dados: revEmp })
-            });
-        } catch(e) {}
-
-        try { showToast('Obrigado por avaliar a Próximo Passo Ideal!'); } catch(e) {}
-    }
-
-    function updateCompanyLikeDisplay() {
-        try {
-            const data = getCompanyLikes();
-            const likeEl = document.getElementById('header-company-like-count');
-            const dislikeEl = document.getElementById('header-company-dislike-count');
-            if (likeEl) likeEl.textContent = data.like;
-            if (dislikeEl) dislikeEl.textContent = data.dislike;
+            const lista = getReviews();
+            const likes = lista.filter(r => r.recomendou === 'like').length;
+            const dislikes = lista.filter(r => r.recomendou === 'dislike').length;
+            const likeEl = document.getElementById('header-rec-like-count');
+            const dislikeEl = document.getElementById('header-rec-dislike-count');
+            if (likeEl) likeEl.textContent = likes;
+            if (dislikeEl) dislikeEl.textContent = dislikes;
         } catch(e) {}
     }
-
-    try {
-        const headerLike = document.getElementById('header-company-like');
-        const headerDislike = document.getElementById('header-company-dislike');
-        if (headerLike && headerDislike) {
-            const votou = localStorage.getItem('proximopasso_company_vote');
-            if (votou === 'like') headerLike.classList.add('votou');
-            if (votou === 'dislike') headerDislike.classList.add('votou');
-
-            headerLike.addEventListener('click', function() {
-                const jaVotou = localStorage.getItem('proximopasso_company_vote');
-                if (jaVotou === 'like') return;
-                if (jaVotou === 'dislike') {
-                    try {
-                        const d = getCompanyLikes();
-                        d.dislike = Math.max(0, d.dislike - 1);
-                        localStorage.setItem(COMPANY_LIKES_KEY, JSON.stringify(d));
-                        headerDislike.classList.remove('votou');
-                    } catch(e) {}
-                }
-                saveCompanyLike('like');
-                try {
-                    headerLike.classList.add('votou');
-                    localStorage.setItem('proximopasso_company_vote', 'like');
-                    updateCompanyLikeDisplay();
-                } catch(e) {}
-            });
-
-            headerDislike.addEventListener('click', function() {
-                const jaVotou = localStorage.getItem('proximopasso_company_vote');
-                if (jaVotou === 'dislike') return;
-                if (jaVotou === 'like') {
-                    try {
-                        const d = getCompanyLikes();
-                        d.like = Math.max(0, d.like - 1);
-                        localStorage.setItem(COMPANY_LIKES_KEY, JSON.stringify(d));
-                        headerLike.classList.remove('votou');
-                    } catch(e) {}
-                }
-                saveCompanyLike('dislike');
-                try {
-                    headerDislike.classList.add('votou');
-                    localStorage.setItem('proximopasso_company_vote', 'dislike');
-                    updateCompanyLikeDisplay();
-                } catch(e) {}
-            });
-
-            updateCompanyLikeDisplay();
-        }
-    } catch(e) {}
+    updateHeaderRecBadge();
 
     renderReviews();
 });
