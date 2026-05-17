@@ -138,6 +138,14 @@ body {
     display: flex;
     align-items: center;
 }
+.nav-home-btn {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 18px;
+    transition: color 0.3s;
+}
+.nav-home-btn:hover {
+    color: #f39c12;
+}
 
 .header-rec-badge {
     display: inline-flex;
