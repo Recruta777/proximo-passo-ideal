@@ -466,20 +466,12 @@ document.addEventListener('DOMContentLoaded', function() {
     var navLinks = document.querySelectorAll('.nav-links a');
     for (var i = 0; i < navLinks.length; i++) {
         navLinks[i].addEventListener('click', function() {
-            for (var j = 0; j < navLinks.length; j++) navLinks[j].classList.remove('active');
-            this.classList.add('active');
+            document.querySelectorAll('.nav-links a').forEach(function(l) { l.classList.remove('active'); });
+            var self = this;
+            setTimeout(function() { self.classList.add('active'); }, 0);
         });
     }
-    document.addEventListener('click', function(e) {
-        var t = e.target;
-        var inNav = false;
-        while (t) {
-            if (t.nodeType === 1 && t.classList.contains('nav-links')) { inNav = true; break; }
-            t = t.parentElement;
-        }
-        if (!inNav) {
-            var act = document.querySelectorAll('.nav-links a.active');
-            for (var k = 0; k < act.length; k++) act[k].classList.remove('active');
-        }
+    document.addEventListener('click', function() {
+        document.querySelectorAll('.nav-links a.active').forEach(function(l) { l.classList.remove('active'); });
     });
 });
