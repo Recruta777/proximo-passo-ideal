@@ -431,31 +431,43 @@ document.addEventListener('DOMContentLoaded', function() {
     const COMPANY_LIKES_KEY = 'proximopasso_company_likes';
 
     function getCompanyLikes() {
-        return JSON.parse(localStorage.getItem(COMPANY_LIKES_KEY) || '{"like":0,"dislike":0}');
+        try {
+            return JSON.parse(localStorage.getItem(COMPANY_LIKES_KEY) || '{"like":0,"dislike":0}');
+        } catch(e) {
+            return {like:0, dislike:0};
+        }
     }
 
     function saveCompanyLike(tipo) {
-        const data = getCompanyLikes();
-        data[tipo] += 1;
-        localStorage.setItem(COMPANY_LIKES_KEY, JSON.stringify(data));
-        updateCompanyLikeDisplay();
-
-        const reviews = getReviews();
-        const revEmp = {
-            id: 'emp_' + Date.now().toString(),
-            nome: 'Visitante',
-            servico: 'empresa',
-            prestador: '',
-            stars: tipo === 'like' ? 5 : 1,
-            recomendou: tipo,
-            descricao: tipo === 'like' ? 'Recomenda a empresa' : 'Não recomenda a empresa',
-            data: new Date().toLocaleDateString('pt-BR'),
-            likes: 0,
-            dislikes: 0
-        };
-        reviews.push(revEmp);
-        saveReviews(reviews);
         try {
+            const data = getCompanyLikes();
+            data[tipo] += 1;
+            localStorage.setItem(COMPANY_LIKES_KEY, JSON.stringify(data));
+        } catch(e) {}
+
+        try {
+            const likeEl = document.getElementById('header-company-like-count');
+            const dislikeEl = document.getElementById('header-company-dislike-count');
+            if (likeEl) likeEl.textContent = data.like;
+            if (dislikeEl) dislikeEl.textContent = data.dislike;
+        } catch(e) {}
+
+        try {
+            const reviews = getReviews();
+            const revEmp = {
+                id: 'emp_' + Date.now().toString(),
+                nome: 'Visitante',
+                servico: 'empresa',
+                prestador: '',
+                stars: tipo === 'like' ? 5 : 1,
+                recomendou: tipo,
+                descricao: tipo === 'like' ? 'Recomenda a empresa' : 'Não recomenda a empresa',
+                data: new Date().toLocaleDateString('pt-BR'),
+                likes: 0,
+                dislikes: 0
+            };
+            reviews.push(revEmp);
+            saveReviews(reviews);
             fetch('/api/dados', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -463,56 +475,68 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         } catch(e) {}
 
-        showToast('Obrigado por avaliar a Próximo Passo Ideal!');
+        try { showToast('Obrigado por avaliar a Próximo Passo Ideal!'); } catch(e) {}
     }
 
     function updateCompanyLikeDisplay() {
-        const data = getCompanyLikes();
-        const likeEl = document.getElementById('header-company-like-count');
-        const dislikeEl = document.getElementById('header-company-dislike-count');
-        if (likeEl) likeEl.textContent = data.like || 0;
-        if (dislikeEl) dislikeEl.textContent = data.dislike || 0;
+        try {
+            const data = getCompanyLikes();
+            const likeEl = document.getElementById('header-company-like-count');
+            const dislikeEl = document.getElementById('header-company-dislike-count');
+            if (likeEl) likeEl.textContent = data.like;
+            if (dislikeEl) dislikeEl.textContent = data.dislike;
+        } catch(e) {}
     }
 
-    const headerLike = document.getElementById('header-company-like');
-    const headerDislike = document.getElementById('header-company-dislike');
-    if (headerLike && headerDislike) {
-        const votou = localStorage.getItem('proximopasso_company_vote') || null;
-        if (votou === 'like') headerLike.classList.add('votou');
-        if (votou === 'dislike') headerDislike.classList.add('votou');
+    try {
+        const headerLike = document.getElementById('header-company-like');
+        const headerDislike = document.getElementById('header-company-dislike');
+        if (headerLike && headerDislike) {
+            const votou = localStorage.getItem('proximopasso_company_vote');
+            if (votou === 'like') headerLike.classList.add('votou');
+            if (votou === 'dislike') headerDislike.classList.add('votou');
 
-        headerLike.addEventListener('click', function() {
-            const jaVotou = localStorage.getItem('proximopasso_company_vote');
-            if (jaVotou === 'like') return;
-            if (jaVotou === 'dislike') {
-                const data = getCompanyLikes();
-                data.dislike = Math.max(0, data.dislike - 1);
-                localStorage.setItem(COMPANY_LIKES_KEY, JSON.stringify(data));
-                headerDislike.classList.remove('votou');
-            }
-            saveCompanyLike('like');
-            headerLike.classList.add('votou');
-            localStorage.setItem('proximopasso_company_vote', 'like');
+            headerLike.addEventListener('click', function() {
+                const jaVotou = localStorage.getItem('proximopasso_company_vote');
+                if (jaVotou === 'like') return;
+                if (jaVotou === 'dislike') {
+                    try {
+                        const d = getCompanyLikes();
+                        d.dislike = Math.max(0, d.dislike - 1);
+                        localStorage.setItem(COMPANY_LIKES_KEY, JSON.stringify(d));
+                        headerDislike.classList.remove('votou');
+                    } catch(e) {}
+                }
+                saveCompanyLike('like');
+                try {
+                    headerLike.classList.add('votou');
+                    localStorage.setItem('proximopasso_company_vote', 'like');
+                    updateCompanyLikeDisplay();
+                } catch(e) {}
+            });
+
+            headerDislike.addEventListener('click', function() {
+                const jaVotou = localStorage.getItem('proximopasso_company_vote');
+                if (jaVotou === 'dislike') return;
+                if (jaVotou === 'like') {
+                    try {
+                        const d = getCompanyLikes();
+                        d.like = Math.max(0, d.like - 1);
+                        localStorage.setItem(COMPANY_LIKES_KEY, JSON.stringify(d));
+                        headerLike.classList.remove('votou');
+                    } catch(e) {}
+                }
+                saveCompanyLike('dislike');
+                try {
+                    headerDislike.classList.add('votou');
+                    localStorage.setItem('proximopasso_company_vote', 'dislike');
+                    updateCompanyLikeDisplay();
+                } catch(e) {}
+            });
+
             updateCompanyLikeDisplay();
-        });
-
-        headerDislike.addEventListener('click', function() {
-            const jaVotou = localStorage.getItem('proximopasso_company_vote');
-            if (jaVotou === 'dislike') return;
-            if (jaVotou === 'like') {
-                const data = getCompanyLikes();
-                data.like = Math.max(0, data.like - 1);
-                localStorage.setItem(COMPANY_LIKES_KEY, JSON.stringify(data));
-                headerLike.classList.remove('votou');
-            }
-            saveCompanyLike('dislike');
-            headerDislike.classList.add('votou');
-            localStorage.setItem('proximopasso_company_vote', 'dislike');
-            updateCompanyLikeDisplay();
-        });
-
-        updateCompanyLikeDisplay();
-    }
+        }
+    } catch(e) {}
 
     renderReviews();
 });
