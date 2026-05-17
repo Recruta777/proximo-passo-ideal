@@ -1,17 +1,4 @@
-// Menu toggle
-const menuToggle = document.querySelector('.menu-toggle');
-const navList = document.querySelector('.nav-list');
 
-menuToggle.addEventListener('click', () => {
-    navList.classList.toggle('active');
-});
-
-// Close menu on link click
-document.querySelectorAll('.nav-list a').forEach(link => {
-    link.addEventListener('click', () => {
-        navList.classList.remove('active');
-    });
-});
 
 // Close menu on scroll
 window.addEventListener('scroll', () => {
