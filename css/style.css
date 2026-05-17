@@ -1061,8 +1061,9 @@ section {
     background: none;
     border: 2px solid #ddd;
     border-radius: 10px;
-    padding: 8px 12px;
-    font-size: 18px;
+    width: 100px;
+    height: 100px;
+    font-size: 32px;
     cursor: pointer;
     transition: all 0.3s;
     color: #bbb;
