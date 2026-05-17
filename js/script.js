@@ -376,13 +376,15 @@ document.addEventListener('DOMContentLoaded', function() {
         const fotoInput = document.getElementById('rev-foto');
         let fotoData = null;
         if (fotoInput) {
+            const photoLabel = document.querySelector('.form-photo-label');
             fotoInput.addEventListener('change', function() {
                 const file = this.files[0];
-                if (!file) { fotoData = null; document.getElementById('form-photo-btn').classList.remove('has-photo'); return; }
+                if (!file) { fotoData = null; document.getElementById('form-photo-btn').classList.remove('has-photo'); if (photoLabel) photoLabel.textContent = 'Adicione sua foto'; return; }
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     fotoData = e.target.result;
                     document.getElementById('form-photo-btn').classList.add('has-photo');
+                    if (photoLabel) photoLabel.textContent = 'Foto adicionada';
                 };
                 reader.readAsDataURL(file);
             });

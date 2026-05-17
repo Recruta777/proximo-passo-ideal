@@ -1035,7 +1035,7 @@ section {
 
 .rating-row {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 12px;
 }
 .form-like-btn, .form-dislike-btn {
@@ -1072,12 +1072,23 @@ section {
     flex-shrink: 0;
 }
 .form-photo-btn i {
-    font-size: 60px;
+    font-size: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
     width: 100%;
     height: 100%;
+}
+.form-photo-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.form-photo-label {
+    font-size: 12px;
+    color: #888;
+    margin-top: 6px;
+    white-space: nowrap;
 }
 .form-photo-btn:hover {
     border-color: #f39c12;
