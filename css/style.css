@@ -242,7 +242,7 @@ body {
 .hero-content {
     position: relative;
     z-index: 1;
-    max-width: 300px;
+    max-width: 700px;
     margin: 0 auto;
     text-align: center;
     margin-top: 60px;
@@ -264,7 +264,7 @@ body {
 .hero-buttons {
     display: flex;
     flex-wrap: nowrap;
-    gap: 10px;
+    gap: 8px;
     margin-top: 25px;
     justify-content: center;
 }
@@ -272,19 +272,19 @@ body {
     display: inline-flex;
     align-items: center;
     margin-bottom: 0;
-    font-size: 14px;
-    padding: 10px 14px;
+    font-size: 13px;
+    padding: 8px 12px;
     white-space: nowrap;
     flex-shrink: 1;
     min-width: 0;
 }
-@media (max-width: 768px) {
+@media (max-width: 480px) {
     .hero-buttons {
-        flex-wrap: wrap;
+        gap: 5px;
     }
     .hero-buttons .btn {
-        font-size: 13px;
-        padding: 8px 12px;
+        font-size: 11px;
+        padding: 6px 8px;
     }
 }
 
