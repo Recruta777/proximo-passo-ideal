@@ -143,10 +143,10 @@ body {
     gap: 8px;
     padding: 4px 12px;
     margin-top: 2px;
-    background: rgba(243, 156, 18, 0.15);
-    border: 1px solid rgba(243, 156, 18, 0.3);
+    background: #f39c12;
+    border: 1px solid #d4880f;
     border-radius: 20px;
-    color: #fff;
+    color: #1B2A4A;
     font-size: 13px;
 }
 .header-rec-badge i {
