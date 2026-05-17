@@ -2,20 +2,27 @@
 
 
 // Nav-links active state (silhueta ao clicar)
-document.querySelectorAll('.nav-links a').forEach(link => {
-    link.addEventListener('click', function() {
-        document.querySelectorAll('.nav-links a').forEach(l => l.classList.remove('active'));
-        this.classList.add('active');
-    });
-});
-document.addEventListener('click', function(e) {
-    let target = e.target;
-    while (target) {
-        if (target.classList && target.classList.contains('nav-links')) return;
-        target = target.parentElement;
+try {
+    var navLinks = document.querySelectorAll('.nav-links a');
+    for (var i = 0; i < navLinks.length; i++) {
+        navLinks[i].addEventListener('click', function() {
+            for (var j = 0; j < navLinks.length; j++) navLinks[j].classList.remove('active');
+            this.classList.add('active');
+        });
     }
-    document.querySelectorAll('.nav-links a.active').forEach(el => el.classList.remove('active'));
-}, true);
+    document.addEventListener('click', function(e) {
+        var t = e.target;
+        var inNav = false;
+        while (t) {
+            if (t.nodeType === 1 && t.classList.contains('nav-links')) { inNav = true; break; }
+            t = t.parentElement;
+        }
+        if (!inNav) {
+            var act = document.querySelectorAll('.nav-links a.active');
+            for (var k = 0; k < act.length; k++) act[k].classList.remove('active');
+        }
+    });
+} catch(er) {}
 
 // Header shadow on scroll
 const header = document.querySelector('.header');
