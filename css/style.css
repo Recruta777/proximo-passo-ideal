@@ -29,7 +29,7 @@ body {
     background: rgba(27, 42, 74, 0.95);
     backdrop-filter: blur(10px);
     z-index: 1000;
-    padding: 15px 0;
+    padding: 25px 0 15px;
     transition: all 0.3s;
 }
 
