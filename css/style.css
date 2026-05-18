@@ -927,6 +927,7 @@ section {
     .header-center {
         max-width: 100%;
         width: 100%;
+        padding-right: 50px;
     }
 
     .logo-mark {
@@ -950,7 +951,7 @@ section {
     }
 
     .logo-title {
-        font-size: 18px;
+        font-size: 16px;
         transform: none;
     }
 
