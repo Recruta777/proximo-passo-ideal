@@ -244,6 +244,33 @@ body {
     -webkit-tap-highlight-color: transparent !important;
 }
 
+.nav-links a {
+    position: relative;
+    padding: 6px 0;
+    transition: color 0.3s;
+}
+
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: #f39c12;
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+    border-radius: 2px;
+}
+
+.nav-links a:hover {
+    color: #f39c12;
+}
+
+.nav-links a:hover::after {
+    width: 100%;
+}
+
 
 
 .nav-list {
