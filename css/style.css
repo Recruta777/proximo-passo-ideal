@@ -960,25 +960,27 @@ section {
 
     .header-top .nav-list {
         position: absolute;
-        top: 8px;
-        right: 10px;
+        top: 6px;
+        right: 8px;
         flex: none;
-        gap: 6px;
     }
 
     .nav-rating-item {
         transform: none !important;
-        gap: 4px !important;
+        gap: 6px !important;
     }
 
     .header-rec-badge {
-        display: none !important;
+        transform: none !important;
+        font-size: 11px;
+        padding: 2px 8px;
+        gap: 4px;
     }
 
     .nav-list a[href="admin.html"] {
         transform: none !important;
         font-size: 14px !important;
-        color: rgba(255,255,255,0.5) !important;
+        color: rgba(255,255,255,0.6) !important;
     }
 
     .nav {
