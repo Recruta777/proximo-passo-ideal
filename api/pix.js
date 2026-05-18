@@ -22,17 +22,25 @@ async function mpRequest(path, method = 'GET', body = null) {
   return { status: res.status, data: await res.json() };
 }
 
-const UPSTASH_URL = process.env.UPSTASH_REDIS_URL;
-const UPSTASH_TOKEN = process.env.UPSTASH_REDIS_TOKEN;
+const GIT_REPO = 'Recruta777/proximo-passo-ideal';
+const GIT_PATH = '_data';
+
+function ghHeaders() {
+  const t = process.env.GH_TOKEN;
+  return t ? { Authorization: `token ${t}`, Accept: 'application/vnd.github.v3+json' } : {};
+}
 
 async function listarConfirmados() {
-  if (!UPSTASH_URL || !UPSTASH_TOKEN) return [];
+  const token = process.env.GH_TOKEN;
+  if (!token) return [];
   try {
-    const res = await fetch(`${UPSTASH_URL}/get/pix_confirmados`, {
-      headers: { Authorization: `Bearer ${UPSTASH_TOKEN}` },
+    const res = await fetch(`https://api.github.com/repos/${GIT_REPO}/contents/${GIT_PATH}/pix_confirmados.json`, {
+      headers: ghHeaders(),
     });
+    if (res.status === 404) return [];
     const data = await res.json();
-    return data.result ? JSON.parse(data.result) : [];
+    const content = Buffer.from(data.content, 'base64').toString('utf-8');
+    return JSON.parse(content);
   } catch { return []; }
 }
 

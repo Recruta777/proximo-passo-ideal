@@ -13,17 +13,57 @@ async function mpRequest(path) {
   return res.json();
 }
 
-const UPSTASH_URL = process.env.UPSTASH_REDIS_URL;
-const UPSTASH_TOKEN = process.env.UPSTASH_REDIS_TOKEN;
+const GIT_REPO = 'Recruta777/proximo-passo-ideal';
+const GIT_PATH = '_data';
+
+function ghHeaders() {
+  const t = process.env.GH_TOKEN;
+  return t ? { Authorization: `token ${t}`, Accept: 'application/vnd.github.v3+json' } : {};
+}
+
+async function lerDados(key) {
+  const token = process.env.GH_TOKEN;
+  if (!token) return [];
+  try {
+    const res = await fetch(`https://api.github.com/repos/${GIT_REPO}/contents/${GIT_PATH}/${key}.json`, {
+      headers: ghHeaders(),
+    });
+    if (res.status === 404) return [];
+    const data = await res.json();
+    return JSON.parse(Buffer.from(data.content, 'base64').toString('utf-8'));
+  } catch { return []; }
+}
+
+async function salvarDados(key, dados) {
+  const token = process.env.GH_TOKEN;
+  if (!token) return;
+  try {
+    const content = Buffer.from(JSON.stringify(dados, null, 2)).toString('base64');
+    const getRes = await fetch(`https://api.github.com/repos/${GIT_REPO}/contents/${GIT_PATH}/${key}.json`, {
+      headers: ghHeaders(),
+    });
+    let sha = null;
+    if (getRes.status !== 404) {
+      const existing = await getRes.json();
+      sha = existing.sha;
+    }
+    await fetch(`https://api.github.com/repos/${GIT_REPO}/contents/${GIT_PATH}/${key}.json`, {
+      method: 'PUT',
+      headers: ghHeaders(),
+      body: JSON.stringify({
+        message: `Atualizar dados: ${key}`,
+        content,
+        sha,
+      }),
+    });
+  } catch {}
+}
 
 async function salvarConfirmado(payment_id, prestador_id) {
-  if (!UPSTASH_URL || !UPSTASH_TOKEN) return;
+  const token = process.env.GH_TOKEN;
+  if (!token) return;
   try {
-    const res = await fetch(`${UPSTASH_URL}/get/pix_confirmados`, {
-      headers: { Authorization: `Bearer ${UPSTASH_TOKEN}` },
-    });
-    const data = await res.json();
-    const existing = data.result ? JSON.parse(data.result) : [];
+    const existing = await lerDados('pix_confirmados');
     if (!existing.find(p => String(p.payment_id) === String(payment_id))) {
       existing.push({
         payment_id: String(payment_id),
@@ -31,11 +71,7 @@ async function salvarConfirmado(payment_id, prestador_id) {
         status: 'approved',
         confirmed_at: new Date().toISOString(),
       });
-      await fetch(`${UPSTASH_URL}/set/pix_confirmados`, {
-        method: 'POST',
-        headers: { Authorization: `Bearer ${UPSTASH_TOKEN}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify(JSON.stringify(existing)),
-      });
+      await salvarDados('pix_confirmados', existing);
     }
   } catch {}
 }
