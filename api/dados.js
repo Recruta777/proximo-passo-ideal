@@ -1,24 +1,54 @@
-const UPSTASH_URL = process.env.UPSTASH_REDIS_URL;
-const UPSTASH_TOKEN = process.env.UPSTASH_REDIS_TOKEN;
+const GIT_REPO = 'Recruta777/proximo-passo-ideal';
+const GIT_PATH = '_data';
+
+function getToken() {
+  return process.env.GH_TOKEN;
+}
+
+const GH_HEADERS = () => {
+  const t = getToken();
+  return t ? { Authorization: `token ${t}`, Accept: 'application/vnd.github.v3+json' } : {};
+};
 
 async function getData(key) {
-  if (!UPSTASH_URL || !UPSTASH_TOKEN) return [];
+  const token = getToken();
+  if (!token) return [];
   try {
-    const res = await fetch(`${UPSTASH_URL}/get/${key}`, {
-      headers: { Authorization: `Bearer ${UPSTASH_TOKEN}` },
+    const res = await fetch(`https://api.github.com/repos/${GIT_REPO}/contents/${GIT_PATH}/${key}.json`, {
+      headers: GH_HEADERS(),
     });
+    if (res.status === 404) return [];
     const data = await res.json();
-    return data.result ? JSON.parse(data.result) : [];
-  } catch { return []; }
+    const content = Buffer.from(data.content, 'base64').toString('utf-8');
+    return JSON.parse(content);
+  } catch {
+    return [];
+  }
 }
 
 async function setData(key, data) {
-  if (!UPSTASH_URL || !UPSTASH_TOKEN) return;
-  await fetch(`${UPSTASH_URL}/set/${key}`, {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${UPSTASH_TOKEN}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify(JSON.stringify(data)),
-  });
+  const token = getToken();
+  if (!token) return;
+  try {
+    const content = Buffer.from(JSON.stringify(data, null, 2)).toString('base64');
+    const getRes = await fetch(`https://api.github.com/repos/${GIT_REPO}/contents/${GIT_PATH}/${key}.json`, {
+      headers: GH_HEADERS(),
+    });
+    let sha = null;
+    if (getRes.status !== 404) {
+      const existing = await getRes.json();
+      sha = existing.sha;
+    }
+    await fetch(`https://api.github.com/repos/${GIT_REPO}/contents/${GIT_PATH}/${key}.json`, {
+      method: 'PUT',
+      headers: GH_HEADERS(),
+      body: JSON.stringify({
+        message: `Atualizar dados: ${key}`,
+        content,
+        sha,
+      }),
+    });
+  } catch {}
 }
 
 module.exports = async (req, res) => {
