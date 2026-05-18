@@ -911,46 +911,114 @@ section {
 /* Responsive */
 @media (max-width: 768px) {
     .header {
-        padding: 10px 0 0;
+        padding: 8px 0 0;
+    }
+
+    .header-top {
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .header-spacer {
+        display: none;
     }
 
     .header-center {
         max-width: 100%;
+        width: 100%;
     }
 
     .logo-mark {
         left: 0;
+        width: 32px;
+        height: 32px;
+    }
+
+    .logo-mark i {
+        font-size: 16px;
+    }
+
+    .logo-ring {
+        width: 38px;
+        height: 38px;
     }
 
     .logo-text {
         margin-left: 0;
+        padding-bottom: 6px;
+    }
+
+    .logo-title {
+        font-size: 18px;
+        transform: none;
     }
 
     .logo-tagline {
         display: none;
     }
 
+    .header-top .nav-list {
+        position: absolute;
+        top: 8px;
+        right: 10px;
+        flex: none;
+        gap: 6px;
+    }
+
+    .nav-rating-item {
+        transform: none !important;
+        gap: 4px !important;
+    }
+
     .header-rec-badge {
-        transform: none;
-        font-size: 11px;
-        padding: 2px 8px;
+        display: none !important;
     }
 
     .nav-list a[href="admin.html"] {
         transform: none !important;
         font-size: 14px !important;
+        color: rgba(255,255,255,0.5) !important;
+    }
+
+    .nav {
+        margin-top: 4px;
+    }
+
+    .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 4px;
+        transform: none;
+    }
+
+    .nav-links a {
+        font-size: 10px;
+        padding: 3px 6px;
+    }
+
+    .nav-links a::after {
+        display: none;
+    }
+
+    .hero {
+        min-height: auto;
+        padding-top: 120px;
+        padding-bottom: 30px;
+        margin-top: 0;
     }
 
     .hero-content {
-        margin-top: 100px;
+        margin-top: 10px;
     }
 
     .hero-content h1 {
-        font-size: 28px;
+        font-size: 26px;
     }
 
     .hero-content p {
         font-size: 14px;
+        margin-bottom: 20px;
     }
 
     .btn {
@@ -961,20 +1029,6 @@ section {
 
     .btn-primary {
         margin-right: 0;
-    }
-
-    .nav {
-        margin-top: 10px;
-    }
-
-    .nav-links {
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 6px;
-    }
-    .nav-links a {
-        font-size: 11px;
-        padding: 4px 8px;
     }
 
     .menu-toggle {
