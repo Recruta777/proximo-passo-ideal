@@ -11,6 +11,7 @@
     <meta property="og:type" content="website">
     <link rel="icon" type="image/svg+xml" href="img/logo.svg">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
@@ -18,31 +19,32 @@
         <div class="container">
             <div class="header-top">
                 <div class="header-spacer"></div>
-                <a href="#" class="logo"><span class="logo-mark"><i class="fas fa-arrow-trend-up"></i><span class="logo-ring"></span></span><span class="logo-title">Próximo Passo <span>Ideal</span></span> <span class="logo-tagline">ajuda para você realizar seu projeto com confiança e qualidade</span></a>
+                <div class="header-center">
+                    <a href="#" class="logo"><span class="logo-mark"><i class="fas fa-arrow-trend-up"></i><span class="logo-ring"></span></span><span class="logo-text"><span class="logo-title">Próximo passo <span>ideal</span></span> <span class="logo-tagline">ajuda a criar seu projeto com confiança e profissionalismo</span></span></a>
+                    <nav class="nav">
+                        <button class="menu-toggle" aria-label="Abrir menu">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                        <ul class="nav-links">
+                            <li><a href="#inicio">Início</a></li>
+                            <li><a href="#servicos">Nossos Principais Serviços</a></li>
+                            <li><a href="#contato">Solicite seu Orçamento</a></li>
+                            <li><a href="#cadastro-prestador">Cadastro de Prestador</a></li>
+                            <li><a href="#avaliacoes">Avaliação dos Clientes</a></li>
+                        </ul>
+                    </nav>
+                </div>
                 <ul class="nav-list">
-                    <li class="nav-rating-item">
+                    <li class="nav-rating-item" style="display:flex;align-items:center;gap:12px;transform:translateY(-10px);">
                         <span class="header-rec-badge" id="header-rec-badge">
                             <span><i class="fas fa-thumbs-up" style="color:#27ae60;"></i> <strong id="header-rec-like-count">0</strong></span>
                             <span class="rec-sep">|</span>
                             <span><i class="fas fa-thumbs-down" style="color:#e74c3c;"></i> <strong id="header-rec-dislike-count">0</strong></span>
                         </span>
+                        <a href="admin.html" style="color:#fff;font-size:16px;transform:translate(-70px, -10px);"><i class="fas fa-lock"></i></a>
                     </li>
-                    <li><a href="admin.html"><i class="fas fa-lock"></i> <span id="nav-badge" class="nav-badge" style="display:none;"></span><span id="sol-badge" class="nav-badge" style="background:#f39c12;color:#1B2A4A;display:none;"></span></a></li>
                 </ul>
             </div>
-            <nav class="nav">
-                <button class="menu-toggle" aria-label="Abrir menu">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <ul class="nav-links" style="position: relative; top: 100px;">
-                    <li><a href="#inicio">Início</a></li>
-                    <li><a href="#servicos">Serviços</a></li>
-                    <li><a href="#como-funciona">Como Funciona</a></li>
-                    <li><a href="#avaliacoes">Avaliações</a></li>
-                    <li><a href="#contato">Contato</a></li>
-                    <li><a href="#cadastro-prestador">Cadastro de Prestador</a></li>
-                </ul>
-            </nav>
         </div>
     </header>
 
@@ -56,32 +58,6 @@
                     <a href="#contato" class="btn btn-primary">Solicite seu Orçamento</a>
                     <a href="#cadastro-prestador" class="btn btn-primary">Cadastro de Prestador</a>
                     <a href="#avaliacoes" class="btn btn-primary">Avaliação de Cliente</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="como-funciona" class="how-it-works">
-        <div class="container">
-            <h2 class="section-title">Como funciona o <span>site</span></h2>
-            <p class="section-subtitle">Em 3 passos simples você encontra o profissional ideal</p>
-            <div class="steps">
-                <div class="step">
-                    <div class="step-number">1</div>
-                    <h3>Descreva o Serviço</h3>
-                    <p>Nos conte detalhadamente o que precisa ser feito. Quanto mais detalhes, melhor o orçamento.</p>
-                </div>
-                <div class="step-arrow"><i class="fas fa-chevron-right"></i></div>
-                <div class="step">
-                    <div class="step-number">2</div>
-                    <h3>Analisamos e Indicamos</h3>
-                    <p>Verificamos seu serviço e encontramos o melhor profissional disponível para você.</p>
-                </div>
-                <div class="step-arrow"><i class="fas fa-chevron-right"></i></div>
-                <div class="step">
-                    <div class="step-number">3</div>
-                    <h3>Serviço Realizado</h3>
-                    <p>O profissional executa o serviço com qualidade e profissionalismo.</p>
                 </div>
             </div>
         </div>
