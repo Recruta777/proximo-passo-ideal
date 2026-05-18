@@ -220,7 +220,7 @@ body {
 .nav-links {
     display: flex;
     list-style: none;
-    gap: 8px;
+    gap: 24px;
     align-items: center;
     margin: 0;
     padding: 0;
@@ -904,7 +904,7 @@ section {
     .nav-links {
         flex-wrap: wrap;
         justify-content: center;
-        gap: 10px;
+        gap: 16px;
     }
     .nav-links a {
         font-size: 12px;
