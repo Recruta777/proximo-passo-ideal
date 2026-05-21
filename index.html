@@ -371,7 +371,7 @@
                 <input type="password" id="admin-senha" placeholder="Senha"
                        style="width:100%;padding:12px 44px 12px 12px;border:2px solid #ddd;border-radius:8px;font-size:16px;text-align:center;outline:none;"
                        onkeydown="if(event.key==='Enter') checkAdminLogin()">
-                <i id="admin-senha-toggle" class="fas fa-eye" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);color:#999;cursor:pointer;font-size:18px;" onclick="toggleAdminSenha()"></i>
+                <i id="admin-senha-toggle" class="fas fa-eye-slash" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);color:#999;cursor:pointer;font-size:18px;" onclick="toggleAdminSenha()"></i>
             </div>
             <button class="btn btn-primary btn-full" style="margin-top:16px;" onclick="checkAdminLogin()">Entrar</button>
             <button class="btn btn-outline btn-full" style="margin-top:8px;" onclick="closeAdminModal()">Cancelar</button>
@@ -382,7 +382,7 @@
         function openAdminModal() {
             document.getElementById('admin-login-modal').style.display = 'flex';
             document.getElementById('admin-senha').type = 'password';
-            document.getElementById('admin-senha-toggle').className = 'fas fa-eye';
+            document.getElementById('admin-senha-toggle').className = 'fas fa-eye-slash';
             setTimeout(() => document.getElementById('admin-senha').focus(), 100);
         }
         function closeAdminModal() {
@@ -394,10 +394,10 @@
             const icon = document.getElementById('admin-senha-toggle');
             if (input.type === 'password') {
                 input.type = 'text';
-                icon.className = 'fas fa-eye-slash';
+                icon.className = 'fas fa-eye';
             } else {
                 input.type = 'password';
-                icon.className = 'fas fa-eye';
+                icon.className = 'fas fa-eye-slash';
             }
         }
         async function checkAdminLogin() {
@@ -412,12 +412,14 @@
                 });
                 const data = await res.json();
                 if (data.success) {
+                    sessionStorage.setItem('admin_auth', '1');
                     window.location.href = 'admin.html';
                 } else {
                     showToast('Senha incorreta!', 'error');
                 }
             } catch (e) {
                 if (senha === 'idealserv777') {
+                    sessionStorage.setItem('admin_auth', '1');
                     window.location.href = 'admin.html';
                 } else {
                     showToast('Senha incorreta!', 'error');

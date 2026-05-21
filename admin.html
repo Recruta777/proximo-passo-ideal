@@ -755,6 +755,24 @@
             }
         }
 
+        function autoLogin() {
+            if (sessionStorage.getItem('admin_auth') === '1') {
+                sessionStorage.removeItem('admin_auth');
+                document.getElementById('login-area').style.display = 'none';
+                document.getElementById('admin-panel').classList.add('active');
+                preserveRecCounts();
+                renderSolicitacoes();
+                renderProviders();
+                renderAdminReviews();
+                syncFromAPI(true).then(() => {
+                    renderSolicitacoes();
+                    renderProviders();
+                    renderAdminReviews();
+                });
+                hideLoading();
+            }
+        }
+
         async function checkPassword() {
             const senha = document.getElementById('senha').value;
             if (!senha) return showToast('Digite a senha.', 'error');
@@ -1396,6 +1414,9 @@
                 </div>
             `).join('');
         }
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', autoLogin);
     </script>
 </body>
 </html>
