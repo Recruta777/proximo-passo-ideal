@@ -435,6 +435,35 @@
         .solic-card { display:flex;align-items:flex-start;gap:4px; }
         .solic-card .solic-body { flex:1; }
 
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(27,42,74,0.6);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+        .loading-overlay.active { display: flex; }
+        .loading-spinner {
+            background: #fff;
+            border-radius: 16px;
+            padding: 40px 50px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .loading-spinner i {
+            font-size: 36px;
+            color: #f39c12;
+            animation: spin 1s linear infinite;
+        }
+        .loading-spinner p {
+            margin-top: 16px;
+            color: #1B2A4A;
+            font-weight: 600;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
         @media (max-width: 600px) {
             .provider-card {
                 flex-direction: column;
@@ -543,11 +572,6 @@
                     <div class="admin-toolbar">
                         <h2>Avaliações <span>dos Clientes</span></h2>
                         <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-                            <span class="rec-badge" id="rec-badge" style="display:inline-flex;background:linear-gradient(135deg,#1B2A4A,#243B55);border-radius:20px;padding:5px 14px;color:#fff;font-size:13px;gap:12px;align-items:center;">
-                                <span><i class="fas fa-thumbs-up" style="color:#27ae60;"></i> <strong id="rec-like-count">0</strong></span>
-                                <span style="opacity:0.3;">|</span>
-                                <span><i class="fas fa-thumbs-down" style="color:#e74c3c;"></i> <strong id="rec-dislike-count">0</strong></span>
-                            </span>
                             <button class="btn btn-outline btn-sm" style="border-color:#ccc;color:#666;margin-right:8px;" onclick="forcarSync()"><i class="fas fa-sync"></i> Sincronizar</button>
                             <button class="btn btn-outline btn-sm" style="border-color:#ccc;color:#666;margin-right:8px;" onclick="exportReviews()"><i class="fas fa-download"></i> Exportar</button>
                         </div>
@@ -633,6 +657,12 @@
     </div>
 
     <div id="toast" class="toast"></div>
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="loading-spinner">
+            <i class="fas fa-spinner"></i>
+            <p id="loading-text">Carregando...</p>
+        </div>
+    </div>
 
     <script src="js/script.js"></script>
     <script>
@@ -726,6 +756,8 @@
 
         async function checkPassword() {
             const senha = document.getElementById('senha').value;
+            if (!senha) return showToast('Digite a senha.', 'error');
+            showLoading('Autenticando...');
             try {
                 const res = await fetch('/api/admin-auth', {
                     method: 'POST',
@@ -736,7 +768,8 @@
                 if (data.success) {
                     document.getElementById('login-area').style.display = 'none';
                     document.getElementById('admin-panel').classList.add('active');
-                    // Mostra dados do navegador imediatamente (zero espera)
+                    // Inicializa contadores e mostra dados do navegador imediatamente
+                    preserveRecCounts();
                     renderSolicitacoes();
                     renderProviders();
                     renderAdminReviews();
@@ -752,6 +785,7 @@
             } catch (e) {
                 showToast('Erro de conexão com o servidor.', 'error');
             }
+            hideLoading();
         }
 
         function getProviders() {
@@ -771,6 +805,14 @@
             document.getElementById('provider-count').textContent = count;
         }
 
+        function showLoading(msg) {
+            document.getElementById('loading-text').textContent = msg || 'Carregando...';
+            document.getElementById('loading-overlay').classList.add('active');
+        }
+        function hideLoading() {
+            document.getElementById('loading-overlay').classList.remove('active');
+        }
+
         function switchTab(tab) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
@@ -781,17 +823,32 @@
             if (tab === 'prestadores') renderProviders();
         }
 
+        let providerFilter = '';
+
+        function filterProviders(value) {
+            providerFilter = value.toLowerCase();
+            renderProviders();
+        }
+
         function renderProviders() {
             updateCount();
             const providers = getProviders();
             const list = document.getElementById('provider-list');
+            const filtrados = providerFilter ? providers.filter(p =>
+                (p.nome||'').toLowerCase().includes(providerFilter) ||
+                (p.empresa||'').toLowerCase().includes(providerFilter) ||
+                (p.telefone||'').toLowerCase().includes(providerFilter) ||
+                (p.cidade||'').toLowerCase().includes(providerFilter) ||
+                getServicoLabel(p.servico).toLowerCase().includes(providerFilter) ||
+                (p.descricao||'').toLowerCase().includes(providerFilter)
+            ) : providers;
 
-            if (providers.length === 0) {
+            if (filtrados.length === 0) {
                 list.innerHTML = `
                     <div class="empty-state">
                         <i class="fas fa-users"></i>
-                        <h3>Nenhum prestador cadastrado</h3>
-                        <p>Os prestadores cadastrados aparecerão aqui.</p>
+                        <h3>${providerFilter ? 'Nenhum prestador encontrado para "' + providerFilter + '"' : 'Nenhum prestador cadastrado'}</h3>
+                        <p>${providerFilter ? 'Tente buscar por nome, cidade, telefone ou serviço.' : 'Os prestadores cadastrados aparecerão aqui.'}</p>
                         <p style="margin-top:16px;">Os cadastros feitos no site chegam no seu WhatsApp.<br>Use o botão "Adicionar Prestador" para incluí-los aqui.</p>
                     </div>
                 `;
@@ -801,9 +858,10 @@
             list.innerHTML = `
                 <div class="sel-bar">
                     <label><input type="checkbox" onchange="toggleSelectAllProviders(this.checked)"> <strong>Selecionar todos</strong></label>
+                    <input type="text" class="provider-search" placeholder="Buscar prestador..." value="${providerFilter}" oninput="filterProviders(this.value)" style="flex:1;max-width:300px;padding:6px 12px;border:1px solid #ddd;border-radius:8px;font-size:13px;outline:none;background:#f5f6f8;" onfocus="this.style.borderColor='#f39c12'" onblur="this.style.borderColor='#ddd'">
                     <button class="btn-del-sel" onclick="deleteSelectedProviders()" id="del-sel-prov"><i class="fas fa-trash"></i> Excluir selecionados</button>
                 </div>
-            ` + providers.map(p => `
+            ` + filtrados.map(p => `
                 <div class="provider-card">
                     <input type="checkbox" class="item-check prov-item" value="${p.id}" onchange="updateDelSelBtnProv()">
                     <div class="provider-info" style="flex:1">
@@ -941,14 +999,16 @@
         }
 
         async function forcarSync() {
-            showToast('Sincronizando com o servidor...');
+            showLoading('Sincronizando com o servidor...');
             await syncFromAPI(true);
             renderProviders();
             renderSolicitacoes();
             renderAdminReviews();
+            hideLoading();
         }
 
         async function sincronizarPIX() {
+            showLoading('Verificando pagamentos PIX...');
             // Verifica localStorage (pagamentos iniciados no navegador)
             const pagamentos = JSON.parse(localStorage.getItem('proximopasso_pagamentos') || '[]');
             const providers = getProviders();
@@ -987,6 +1047,7 @@
                 // Servidor indisponível, apenas localStorage
             }
 
+            hideLoading();
             if (atualizados > 0) {
                 saveProviders(providers);
                 renderProviders();
@@ -1121,12 +1182,10 @@
             const likes = lista.filter(r => r.recomendou === 'like').length;
             const dislikes = lista.filter(r => r.recomendou === 'dislike').length;
             const current = JSON.parse(localStorage.getItem(REC_COUNTS_KEY) || '{"likes":0,"dislikes":0}');
-            if (likes > current.likes || dislikes > current.dislikes) {
-                localStorage.setItem(REC_COUNTS_KEY, JSON.stringify({
-                    likes: Math.max(current.likes, likes),
-                    dislikes: Math.max(current.dislikes, dislikes)
-                }));
-            }
+            localStorage.setItem(REC_COUNTS_KEY, JSON.stringify({
+                likes: Math.max(current.likes, likes),
+                dislikes: Math.max(current.dislikes, dislikes)
+            }));
         }
 
         function deleteReview(id) {
@@ -1294,9 +1353,7 @@
                     <input type="checkbox" class="item-check rev-item" value="${r.id}" onchange="updateDelSelBtnRev()">
                     <div class="solic-body">
                         <span class="solic-badge badge-${r.servico}">${labels[r.servico] || r.servico}</span>
-                        <h3><i class="fas fa-user"></i> ${r.nome} 
-                            ${r.recomendou === 'like' ? '<i class="fas fa-thumbs-up" style="color:#27ae60;font-size:16px;" title="Recomendou"></i>' : ''}
-                            ${r.recomendou === 'dislike' ? '<i class="fas fa-thumbs-down" style="color:#e74c3c;font-size:16px;" title="Não recomendou"></i>' : ''}
+                        <h3><i class="fas fa-user"></i> ${r.nome}
                             <span style="color:#f39c12;font-size:14px;">${'★'.repeat(r.stars)}${'☆'.repeat(5-r.stars)}</span></h3>
                         <div class="solic-info">
                             ${r.prestador ? `<p><i class="fas fa-tools"></i> Prestador: ${r.prestador}</p>` : ''}
@@ -1316,11 +1373,6 @@
                     </div>
                 </div>
             `).join('');
-
-            const recCounts = JSON.parse(localStorage.getItem(REC_COUNTS_KEY) || '{"likes":0,"dislikes":0}');
-            document.getElementById('rec-like-count').textContent = recCounts.likes;
-            document.getElementById('rec-dislike-count').textContent = recCounts.dislikes;
-            updateReviewCount();
         }
     </script>
 </body>
