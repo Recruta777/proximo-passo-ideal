@@ -880,7 +880,8 @@
             const pagos = providers.filter(p => p.pago).length;
             const naoPagos = providers.filter(p => !p.pago).length;
 
-            // Pontuação da empresa
+            // Pontuação da empresa (com baseline de reset)
+            const baseline = parseInt(localStorage.getItem('proximopasso_score_baseline') || '0');
             let score = 0;
             score += likes * 5;
             score -= dislikes * 3;
@@ -888,8 +889,9 @@
             score += pagos * 5;
             score -= naoPagos * 10;
             score += solicitacoes.length * 2;
+            const exibido = score - baseline;
 
-            const scoreClass = score >= 50 ? 'score-good' : score >= 0 ? 'score-ok' : 'score-bad';
+            const scoreClass = exibido >= 50 ? 'score-good' : exibido >= 0 ? 'score-ok' : 'score-bad';
 
             container.innerHTML = `
                 <div class="dashboard-card">
@@ -945,7 +947,7 @@
                     </div>
                     <div class="score-box ${scoreClass}">
                         <div class="score-label">Pontuação da Empresa</div>
-                        <div class="score-value">${score}</div>
+                        <div class="score-value">${exibido}</div>
                         <div class="score-detail">
                             <span>+${likes*5} likes</span>
                             <span>${dislikes*3 > 0 ? '-'+dislikes*3 : '0'} dislikes</span>
@@ -954,9 +956,25 @@
                             <span>${naoPagos*10 > 0 ? '-'+naoPagos*10 : '0'} não pagos</span>
                             <span>+${solicitacoes.length*2} orçamentos</span>
                         </div>
+                        <button class="btn btn-outline btn-sm" style="margin-top:12px;color:#e74c3c;border-color:#e74c3c;" onclick="resetarPontuacao()"><i class="fas fa-undo"></i> Resetar Pontuação</button>
                     </div>
                 </div>
             `;
+        }
+
+        function resetarPontuacao() {
+            if (!confirm('Resetar a pontuação para zero? O gráfico anual será reiniciado.')) return;
+            const providers = getProviders();
+            const reviews = getReviews();
+            const solicitacoes = getSolicitacoes();
+            const likes = reviews.filter(r => r.recomendou === 'like').length;
+            const dislikes = reviews.filter(r => r.recomendou === 'dislike').length;
+            const pagos = providers.filter(p => p.pago).length;
+            const naoPagos = providers.filter(p => !p.pago).length;
+            let score = likes*5 - dislikes*3 + providers.length*10 + pagos*5 - naoPagos*10 + solicitacoes.length*2;
+            localStorage.setItem('proximopasso_score_baseline', String(score));
+            renderDashboard();
+            showToast('Pontuação resetada!');
         }
 
         function switchTab(tab) {
