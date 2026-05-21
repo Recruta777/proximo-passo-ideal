@@ -173,7 +173,7 @@ function applyPhoneMask(input) {
 const telefoneInputs = document.querySelectorAll('input[type="tel"]');
 telefoneInputs.forEach(applyPhoneMask);
 
-// Provider registration form
+// Provider registration form (PAGO via PIX)
 const providerForm = document.getElementById('provider-form');
 if (providerForm) {
     providerForm.addEventListener('submit', async function (e) {
@@ -183,7 +183,7 @@ if (providerForm) {
         const empresa = document.getElementById('prov-empresa').value.trim();
         const telefone = document.getElementById('prov-telefone').value.trim();
         const servico = document.getElementById('prov-servico').value;
-        const cidade = document.getElementById('prov-cidade').value.trim();
+        const cidade = document.getElementById('prov-cidade').value;
         const descricao = document.getElementById('prov-descricao').value.trim();
 
         if (!nome || !empresa || !telefone || !servico || !cidade || !descricao) {
@@ -191,17 +191,9 @@ if (providerForm) {
             return;
         }
 
-        const message = `*NOVO PRESTADOR CADASTRADO!*\n\n` +
-            `*Nome:* ${nome}\n` +
-            (empresa ? `*Empresa:* ${empresa}\n` : '') +
-            `*Telefone:* ${telefone}\n` +
-            `*Serviço:* ${servico}\n` +
-            `*Cidade:* ${cidade}\n` +
-            `*Sobre:* ${descricao}\n\n` +
-            `*PIX R$10:* PENDENTE`;
-
-        const whatsappNumber = '5519983025082';
-        const url = `whatsapp://send?phone=${whatsappNumber}&text=${encodeURIComponent(message)}`;
+        const submitBtn = this.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Aguardando...';
 
         // Cartão de visita
         const cartaoInput = document.getElementById('prov-cartao');
@@ -214,11 +206,12 @@ if (providerForm) {
             });
         }
 
-        // Save to localStorage
+        // Save to localStorage como não pago
         const STORAGE_KEY = 'proximopasso_prestadores';
         const providers = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        const prestadorId = Date.now().toString();
         const novoProv = {
-            id: Date.now().toString(),
+            id: prestadorId,
             nome,
             empresa,
             telefone,
@@ -227,33 +220,130 @@ if (providerForm) {
             descricao,
             cartao: cartaoData,
             data: new Date().toLocaleDateString('pt-BR'),
-            pago: true,
+            pago: false,
         };
         providers.push(novoProv);
         localStorage.setItem(STORAGE_KEY, JSON.stringify(providers));
 
-        // Save to API (banco de dados) com retry
-        for (let tentativa = 0; tentativa < 3; tentativa++) {
-            try {
-                const resp = await fetch('/api/dados', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'salvar',
-                        tipo: 'prestadores',
-                        dados: novoProv
-                    })
-                });
-                if (resp.ok) break;
-            } catch(e) {
-                if (tentativa === 2) console.warn('API indisponível após 3 tentativas');
+        // Gera PIX
+        try {
+            const pixData = await gerarPix(prestadorId, nome, 'pagamento@proximopassoideal.com.br');
+            if (pixData.erro) {
+                showToast('Erro ao gerar PIX: ' + pixData.erro, 'error');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Cadastrar';
+                return;
             }
-        }
 
-        updateAdminBadge();
-        showToast('Cadastro enviado com sucesso!');
-        this.reset();
+            salvarPagamentoLocal(pixData.payment_id, prestadorId);
+
+            const overlay = document.createElement('div');
+            overlay.className = 'pix-overlay';
+            overlay.innerHTML = `
+                <div class="pix-modal">
+                    <button class="pix-close" onclick="this.closest('.pix-overlay').remove(); cancelarCadastro('${prestadorId}')">&times;</button>
+                    <h3><i class="fas fa-qrcode" style="color:#f39c12;"></i> Pagamento PIX - R$ 10,00</h3>
+                    <p style="color:#666;margin-bottom:20px;">Escaneie o QR Code abaixo para pagar e ativar seu cadastro</p>
+                    <div class="pix-qr-wrapper">
+                        <img src="data:image/png;base64,${pixData.qr_code_base64}" alt="QR Code PIX" class="pix-qr">
+                    </div>
+                    <p style="font-size:13px;color:#999;margin:16px 0 8px;">Ou copie o código PIX:</p>
+                    <div class="pix-copy-area">
+                        <code class="pix-code">${pixData.qr_code}</code>
+                        <button class="btn btn-primary btn-sm" onclick="copiarPix(this)" style="font-size:13px;padding:8px 16px;">Copiar</button>
+                    </div>
+                    <div class="pix-status" id="pix-status-${pixData.payment_id}">
+                        <i class="fas fa-spinner fa-spin"></i> Aguardando pagamento...
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+
+            // Polling de 3 em 3 segundos
+            const interval = setInterval(async () => {
+                try {
+                    const status = await consultarPix(pixData.payment_id);
+                    const statusEl = document.getElementById(`pix-status-${pixData.payment_id}`);
+                    if (statusEl) {
+                        if (status.status === 'approved') {
+                            marcarPagoLocal(pixData.payment_id);
+                            statusEl.innerHTML = '<i class="fas fa-check-circle" style="color:#27ae60;"></i> Pagamento confirmado! Cadastro liberado!';
+                            statusEl.style.color = '#27ae60';
+                            clearInterval(interval);
+
+                            // Atualiza para pago no localStorage
+                            const provs = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+                            const idx = provs.findIndex(p => p.id === prestadorId);
+                            if (idx !== -1) {
+                                provs[idx].pago = true;
+                                localStorage.setItem(STORAGE_KEY, JSON.stringify(provs));
+                                // Save to API
+                                for (let tentativa = 0; tentativa < 3; tentativa++) {
+                                    try {
+                                        const resp = await fetch('/api/dados', {
+                                            method: 'POST',
+                                            headers: { 'Content-Type': 'application/json' },
+                                            body: JSON.stringify({
+                                                action: 'salvar',
+                                                tipo: 'prestadores',
+                                                dados: provs[idx]
+                                            })
+                                        });
+                                        if (resp.ok) break;
+                                    } catch(e) {
+                                        if (tentativa === 2) console.warn('API indisponível após 3 tentativas');
+                                    }
+                                }
+                            }
+
+                            updateAdminBadge();
+                            showToast('Pagamento confirmado! Cadastro realizado com sucesso!');
+
+                            // WhatsApp depois do pagamento
+                            setTimeout(() => {
+                                const message = `*NOVO PRESTADOR CADASTRADO (PAGO)!*\n\n` +
+                                    `*Nome:* ${nome}\n` +
+                                    (empresa ? `*Empresa:* ${empresa}\n` : '') +
+                                    `*Telefone:* ${telefone}\n` +
+                                    `*Serviço:* ${servico}\n` +
+                                    `*Cidade:* ${cidade}\n` +
+                                    `*Sobre:* ${descricao}\n\n` +
+                                    `*PIX R$10:* ✅ CONFIRMADO`;
+
+                                const whatsappNumber = '5519983025082';
+                                const url = `whatsapp://send?phone=${whatsappNumber}&text=${encodeURIComponent(message)}`;
+                                window.location.href = url;
+                            }, 2000);
+
+                            setTimeout(() => {
+                                overlay.querySelector('.pix-close').click();
+                            }, 4000);
+
+                        } else if (status.status === 'rejected') {
+                            statusEl.innerHTML = '<i class="fas fa-times-circle" style="color:#e74c3c;"></i> Pagamento rejeitado';
+                            statusEl.style.color = '#e74c3c';
+                            clearInterval(interval);
+                        }
+                    }
+                } catch (err) {}
+            }, 3000);
+
+            this.reset();
+        } catch (err) {
+            showToast('Erro ao processar pagamento. Tente novamente.', 'error');
+            cancelarCadastro(prestadorId);
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = 'Cadastrar';
+        }
     });
+}
+
+function cancelarCadastro(prestadorId) {
+    const STORAGE_KEY = 'proximopasso_prestadores';
+    const provs = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    const filtered = provs.filter(p => p.id !== prestadorId);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(filtered));
+    updateAdminBadge();
 }
 
 function abrirPix(prestadorId, nome) {
