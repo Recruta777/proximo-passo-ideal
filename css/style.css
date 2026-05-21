@@ -1337,32 +1337,31 @@ section {
     padding-top: 20px;
 }
 .review-carousel-track {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
     min-height: 100px;
 }
-.review-carousel-nav {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-    margin-top: 16px;
+.review-carousel-card {
+    flex: 1;
+    min-width: 0;
 }
-.review-carousel-nav button {
-    background: #1B2A4A;
-    color: #fff;
+.review-carousel-arrow {
+    background: none;
     border: none;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
+    color: #1B2A4A;
+    font-size: 22px;
     cursor: pointer;
+    padding: 0 10px;
     transition: all 0.3s;
-    font-size: 14px;
+    flex-shrink: 0;
 }
-.review-carousel-nav button:hover:not(:disabled) {
-    background: #f39c12;
+.review-carousel-arrow:hover {
+    color: #f39c12;
 }
-.review-carousel-nav button:disabled {
-    opacity: 0.3;
-    cursor: default;
+.review-carousel-info {
+    text-align: center;
+    margin-top: 12px;
 }
 .review-carousel-counter {
     font-size: 14px;

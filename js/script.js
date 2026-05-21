@@ -470,17 +470,19 @@ function renderReviews() {
         const wrapper = document.createElement('div');
         wrapper.className = 'review-carousel';
         wrapper.innerHTML = `
-            <div class="review-carousel-track" style="display:none"></div>
-            <div class="review-carousel-nav" style="display:none">
-                <button class="review-carousel-prev"><i class="fas fa-chevron-left"></i></button>
+            <div class="review-carousel-track" style="display:none">
+                <button class="review-carousel-arrow review-carousel-prev"><i class="fas fa-chevron-left"></i></button>
+                <div class="review-carousel-card"></div>
+                <button class="review-carousel-arrow review-carousel-next"><i class="fas fa-chevron-right"></i></button>
+            </div>
+            <div class="review-carousel-info" style="display:none">
                 <span class="review-carousel-counter"></span>
-                <button class="review-carousel-next"><i class="fas fa-chevron-right"></i></button>
             </div>
             <button class="review-carousel-show btn btn-outline btn-sm" style="margin-top:12px;border-color:#ccc;color:#666;"><i class="fas fa-chevron-down"></i> Ver mais avaliações (${restantes.length})</button>
         `;
         container.appendChild(wrapper);
 
-        const track = wrapper.querySelector('.review-carousel-track');
+        const cardContainer = wrapper.querySelector('.review-carousel-card');
         const counter = wrapper.querySelector('.review-carousel-counter');
         const prevBtn = wrapper.querySelector('.review-carousel-prev');
         const nextBtn = wrapper.querySelector('.review-carousel-next');
@@ -488,16 +490,16 @@ function renderReviews() {
 
         function showSlide(i) {
             slideIndex = i;
-            track.innerHTML = cardHTML(restantes[slideIndex]);
+            cardContainer.innerHTML = cardHTML(restantes[slideIndex]);
             counter.textContent = `${slideIndex + 1} de ${restantes.length}`;
-            prevBtn.disabled = slideIndex === 0;
-            nextBtn.disabled = slideIndex === restantes.length - 1;
+            prevBtn.style.opacity = slideIndex === 0 ? '0.3' : '1';
+            nextBtn.style.opacity = slideIndex === restantes.length - 1 ? '0.3' : '1';
         }
 
         showBtn.addEventListener('click', () => {
             showBtn.style.display = 'none';
-            track.style.display = '';
-            wrapper.querySelector('.review-carousel-nav').style.display = 'flex';
+            wrapper.querySelector('.review-carousel-track').style.display = 'flex';
+            wrapper.querySelector('.review-carousel-info').style.display = 'block';
             showSlide(0);
         });
 
