@@ -1480,6 +1480,15 @@ section {
     flex-shrink: 0;
 }
 
+.dashboard-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+@media (max-width: 700px) {
+    .dashboard-row { grid-template-columns: 1fr; }
+}
+
 .score-box {
     margin-top: 20px;
     padding: 16px;
