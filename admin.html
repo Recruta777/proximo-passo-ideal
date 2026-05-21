@@ -891,7 +891,11 @@
             score += solicitacoes.length * 2;
             const exibido = score - baseline;
 
-            const scoreClass = exibido >= 50 ? 'score-good' : exibido >= 0 ? 'score-ok' : 'score-bad';
+            let scoreClass, scoreLabel;
+            if (exibido >= 80) { scoreClass = 'score-excelente'; scoreLabel = 'Excelente'; }
+            else if (exibido >= 50) { scoreClass = 'score-boa'; scoreLabel = 'Boa'; }
+            else if (exibido >= 30) { scoreClass = 'score-regular'; scoreLabel = 'Regular'; }
+            else { scoreClass = 'score-ruim'; scoreLabel = 'Ruim'; }
 
             container.innerHTML = `
                 <div class="dashboard-card">
@@ -948,6 +952,7 @@
                     <div class="score-box ${scoreClass}">
                         <div class="score-label">Pontuação da Empresa</div>
                         <div class="score-value">${exibido}</div>
+                        <div class="score-status">${scoreLabel}</div>
                         <div class="score-detail">
                             <span>+${likes*5} likes</span>
                             <span>${dislikes*3 > 0 ? '-'+dislikes*3 : '0'} dislikes</span>
