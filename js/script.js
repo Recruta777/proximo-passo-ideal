@@ -126,6 +126,13 @@ form.addEventListener('submit', async function (e) {
 
     playCongratsSound();
 
+    const btn = form.querySelector('button[type="submit"]');
+    const btnHtml = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-check-circle"></i> Orçamento Enviado';
+    btn.style.background = '#27ae60';
+    btn.style.borderColor = '#27ae60';
+
     // Save to localStorage
     const solicitacoes = getSolicitacoes();
     const novaSolic = {
@@ -169,12 +176,6 @@ form.addEventListener('submit', async function (e) {
     const whatsappNumber = '5519983025082';
     const url = `whatsapp://send?phone=${whatsappNumber}&text=${encodeURIComponent(message)}`;
 
-    const btn = form.querySelector('button[type="submit"]');
-    const btnHtml = btn.innerHTML;
-    btn.disabled = true;
-    btn.innerHTML = '<i class="fas fa-check-circle"></i> Orçamento Enviado';
-    btn.style.background = '#27ae60';
-    btn.style.borderColor = '#27ae60';
     setTimeout(() => {
         btn.disabled = false;
         btn.innerHTML = btnHtml;
@@ -579,6 +580,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 playCongratsSound();
 
+                const btnRv = reviewForm.querySelector('button[type="submit"]');
+                const btnRvHtml = btnRv.innerHTML;
+                btnRv.disabled = true;
+                btnRv.innerHTML = '<i class="fas fa-check-circle"></i> Avaliação Enviada';
+                btnRv.style.background = '#27ae60';
+                btnRv.style.borderColor = '#27ae60';
+
                 const reviews = getReviews();
                 const novaRev = {
                     id: Date.now().toString(),
@@ -610,17 +618,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         if (tentativa === 2) console.warn('API indisponível após 3 tentativas');
                     }
                 }
-                const btn = reviewForm.querySelector('button[type="submit"]');
-                const btnHtml = btn.innerHTML;
-                btn.disabled = true;
-                btn.innerHTML = '<i class="fas fa-check-circle"></i> Avaliação Enviada';
-                btn.style.background = '#27ae60';
-                btn.style.borderColor = '#27ae60';
                 setTimeout(() => {
-                    btn.disabled = false;
-                    btn.innerHTML = btnHtml;
-                    btn.style.background = '';
-                    btn.style.borderColor = '';
+                    btnRv.disabled = false;
+                    btnRv.innerHTML = btnRvHtml;
+                    btnRv.style.background = '';
+                    btnRv.style.borderColor = '';
                 }, 3000);
                 this.reset();
                 selectedStar = 0;
