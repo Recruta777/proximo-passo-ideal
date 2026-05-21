@@ -519,6 +519,9 @@
             <!-- Admin Panel -->
             <div id="admin-panel" class="admin-panel">
                 <div class="admin-tabs">
+                    <button class="tab-btn" onclick="switchTab('dashboard')" id="tab-dashboard">
+                        <i class="fas fa-chart-bar"></i> Dashboard
+                    </button>
                     <button class="tab-btn" onclick="switchTab('solicitacoes')" id="tab-solicitacoes">
                         <i class="fas fa-clipboard-list"></i> Orçamento <span id="solicitacao-count" class="tab-count">0</span>
                     </button>
@@ -528,6 +531,14 @@
                     <button class="tab-btn" onclick="switchTab('avaliacoes')" id="tab-avaliacoes">
                         <i class="fas fa-star"></i> Avaliações <span id="review-count" class="tab-count">0</span>
                     </button>
+                </div>
+
+                <!-- Dashboard Tab -->
+                <div id="tab-content-dashboard" class="tab-content">
+                    <div class="admin-toolbar">
+                        <h2>Dashboard <span>Visão Geral</span></h2>
+                    </div>
+                    <div id="dashboard-stats" class="dashboard-grid"></div>
                 </div>
 
                 <!-- Orçamento Tab -->
@@ -848,6 +859,80 @@
             document.getElementById('loading-overlay').classList.remove('active');
         }
 
+        function renderDashboard() {
+            const providers = getProviders();
+            const reviews = getReviews();
+            const solicitacoes = getSolicitacoes();
+            const container = document.getElementById('dashboard-stats');
+
+            const servicos = ['pedreiro','marcenaria','pintura','refrigeracao','outro'];
+            const labels = {pedreiro:'Pedreiro',marcenaria:'Marcenaria',pintura:'Pintura',refrigeracao:'Refrigeração',outro:'Outro'};
+            const cores = ['#1B2A4A','#e67e22','#2e7d32','#00838f','#999'];
+
+            const servCounts = servicos.map(s => ({ tipo: s, label: labels[s], cor: cores[servicos.indexOf(s)], total: providers.filter(p => p.servico === s).length }));
+            const maxServ = Math.max(...servCounts.map(s => s.total), 1);
+
+            const likes = reviews.filter(r => r.recomendou === 'like').length;
+            const dislikes = reviews.filter(r => r.recomendou === 'dislike').length;
+            const totalRev = reviews.length;
+            const revMax = Math.max(totalRev, 1);
+
+            container.innerHTML = `
+                <div class="dashboard-card">
+                    <h3><i class="fas fa-tools"></i> Prestadores por Serviço</h3>
+                    <div class="bar-chart">
+                        ${servCounts.map(s => `
+                            <div class="bar-row">
+                                <span class="bar-label">${s.label}</span>
+                                <div class="bar-track">
+                                    <div class="bar-fill" style="width:${(s.total/maxServ*100).toFixed(1)}%;background:${s.cor};"></div>
+                                </div>
+                                <span class="bar-value">${s.total}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                <div class="dashboard-card">
+                    <h3><i class="fas fa-star"></i> Avaliações</h3>
+                    <div class="bar-chart">
+                        <div class="bar-row">
+                            <span class="bar-label">Total</span>
+                            <div class="bar-track">
+                                <div class="bar-fill" style="width:${(totalRev/revMax*100).toFixed(1)}%;background:#1B2A4A;"></div>
+                            </div>
+                            <span class="bar-value">${totalRev}</span>
+                        </div>
+                        <div class="bar-row">
+                            <span class="bar-label"><i class="fas fa-thumbs-up" style="color:#27ae60;"></i></span>
+                            <div class="bar-track">
+                                <div class="bar-fill" style="width:${revMax > 0 ? (likes/revMax*100).toFixed(1) : 0}%;background:#27ae60;"></div>
+                            </div>
+                            <span class="bar-value">${likes}</span>
+                        </div>
+                        <div class="bar-row">
+                            <span class="bar-label"><i class="fas fa-thumbs-down" style="color:#e74c3c;"></i></span>
+                            <div class="bar-track">
+                                <div class="bar-fill" style="width:${revMax > 0 ? (dislikes/revMax*100).toFixed(1) : 0}%;background:#e74c3c;"></div>
+                            </div>
+                            <span class="bar-value">${dislikes}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="dashboard-card">
+                    <h3><i class="fas fa-clipboard-list"></i> Orçamentos</h3>
+                    <div class="bar-chart">
+                        <div class="bar-row">
+                            <span class="bar-label">Recebidos</span>
+                            <div class="bar-track">
+                                <div class="bar-fill" style="width:100%;background:#f39c12;"></div>
+                            </div>
+                            <span class="bar-value">${solicitacoes.length}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
         function switchTab(tab) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
@@ -856,6 +941,7 @@
             if (tab === 'solicitacoes') renderSolicitacoes();
             if (tab === 'avaliacoes') renderAdminReviews();
             if (tab === 'prestadores') renderProviders();
+            if (tab === 'dashboard') renderDashboard();
         }
 
         let providerFilter = '';
