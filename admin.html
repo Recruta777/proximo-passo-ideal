@@ -572,8 +572,9 @@
                     <div class="admin-toolbar">
                         <h2>Avaliações <span>dos Clientes</span></h2>
                         <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-                            <button class="btn btn-outline btn-sm" style="border-color:#ccc;color:#666;margin-right:8px;" onclick="forcarSync()"><i class="fas fa-sync"></i> Sincronizar</button>
-                            <button class="btn btn-outline btn-sm" style="border-color:#ccc;color:#666;margin-right:8px;" onclick="exportReviews()"><i class="fas fa-download"></i> Exportar</button>
+                            <button class="btn btn-outline btn-sm" style="border-color:#ccc;color:#666;" onclick="forcarSync()"><i class="fas fa-sync"></i> Sincronizar</button>
+                            <button class="btn btn-outline btn-sm" style="border-color:#ccc;color:#666;" onclick="exportReviews()"><i class="fas fa-download"></i> Exportar</button>
+                            <button class="btn btn-outline btn-sm" style="border-color:#e74c3c;color:#e74c3c;" onclick="resetRecCounts()"><i class="fas fa-undo"></i> Resetar Contadores</button>
                         </div>
                     </div>
 
@@ -1186,6 +1187,13 @@
                 likes: Math.max(current.likes, likes),
                 dislikes: Math.max(current.dislikes, dislikes)
             }));
+        }
+
+        function resetRecCounts() {
+            if (!confirm('Resetar os contadores de like/dislike para 0?')) return;
+            localStorage.setItem(REC_COUNTS_KEY, JSON.stringify({ likes: 0, dislikes: 0 }));
+            if (typeof updateHeaderRecBadge === 'function') updateHeaderRecBadge();
+            showToast('Contadores resetados!');
         }
 
         function deleteReview(id) {
