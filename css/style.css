@@ -1344,6 +1344,12 @@ section {
     gap: 12px;
     padding: 8px 0;
 }
+.reviews-fixed-row .review-carousel-arrows .review-carousel-counter {
+    margin-left: 30px;
+    font-size: 14px;
+    color: #999;
+    font-weight: 600;
+}
 
 .review-carousel-card {
     margin-top: 16px;
@@ -1360,15 +1366,6 @@ section {
 }
 .review-carousel-arrow:hover {
     color: #f39c12;
-}
-.review-carousel-info {
-    text-align: center;
-    margin-top: 12px;
-}
-.review-carousel-counter {
-    font-size: 14px;
-    color: #999;
-    font-weight: 600;
 }
 
 .review-foto {

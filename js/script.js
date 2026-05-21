@@ -468,12 +468,13 @@ function renderReviews() {
     // Wrapper for 2 fixed cards stacked, arrows between them
     const rowDiv = document.createElement('div');
     rowDiv.className = 'reviews-fixed-row';
+    let arrowWrap = null;
     primeiras.forEach((r, idx) => {
         const temp = document.createElement('div');
         temp.innerHTML = cardHTML(r);
         rowDiv.appendChild(temp.firstElementChild);
         if (idx === 0 && restantes.length > 0) {
-            const arrowWrap = document.createElement('div');
+            arrowWrap = document.createElement('div');
             arrowWrap.className = 'review-carousel-arrows';
             const prevBtn = document.createElement('button');
             prevBtn.className = 'review-carousel-arrow review-carousel-prev';
@@ -483,6 +484,9 @@ function renderReviews() {
             nextBtn.className = 'review-carousel-arrow review-carousel-next';
             nextBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
             arrowWrap.appendChild(nextBtn);
+            const counterSpan = document.createElement('span');
+            counterSpan.className = 'review-carousel-counter';
+            arrowWrap.appendChild(counterSpan);
             rowDiv.appendChild(arrowWrap);
         }
     });
@@ -494,14 +498,9 @@ function renderReviews() {
         cardContainer.className = 'review-carousel-card';
         container.appendChild(cardContainer);
 
-        const infoDiv = document.createElement('div');
-        infoDiv.className = 'review-carousel-info';
-        infoDiv.innerHTML = '<span class="review-carousel-counter"></span>';
-        container.appendChild(infoDiv);
-
-        const counter = infoDiv.querySelector('.review-carousel-counter');
-        const prevBtn = rowDiv.querySelector('.review-carousel-arrows .review-carousel-prev');
-        const nextBtn = rowDiv.querySelector('.review-carousel-arrows .review-carousel-next');
+        const counter = rowDiv.querySelector('.review-carousel-counter');
+        const prevBtn = rowDiv.querySelector('.review-carousel-prev');
+        const nextBtn = rowDiv.querySelector('.review-carousel-next');
 
         function showSlide(i) {
             slideIndex = i;
