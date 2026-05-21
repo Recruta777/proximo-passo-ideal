@@ -51,6 +51,16 @@ async function setData(key, data) {
   } catch {}
 }
 
+function parseBody(req) {
+  return new Promise((resolve) => {
+    let body = '';
+    req.on('data', chunk => { body += chunk; });
+    req.on('end', () => {
+      try { resolve(JSON.parse(body)); } catch { resolve({}); }
+    });
+  });
+}
+
 module.exports = async (req, res) => {
   if (req.method === 'OPTIONS') return res.status(204).end();
 
@@ -65,7 +75,8 @@ module.exports = async (req, res) => {
     }
 
     if (req.method === 'POST') {
-      const { action, tipo, dados, id } = req.body;
+      const body = await parseBody(req);
+      const { action, tipo, dados, id } = body;
 
       if (action === 'salvar' && tipo) {
         const lista = await getData(tipo);

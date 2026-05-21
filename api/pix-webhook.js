@@ -76,12 +76,23 @@ async function salvarConfirmado(payment_id, prestador_id) {
   } catch {}
 }
 
+function parseBody(req) {
+  return new Promise((resolve) => {
+    let body = '';
+    req.on('data', chunk => { body += chunk; });
+    req.on('end', () => {
+      try { resolve(JSON.parse(body)); } catch { resolve({}); }
+    });
+  });
+}
+
 module.exports = async (req, res) => {
   if (req.method === 'OPTIONS') return res.status(204).end();
 
   try {
     if (req.method === 'POST') {
-      const paymentId = req.body?.data?.id;
+      const body = await parseBody(req);
+      const paymentId = body?.data?.id;
       if (!paymentId) return res.json({ status: 'ignored' });
 
       const payment = await mpRequest(`/v1/payments/${paymentId}`);

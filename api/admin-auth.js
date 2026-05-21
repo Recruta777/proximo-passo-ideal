@@ -6,8 +6,14 @@ module.exports = async (req, res) => {
   }
 
   try {
+    let body = '';
+    await new Promise((resolve) => {
+      req.on('data', chunk => { body += chunk; });
+      req.on('end', resolve);
+    });
+    const parsed = JSON.parse(body);
     const adminPassword = process.env.ADMIN_PASSWORD || 'idealserv777';
-    if (req.body.password === adminPassword) {
+    if (parsed.password === adminPassword) {
       return res.json({ success: true });
     }
     return res.status(401).json({ success: false, message: 'Senha incorreta' });

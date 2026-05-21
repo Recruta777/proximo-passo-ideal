@@ -44,11 +44,22 @@ async function listarConfirmados() {
   } catch { return []; }
 }
 
+function parseBody(req) {
+  return new Promise((resolve) => {
+    let body = '';
+    req.on('data', chunk => { body += chunk; });
+    req.on('end', () => {
+      try { resolve(JSON.parse(body)); } catch { resolve({}); }
+    });
+  });
+}
+
 module.exports = async (req, res) => {
   if (req.method === 'OPTIONS') return res.status(204).end();
 
   try {
-    const { action, prestador_id, nome, email, payment_id } = req.body;
+    const body = await parseBody(req);
+    const { action, prestador_id, nome, email, payment_id } = body;
 
     if (req.method === 'POST' && action === 'gerar_pix') {
       const { status, data } = await mpRequest('/v1/payments', 'POST', {
