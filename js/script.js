@@ -174,7 +174,7 @@ form.addEventListener('submit', async function (e) {
         `*Descrição:* ${descricao}`;
 
     const whatsappNumber = '5519983025082';
-                                const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+    const url = `whatsapp://send?phone=${whatsappNumber}&text=${encodeURIComponent(message)}`;
 
     setTimeout(() => {
         btn.disabled = false;
@@ -362,7 +362,7 @@ if (providerForm) {
                                     `*PIX R$10:* ✅ CONFIRMADO`;
 
                                 const whatsappNumber = '5519983025082';
-    const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+                                const url = `whatsapp://send?phone=${whatsappNumber}&text=${encodeURIComponent(message)}`;
                                 window.location.href = url;
                             }, 2000);
 
