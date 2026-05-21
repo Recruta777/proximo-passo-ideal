@@ -62,39 +62,48 @@
         <div class="container">
             <h2 class="section-title">Nossos Principais <span>Serviços</span></h2>
             <p class="section-subtitle">Confiança e qualidade em cada serviço realizado</p>
-            <div class="services-grid">
-                <div class="service-card" onclick="location.href='#contato'">
-                    <div class="service-icon">
-                        <i class="fas fa-chair"></i>
+            <div class="services-carousel">
+                <div class="services-track">
+                    <div class="services-slide">
+                        <div class="services-grid">
+                            <div class="service-card" onclick="location.href='#contato'">
+                                <div class="service-icon">
+                                    <i class="fas fa-chair"></i>
+                                </div>
+                                <h3>Marcenaria</h3>
+                                <p>Móveis planejados, armários embutidos, cozinhas, dormitórios e mais.</p>
+                                <span class="service-link">Solicitar <i class="fas fa-arrow-right"></i></span>
+                            </div>
+                            <div class="service-card" onclick="location.href='#contato'">
+                                <div class="service-icon">
+                                    <i class="fas fa-snowflake"></i>
+                                </div>
+                                <h3>Refrigeração</h3>
+                                <p>Ar condicionado, geladeira, lavadora, micro-ondas. Instalação, manutenção e reparo.</p>
+                                <span class="service-link">Solicitar <i class="fas fa-arrow-right"></i></span>
+                            </div>
+                            <div class="service-card" onclick="location.href='#contato'">
+                                <div class="service-icon">
+                                    <i class="fas fa-trowel"></i>
+                                </div>
+                                <h3>Pedreiro</h3>
+                                <p>Construção, reforma, levantamento de paredes, assentar pisos e azulejos, concretagem e mais.</p>
+                                <span class="service-link">Solicitar <i class="fas fa-arrow-right"></i></span>
+                            </div>
+                            <div class="service-card" onclick="location.href='#contato'">
+                                <div class="service-icon">
+                                    <i class="fas fa-paint-roller"></i>
+                                </div>
+                                <h3>Pintura</h3>
+                                <p>Pintura residencial e comercial, texturas, acabamentos finos, pintura de fachadas e interiores.</p>
+                                <span class="service-link">Solicitar <i class="fas fa-arrow-right"></i></span>
+                            </div>
+                        </div>
                     </div>
-                    <h3>Marcenaria</h3>
-                    <p>Móveis planejados, armários embutidos, cozinhas, dormitórios, restauração e reparos em geral.</p>
-                    <span class="service-link">Solicitar <i class="fas fa-arrow-right"></i></span>
                 </div>
-                <div class="service-card" onclick="location.href='#contato'">
-                    <div class="service-icon">
-                        <i class="fas fa-snowflake"></i>
-                    </div>
-                    <h3>Refrigeração</h3>
-                    <p>Ar condicionado, geladeira, lavadora, micro-ondas e toda linha branca. Instalação, manutenção e reparo.</p>
-                    <span class="service-link">Solicitar <i class="fas fa-arrow-right"></i></span>
-                </div>
-                <div class="service-card" onclick="location.href='#contato'">
-                    <div class="service-icon">
-                        <i class="fas fa-trowel"></i>
-                    </div>
-                    <h3>Pedreiro</h3>
-                    <p>Construção, reforma, levantamento de paredes, assentar pisos e azulejos, concretagem e muito mais.</p>
-                    <span class="service-link">Solicitar <i class="fas fa-arrow-right"></i></span>
-                </div>
-                <div class="service-card" onclick="location.href='#contato'">
-                    <div class="service-icon">
-                        <i class="fas fa-paint-roller"></i>
-                    </div>
-                    <h3>Pintura</h3>
-                    <p>Pintura residencial e comercial, texturas, acabamentos finos, pintura de fachadas e interiores.</p>
-                    <span class="service-link">Solicitar <i class="fas fa-arrow-right"></i></span>
-                </div>
+                <button class="services-prev" aria-label="Anterior"><i class="fas fa-chevron-left"></i></button>
+                <button class="services-next" aria-label="Próximo"><i class="fas fa-chevron-right"></i></button>
+                <div class="services-dots"></div>
             </div>
         </div>
     </section>
@@ -198,8 +207,8 @@
                         <input type="text" id="prov-nome" name="prov-nome" placeholder="Seu nome completo" required>
                     </div>
                     <div class="form-group">
-                        <label for="prov-empresa">Nome da Empresa</label>
-                        <input type="text" id="prov-empresa" name="prov-empresa" placeholder="Nome da sua empresa (opcional)">
+                        <label for="prov-empresa"><span class="required-asterisk">*</span> Nome da Empresa</label>
+                        <input type="text" id="prov-empresa" name="prov-empresa" placeholder="Nome da sua empresa" required>
                     </div>
                     <div class="form-group">
                         <label for="prov-telefone"><span class="required-asterisk">*</span> Telefone / WhatsApp</label>
@@ -276,7 +285,7 @@
 
     <section id="avaliacoes" class="reviews">
         <div class="container">
-            <h2 class="section-title">Avaliações <span>dos Clientes</span></h2>
+            <h2 class="section-title">Avaliações dos <span>Clientes</span></h2>
             <p class="section-subtitle">Compartilhe sua experiência com o prestador de serviço</p>
             <div class="reviews-grid">
                 <div class="review-form-card">

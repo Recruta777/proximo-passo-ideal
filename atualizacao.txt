@@ -1,0 +1,6 @@
+para subir as alterações para o Vercel:
+
+1. cd "C:\Users\Anderson\Meu projetos\servicos-page"
+2. git add .
+3. git commit -m "descricao das alteracoes"
+4. git push

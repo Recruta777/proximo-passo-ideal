@@ -186,7 +186,7 @@ if (providerForm) {
         const cidade = document.getElementById('prov-cidade').value.trim();
         const descricao = document.getElementById('prov-descricao').value.trim();
 
-        if (!nome || !telefone || !servico || !cidade || !descricao) {
+        if (!nome || !empresa || !telefone || !servico || !cidade || !descricao) {
             showToast('Preencha todos os campos obrigatórios.', 'error');
             return;
         }
@@ -462,5 +462,27 @@ document.addEventListener('DOMContentLoaded', function() {
 
     renderReviews();
 
+    // Services carousel
+    const track = document.querySelector('.services-track');
+    const slides = document.querySelectorAll('.services-slide');
+    const prevBtn = document.querySelector('.services-prev');
+    const nextBtn = document.querySelector('.services-next');
+    const dotsContainer = document.querySelector('.services-dots');
+    if (track && slides.length && dotsContainer) {
+        let currentIndex = 0;
+        slides.forEach((_, i) => {
+            const dot = document.createElement('button');
+            dot.classList.toggle('active', i === 0);
+            dot.addEventListener('click', () => goToSlide(i));
+            dotsContainer.appendChild(dot);
+        });
+        function goToSlide(index) {
+            currentIndex = index;
+            track.style.transform = `translateX(-${index * 100}%)`;
+            dotsContainer.querySelectorAll('button').forEach((d, i) => d.classList.toggle('active', i === index));
+        }
+        if (prevBtn) prevBtn.addEventListener('click', () => goToSlide(currentIndex > 0 ? currentIndex - 1 : slides.length - 1));
+        if (nextBtn) nextBtn.addEventListener('click', () => goToSlide(currentIndex < slides.length - 1 ? currentIndex + 1 : 0));
+    }
 
 });
