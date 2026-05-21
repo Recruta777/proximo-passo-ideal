@@ -694,6 +694,7 @@ section {
     display: flex;
     flex-direction: column;
     gap: 16px;
+    margin-left: 100px;
 }
 
 .review-card {
@@ -1339,7 +1340,7 @@ section {
 .review-carousel-track {
     display: flex;
     align-items: stretch;
-    gap: 0;
+    gap: 8px;
     min-height: 100px;
 }
 .review-carousel-card {
