@@ -480,7 +480,8 @@
                         <h2>Orçamento <span>de Clientes</span></h2>
                         <div>
                             <button class="btn btn-outline btn-sm" style="border-color:#ccc;color:#666;margin-right:8px;" onclick="forcarSync()"><i class="fas fa-sync"></i> Sincronizar</button>
-                            <button class="btn btn-outline btn-sm" style="border-color:#ccc;color:#666;" onclick="exportSolicitacoes()"><i class="fas fa-download"></i> Exportar</button>
+                            <button class="btn btn-outline btn-sm" style="border-color:#ccc;color:#666;margin-right:8px;" onclick="exportSolicitacoes()"><i class="fas fa-download"></i> Exportar</button>
+                            <button class="btn btn-outline btn-sm" style="border-color:#e74c3c;color:#e74c3c;" onclick="limparTodasSolicitacoes()"><i class="fas fa-trash"></i> Limpar todas</button>
                         </div>
                     </div>
 
@@ -501,6 +502,7 @@
                             <button class="btn btn-outline btn-sm" style="border-color:#ccc;color:#666;margin-right:8px;" onclick="forcarSync()"><i class="fas fa-sync"></i> Sincronizar</button>
                             <button class="btn btn-outline btn-sm" style="border-color:#ccc;color:#666;margin-right:8px;" onclick="sincronizarPIX()"><i class="fas fa-money-bill"></i> PIX</button>
                             <button class="btn btn-primary btn-sm" onclick="openModal('add')"><i class="fas fa-plus"></i> Adicionar</button>
+                            <button class="btn btn-outline btn-sm" style="border-color:#e74c3c;color:#e74c3c;" onclick="limparTodosPrestadores()"><i class="fas fa-trash"></i> Limpar todos</button>
                         </div>
                     </div>
 
@@ -524,7 +526,8 @@
                                 <span><i class="fas fa-thumbs-down" style="color:#e74c3c;"></i> <strong id="rec-dislike-count">0</strong></span>
                             </span>
                             <button class="btn btn-outline btn-sm" style="border-color:#ccc;color:#666;margin-right:8px;" onclick="forcarSync()"><i class="fas fa-sync"></i> Sincronizar</button>
-                            <button class="btn btn-outline btn-sm" style="border-color:#ccc;color:#666;" onclick="exportReviews()"><i class="fas fa-download"></i> Exportar</button>
+                            <button class="btn btn-outline btn-sm" style="border-color:#ccc;color:#666;margin-right:8px;" onclick="exportReviews()"><i class="fas fa-download"></i> Exportar</button>
+                            <button class="btn btn-outline btn-sm" style="border-color:#e74c3c;color:#e74c3c;" onclick="limparTodasAvaliacoes()"><i class="fas fa-trash"></i> Limpar todas</button>
                         </div>
                     </div>
 
@@ -1082,6 +1085,35 @@
             updateReviewCount();
             showToast('Avaliação excluída.');
             apiDados('substituir', { tipo: 'avaliacoes', dados: lista });
+        }
+
+        function limparTodasSolicitacoes() {
+            const lista = getSolicitacoes();
+            if (lista.length === 0) { showToast('Nenhum orçamento para limpar.'); return; }
+            if (!confirm(`Tem certeza que deseja excluir TODOS os ${lista.length} orçamentos?`)) return;
+            saveSolicitacoes([]);
+            renderSolicitacoes();
+            showToast('Todos os orçamentos foram excluídos!');
+        }
+
+        function limparTodosPrestadores() {
+            const lista = getProviders();
+            if (lista.length === 0) { showToast('Nenhum prestador para limpar.'); return; }
+            if (!confirm(`Tem certeza que deseja excluir TODOS os ${lista.length} prestadores?`)) return;
+            saveProviders([]);
+            renderProviders();
+            showToast('Todos os prestadores foram excluídos!');
+        }
+
+        function limparTodasAvaliacoes() {
+            const lista = getReviews();
+            if (lista.length === 0) { showToast('Nenhuma avaliação para limpar.'); return; }
+            if (!confirm(`Tem certeza que deseja excluir TODAS as ${lista.length} avaliações?`)) return;
+            localStorage.setItem(REVIEWS_KEY, JSON.stringify([]));
+            renderAdminReviews();
+            updateReviewCount();
+            showToast('Todas as avaliações foram excluídas!');
+            apiDados('substituir', { tipo: 'avaliacoes', dados: [] });
         }
 
         function exportSolicitacoes() {
