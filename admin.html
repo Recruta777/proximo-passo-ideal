@@ -506,7 +506,6 @@
                         <div>
                             <button class="btn btn-outline btn-sm" style="border-color:#ccc;color:#666;margin-right:8px;" onclick="forcarSync()"><i class="fas fa-sync"></i> Sincronizar</button>
                             <button class="btn btn-outline btn-sm" style="border-color:#ccc;color:#666;margin-right:8px;" onclick="exportSolicitacoes()"><i class="fas fa-download"></i> Exportar</button>
-                            <button class="btn btn-outline btn-sm" style="border-color:#e74c3c;color:#e74c3c;" onclick="limparTodasSolicitacoes()"><i class="fas fa-trash"></i> Limpar todas</button>
                         </div>
                     </div>
 
@@ -527,7 +526,6 @@
                             <button class="btn btn-outline btn-sm" style="border-color:#ccc;color:#666;margin-right:8px;" onclick="forcarSync()"><i class="fas fa-sync"></i> Sincronizar</button>
                             <button class="btn btn-outline btn-sm" style="border-color:#ccc;color:#666;margin-right:8px;" onclick="sincronizarPIX()"><i class="fas fa-money-bill"></i> PIX</button>
                             <button class="btn btn-primary btn-sm" onclick="openModal('add')"><i class="fas fa-plus"></i> Adicionar</button>
-                            <button class="btn btn-outline btn-sm" style="border-color:#e74c3c;color:#e74c3c;" onclick="limparTodosPrestadores()"><i class="fas fa-trash"></i> Limpar todos</button>
                         </div>
                     </div>
 
@@ -552,7 +550,6 @@
                             </span>
                             <button class="btn btn-outline btn-sm" style="border-color:#ccc;color:#666;margin-right:8px;" onclick="forcarSync()"><i class="fas fa-sync"></i> Sincronizar</button>
                             <button class="btn btn-outline btn-sm" style="border-color:#ccc;color:#666;margin-right:8px;" onclick="exportReviews()"><i class="fas fa-download"></i> Exportar</button>
-                            <button class="btn btn-outline btn-sm" style="border-color:#e74c3c;color:#e74c3c;" onclick="limparTodasAvaliacoes()"><i class="fas fa-trash"></i> Limpar todas</button>
                         </div>
                     </div>
 
@@ -1320,10 +1317,9 @@
                 </div>
             `).join('');
 
-            const likesRec = lista.filter(r => r.recomendou === 'like').length;
-            const dislikesRec = lista.filter(r => r.recomendou === 'dislike').length;
-            document.getElementById('rec-like-count').textContent = likesRec;
-            document.getElementById('rec-dislike-count').textContent = dislikesRec;
+            const recCounts = JSON.parse(localStorage.getItem(REC_COUNTS_KEY) || '{"likes":0,"dislikes":0}');
+            document.getElementById('rec-like-count').textContent = recCounts.likes;
+            document.getElementById('rec-dislike-count').textContent = recCounts.dislikes;
             updateReviewCount();
         }
     </script>
