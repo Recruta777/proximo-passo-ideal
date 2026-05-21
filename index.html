@@ -369,19 +369,18 @@
 
     <div id="admin-login-modal" class="modal-overlay" style="display:none;">
         <div class="modal-content" style="max-width:400px;text-align:center;">
+            <form id="admin-login-form" onsubmit="event.preventDefault(); checkAdminLogin();" style="display:contents;">
             <div style="font-size:48px;color:#1B2A4A;margin-bottom:16px;"><i class="fas fa-shield-alt"></i></div>
             <h3 style="margin-bottom:8px;">Acesso Restrito</h3>
             <p style="color:#999;margin-bottom:20px;font-size:14px;">Digite a senha de administrador</p>
             <div style="position:relative;">
-                <input type="password" id="admin-senha" placeholder="Senha"
-                       style="width:100%;padding:12px 44px 12px 12px;border:2px solid #ddd;border-radius:8px;font-size:16px;text-align:center;outline:none;"
-                       onkeydown="if(event.key==='Enter') checkAdminLogin()">
+                <input type="password" id="admin-senha" name="admin-senha" placeholder="Senha"
+                       style="width:100%;padding:12px 44px 12px 12px;border:2px solid #ddd;border-radius:8px;font-size:16px;text-align:center;outline:none;">
                 <i id="admin-senha-toggle" class="fas fa-eye-slash" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);color:#999;cursor:pointer;font-size:18px;" onclick="toggleAdminSenha()"></i>
             </div>
-            <button class="btn btn-primary btn-full" style="margin-top:16px;" onclick="checkAdminLogin()">Entrar</button>
-            <button class="btn btn-outline btn-full" style="margin-top:8px;color:#666;border-color:#ccc;" onclick="closeAdminModal()">Cancelar</button>
-        </div>
-    </div>
+            <button type="submit" class="btn btn-primary btn-full" style="margin-top:16px;">Entrar</button>
+            <button type="button" class="btn btn-outline btn-full" style="margin-top:8px;color:#666;border-color:#ccc;" onclick="closeAdminModal()">Cancelar</button>
+            </form>
 
     <script src="js/script.js"></script>
     <script src="js/pix.js"></script>
