@@ -460,21 +460,27 @@ function renderReviews() {
         `;
     }
     const reversed = [...lista].reverse();
-    const primeiras = reversed.slice(0, 2);
-    const restantes = reversed.slice(2);
+
+    if (reversed.length === 0) {
+        container.innerHTML = '<div class="empty-state"><i class="fas fa-star"></i><h3>Nenhuma avaliação ainda</h3><p>Seja o primeiro a compartilhar sua experiência!</p></div>';
+        return;
+    }
 
     container.innerHTML = '';
 
-    // Wrapper for 2 fixed cards stacked, arrows between them
-    const rowDiv = document.createElement('div');
-    rowDiv.className = 'reviews-fixed-row';
-    let arrowWrap = null;
-    primeiras.forEach((r, idx) => {
-        const temp = document.createElement('div');
-        temp.innerHTML = cardHTML(r);
-        rowDiv.appendChild(temp.firstElementChild);
-        if (idx === 0 && restantes.length > 0) {
-            arrowWrap = document.createElement('div');
+    function renderPage(startIndex) {
+        container.innerHTML = '';
+        const slice = reversed.slice(startIndex, startIndex + 2);
+        const rowDiv = document.createElement('div');
+        rowDiv.className = 'reviews-fixed-row';
+        slice.forEach((r) => {
+            const temp = document.createElement('div');
+            temp.innerHTML = cardHTML(r);
+            rowDiv.appendChild(temp.firstElementChild);
+        });
+
+        if (reversed.length > 2) {
+            const arrowWrap = document.createElement('div');
             arrowWrap.className = 'review-carousel-arrows';
             const prevBtn = document.createElement('button');
             prevBtn.className = 'review-carousel-arrow review-carousel-prev';
@@ -488,38 +494,27 @@ function renderReviews() {
             counterSpan.className = 'review-carousel-counter';
             arrowWrap.appendChild(counterSpan);
             rowDiv.appendChild(arrowWrap);
-        }
-    });
-    container.appendChild(rowDiv);
 
-    if (restantes.length > 0) {
-        let slideIndex = -1;
-        const cardContainer = document.createElement('div');
-        cardContainer.className = 'review-carousel-card';
-        container.appendChild(cardContainer);
+            const totalPages = Math.ceil(reversed.length / 2);
+            let currentPage = Math.floor(startIndex / 2) + 1;
+            counterSpan.textContent = `${currentPage} de ${totalPages}`;
+            prevBtn.style.opacity = currentPage === 1 ? '0.3' : '1';
+            nextBtn.style.opacity = currentPage === totalPages ? '0.3' : '1';
 
-        const counter = rowDiv.querySelector('.review-carousel-counter');
-        const prevBtn = rowDiv.querySelector('.review-carousel-prev');
-        const nextBtn = rowDiv.querySelector('.review-carousel-next');
-
-        function showSlide(i) {
-            slideIndex = i;
-            cardContainer.innerHTML = cardHTML(restantes[slideIndex]);
-            counter.textContent = `${slideIndex + 1} de ${restantes.length}`;
-            prevBtn.style.opacity = slideIndex === 0 ? '0.3' : '1';
-            nextBtn.style.opacity = slideIndex === restantes.length - 1 ? '0.3' : '1';
+            prevBtn.addEventListener('click', () => {
+                const newStart = Math.max(0, startIndex - 2);
+                renderPage(newStart);
+            });
+            nextBtn.addEventListener('click', () => {
+                const newStart = Math.min(reversed.length - 2, startIndex + 2);
+                if (newStart !== startIndex) renderPage(newStart);
+            });
         }
 
-        counter.textContent = `0 de ${restantes.length}`;
-        prevBtn.style.opacity = '0.3';
-        nextBtn.style.opacity = '1';
-
-        nextBtn.addEventListener('click', () => {
-            if (slideIndex === -1) { showSlide(0); return; }
-            if (slideIndex < restantes.length - 1) showSlide(slideIndex + 1);
-        });
-        prevBtn.addEventListener('click', () => { if (slideIndex > 0) showSlide(slideIndex - 1); });
+        container.appendChild(rowDiv);
     }
+
+    renderPage(0);
 }
 
 // Star rating
