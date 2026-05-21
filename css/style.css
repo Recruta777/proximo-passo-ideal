@@ -700,7 +700,7 @@ section {
 .review-card {
     background: #f8f9fa;
     border-radius: 12px;
-    padding: 18px 22px;
+    padding: 8px 22px;
     border: 1px solid #eee;
     transition: all 0.3s;
 }
