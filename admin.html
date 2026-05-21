@@ -889,7 +889,8 @@
             score += pagos * 5;
             score -= naoPagos * 10;
             score += solicitacoes.length * 2;
-            const exibido = score - baseline;
+            let exibido = score - baseline;
+            if (exibido > 100) exibido = 100;
 
             let scoreClass, scoreLabel;
             if (exibido >= 80) { scoreClass = 'score-excelente'; scoreLabel = 'Excelente'; }
@@ -966,7 +967,7 @@
                             <div class="score-editor-controls">
                                 <button class="score-editor-btn" onclick="ajustarScore(-10)">-10</button>
                                 <button class="score-editor-btn" onclick="ajustarScore(-1)">-1</button>
-                                <input type="number" id="score-editor-input" value="${exibido}" min="-999" max="999" onchange="definirScore(this.value)">
+                                <input type="number" id="score-editor-input" value="${exibido}" min="-999" max="100" onchange="definirScore(this.value)">
                                 <button class="score-editor-btn" onclick="ajustarScore(1)">+1</button>
                                 <button class="score-editor-btn" onclick="ajustarScore(10)">+10</button>
                             </div>
@@ -996,12 +997,14 @@
             const input = document.getElementById('score-editor-input');
             let val = parseInt(input.value) || 0;
             val += delta;
+            if (val > 100) val = 100;
             input.value = val;
             definirScore(val);
         }
 
         function definirScore(val) {
             val = parseInt(val) || 0;
+            if (val > 100) val = 100;
             const providers = getProviders();
             const reviews = getReviews();
             const solicitacoes = getSolicitacoes();
