@@ -693,15 +693,13 @@ section {
 .reviews-list {
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    max-height: 600px;
-    overflow-y: auto;
+    gap: 16px;
 }
 
 .review-card {
     background: #f8f9fa;
     border-radius: 12px;
-    padding: 24px;
+    padding: 18px 22px;
     border: 1px solid #eee;
     transition: all 0.3s;
 }

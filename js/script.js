@@ -460,8 +460,8 @@ function renderReviews() {
         `;
     }
     const reversed = [...lista].reverse();
-    const primeiras = reversed.slice(0, 1);
-    const restantes = reversed.slice(1);
+    const primeiras = reversed.slice(0, 2);
+    const restantes = reversed.slice(2);
 
     container.innerHTML = primeiras.map(cardHTML).join('');
 
