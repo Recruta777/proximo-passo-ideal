@@ -710,14 +710,7 @@
                 if (data.success) {
                     document.getElementById('login-area').style.display = 'none';
                     document.getElementById('admin-panel').classList.add('active');
-                    // Mostra dados do localStorage imediatamente
-                    updateCount();
-                    updateSolicitacaoCount();
-                    updateReviewCount();
-                    renderSolicitacoes();
-                    renderProviders();
-                    renderAdminReviews();
-                    // Sincroniza com API e atualiza tudo
+                    // Aguarda sincronização com API
                     await syncFromAPI(true);
                     renderSolicitacoes();
                     renderProviders();
@@ -758,6 +751,7 @@
         }
 
         function renderProviders() {
+            updateCount();
             const providers = getProviders();
             const list = document.getElementById('provider-list');
 
