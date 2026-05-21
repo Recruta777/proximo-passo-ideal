@@ -519,9 +519,6 @@
             <!-- Admin Panel -->
             <div id="admin-panel" class="admin-panel">
                 <div class="admin-tabs">
-                    <button class="tab-btn" onclick="switchTab('dashboard')" id="tab-dashboard">
-                        <i class="fas fa-chart-bar"></i> Dashboard
-                    </button>
                     <button class="tab-btn" onclick="switchTab('solicitacoes')" id="tab-solicitacoes">
                         <i class="fas fa-clipboard-list"></i> Orçamento <span id="solicitacao-count" class="tab-count">0</span>
                     </button>
@@ -531,14 +528,9 @@
                     <button class="tab-btn" onclick="switchTab('avaliacoes')" id="tab-avaliacoes">
                         <i class="fas fa-star"></i> Avaliações <span id="review-count" class="tab-count">0</span>
                     </button>
-                </div>
-
-                <!-- Dashboard Tab -->
-                <div id="tab-content-dashboard" class="tab-content">
-                    <div class="admin-toolbar">
-                        <h2>Dashboard <span>Visão Geral</span></h2>
-                    </div>
-                    <div id="dashboard-stats" class="dashboard-grid"></div>
+                    <button class="tab-btn" onclick="switchTab('dashboard')" id="tab-dashboard">
+                        <i class="fas fa-chart-bar"></i> Dashboard
+                    </button>
                 </div>
 
                 <!-- Orçamento Tab -->
@@ -598,6 +590,14 @@
                             <p>As avaliações dos clientes aparecerão aqui.</p>
                         </div>
                     </div>
+                </div>
+
+                <!-- Dashboard Tab -->
+                <div id="tab-content-dashboard" class="tab-content">
+                    <div class="admin-toolbar">
+                        <h2>Dashboard <span>Visão Geral</span></h2>
+                    </div>
+                    <div id="dashboard-stats" class="dashboard-grid"></div>
                 </div>
 
                 <div style="text-align: center; margin-top: 30px;">
