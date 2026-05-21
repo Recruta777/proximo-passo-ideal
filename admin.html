@@ -410,6 +410,31 @@
             color: #f39c12;
         }
 
+        .sel-bar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 16px;
+            background: #fff;
+            border-radius: 10px;
+            margin-bottom: 16px;
+            border: 1px solid #e0e0e0;
+            font-size: 14px;
+        }
+        .sel-bar label { display:flex;align-items:center;gap:8px;cursor:pointer;color:#1B2A4A;user-select:none; }
+        .sel-bar input[type=checkbox] { width:18px;height:18px;accent-color:#f39c12;cursor:pointer; }
+        .sel-bar .btn-del-sel {
+            margin-left:auto;
+            background:#e74c3c;color:#fff;border:none;
+            padding:6px 16px;border-radius:8px;cursor:pointer;
+            font-size:13px;font-weight:600;transition:all .3s;
+        }
+        .sel-bar .btn-del-sel:hover { background:#c0392b; }
+        .sel-bar .btn-del-sel:disabled { background:#ccc;cursor:default; }
+        .item-check { width:18px;height:18px;accent-color:#f39c12;cursor:pointer;margin-right:12px;flex-shrink:0; }
+        .solic-card { display:flex;align-items:flex-start;gap:4px; }
+        .solic-card .solic-body { flex:1; }
+
         @media (max-width: 600px) {
             .provider-card {
                 flex-direction: column;
@@ -775,9 +800,15 @@
                 return;
             }
 
-            list.innerHTML = providers.map(p => `
+            list.innerHTML = `
+                <div class="sel-bar">
+                    <label><input type="checkbox" onchange="toggleSelectAllProviders(this.checked)"> <strong>Selecionar todos</strong></label>
+                    <button class="btn-del-sel" onclick="deleteSelectedProviders()" id="del-sel-prov"><i class="fas fa-trash"></i> Excluir selecionados</button>
+                </div>
+            ` + providers.map(p => `
                 <div class="provider-card">
-                    <div class="provider-info">
+                    <input type="checkbox" class="item-check prov-item" value="${p.id}" onchange="updateDelSelBtnProv()">
+                    <div class="provider-info" style="flex:1">
                         <span class="badge badge-default">${getServicoLabel(p.servico)}</span>
                         <span class="badge ${p.pago ? 'badge-pago' : 'badge-naopago'}">${p.pago ? 'PAGO' : 'NÃO PAGO'}</span>
                         <h3>${p.empresa ? p.empresa : p.nome}</h3>
@@ -805,6 +836,7 @@
                     </div>
                 </div>
             `).join('');
+            updateDelSelBtnProv();
         }
 
         function getServicoLabel(s) {
@@ -1048,25 +1080,34 @@
             }
 
             const labels = { pedreiro: 'Pedreiro', marcenaria: 'Marcenaria', pintura: 'Pintura', refrigeracao: 'Refrigeração', outro: 'Outro', empresa: '⭐ Empresa' };
-            container.innerHTML = [...lista].reverse().map(r => `
+            container.innerHTML = `
+                <div class="sel-bar">
+                    <label><input type="checkbox" onchange="toggleSelectAllSolicitacoes(this.checked)"> <strong>Selecionar todos</strong></label>
+                    <button class="btn-del-sel" onclick="deleteSelectedSolicitacoes()" id="del-sel-solic"><i class="fas fa-trash"></i> Excluir selecionados</button>
+                </div>
+            ` + [...lista].reverse().map(r => `
                 <div class="solic-card">
-                    <span class="solic-badge badge-${r.servico}">${labels[r.servico] || r.servico}</span>
-                    <h3><i class="fas fa-user"></i> ${r.nome}</h3>
-                    <div class="solic-info">
-                        ${r.prestador ? `<p><i class="fas fa-tools"></i> Prestador: ${r.prestador}</p>` : ''}
-                        <p><i class="fas fa-calendar"></i> ${r.data}</p>
-                    </div>
-                    <div class="solic-desc">
-                        <strong><i class="fas fa-comment-dots"></i> Experiência</strong>
-                        ${r.descricao}
-                    </div>
-                    <div class="solic-actions">
-                        <button class="btn-delete" onclick="deleteSolicitacao('${r.id}')" title="Excluir">
-                            <i class="fas fa-trash"></i>
-                        </button>
+                    <input type="checkbox" class="item-check solic-item" value="${r.id}" onchange="updateDelSelBtnSolic()">
+                    <div class="solic-body">
+                        <span class="solic-badge badge-${r.servico}">${labels[r.servico] || r.servico}</span>
+                        <h3><i class="fas fa-user"></i> ${r.nome}</h3>
+                        <div class="solic-info">
+                            ${r.prestador ? `<p><i class="fas fa-tools"></i> Prestador: ${r.prestador}</p>` : ''}
+                            <p><i class="fas fa-calendar"></i> ${r.data}</p>
+                        </div>
+                        <div class="solic-desc">
+                            <strong><i class="fas fa-comment-dots"></i> Experiência</strong>
+                            ${r.descricao}
+                        </div>
+                        <div class="solic-actions">
+                            <button class="btn-delete" onclick="deleteSolicitacao('${r.id}')" title="Excluir">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
             `).join('');
+            updateDelSelBtnSolic();
         }
 
         function deleteSolicitacao(id) {
@@ -1116,6 +1157,74 @@
             apiDados('substituir', { tipo: 'avaliacoes', dados: [] });
         }
 
+        // === SELEÇÃO EM LOTE ===
+        function getChecked(selector) {
+            return Array.from(document.querySelectorAll(selector))
+                .filter(cb => cb.checked).map(cb => cb.value);
+        }
+
+        function updateDelSelBtnSolic() {
+            const btn = document.getElementById('del-sel-solic');
+            if (btn) btn.disabled = getChecked('.solic-item').length === 0;
+        }
+
+        function updateDelSelBtnProv() {
+            const btn = document.getElementById('del-sel-prov');
+            if (btn) btn.disabled = getChecked('.prov-item').length === 0;
+        }
+
+        function updateDelSelBtnRev() {
+            const btn = document.getElementById('del-sel-rev');
+            if (btn) btn.disabled = getChecked('.rev-item').length === 0;
+        }
+
+        function toggleSelectAllSolicitacoes(checked) {
+            document.querySelectorAll('.solic-item').forEach(cb => cb.checked = checked);
+            updateDelSelBtnSolic();
+        }
+
+        function toggleSelectAllProviders(checked) {
+            document.querySelectorAll('.prov-item').forEach(cb => cb.checked = checked);
+            updateDelSelBtnProv();
+        }
+
+        function toggleSelectAllReviews(checked) {
+            document.querySelectorAll('.rev-item').forEach(cb => cb.checked = checked);
+            updateDelSelBtnRev();
+        }
+
+        function deleteSelectedSolicitacoes() {
+            const ids = getChecked('.solic-item');
+            if (ids.length === 0) return;
+            if (!confirm(`Excluir ${ids.length} orçamento(s) selecionado(s)?`)) return;
+            const lista = getSolicitacoes().filter(r => !ids.includes(r.id));
+            saveSolicitacoes(lista);
+            renderSolicitacoes();
+            showToast(`${ids.length} orçamento(s) excluído(s)!`);
+        }
+
+        function deleteSelectedProviders() {
+            const ids = getChecked('.prov-item');
+            if (ids.length === 0) return;
+            if (!confirm(`Excluir ${ids.length} prestador(es) selecionado(s)?`)) return;
+            const lista = getProviders().filter(p => !ids.includes(p.id));
+            saveProviders(lista);
+            renderProviders();
+            showToast(`${ids.length} prestador(es) excluído(s)!`);
+        }
+
+        function deleteSelectedReviews() {
+            const ids = getChecked('.rev-item');
+            if (ids.length === 0) return;
+            if (!confirm(`Excluir ${ids.length} avaliação(ões) selecionada(s)?`)) return;
+            const lista = getReviews().filter(r => !ids.includes(r.id));
+            localStorage.setItem(REVIEWS_KEY, JSON.stringify(lista));
+            renderAdminReviews();
+            updateReviewCount();
+            showToast(`${ids.length} avaliação(ões) excluída(s)!`);
+            apiDados('substituir', { tipo: 'avaliacoes', dados: lista });
+        }
+
         function exportSolicitacoes() {
             const data = getSolicitacoes();
             const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
@@ -1161,27 +1270,35 @@
             }
 
             const labels = { pedreiro: 'Pedreiro', marcenaria: 'Marcenaria', pintura: 'Pintura', refrigeracao: 'Refrigeração', outro: 'Outro', empresa: '⭐ Empresa' };
-            container.innerHTML = [...lista].reverse().map(r => `
+            container.innerHTML = `
+                <div class="sel-bar">
+                    <label><input type="checkbox" onchange="toggleSelectAllReviews(this.checked)"> <strong>Selecionar todos</strong></label>
+                    <button class="btn-del-sel" onclick="deleteSelectedReviews()" id="del-sel-rev"><i class="fas fa-trash"></i> Excluir selecionados</button>
+                </div>
+            ` + [...lista].reverse().map(r => `
                 <div class="solic-card">
-                    <span class="solic-badge badge-${r.servico}">${labels[r.servico] || r.servico}</span>
-                    <h3><i class="fas fa-user"></i> ${r.nome} 
-                        ${r.recomendou === 'like' ? '<i class="fas fa-thumbs-up" style="color:#27ae60;font-size:16px;" title="Recomendou"></i>' : ''}
-                        ${r.recomendou === 'dislike' ? '<i class="fas fa-thumbs-down" style="color:#e74c3c;font-size:16px;" title="Não recomendou"></i>' : ''}
-                        <span style="color:#f39c12;font-size:14px;">${'★'.repeat(r.stars)}${'☆'.repeat(5-r.stars)}</span></h3>
-                    <div class="solic-info">
-                        ${r.prestador ? `<p><i class="fas fa-tools"></i> Prestador: ${r.prestador}</p>` : ''}
-                        <p><i class="fas fa-calendar"></i> ${r.data}</p>
+                    <input type="checkbox" class="item-check rev-item" value="${r.id}" onchange="updateDelSelBtnRev()">
+                    <div class="solic-body">
+                        <span class="solic-badge badge-${r.servico}">${labels[r.servico] || r.servico}</span>
+                        <h3><i class="fas fa-user"></i> ${r.nome} 
+                            ${r.recomendou === 'like' ? '<i class="fas fa-thumbs-up" style="color:#27ae60;font-size:16px;" title="Recomendou"></i>' : ''}
+                            ${r.recomendou === 'dislike' ? '<i class="fas fa-thumbs-down" style="color:#e74c3c;font-size:16px;" title="Não recomendou"></i>' : ''}
+                            <span style="color:#f39c12;font-size:14px;">${'★'.repeat(r.stars)}${'☆'.repeat(5-r.stars)}</span></h3>
+                        <div class="solic-info">
+                            ${r.prestador ? `<p><i class="fas fa-tools"></i> Prestador: ${r.prestador}</p>` : ''}
+                            <p><i class="fas fa-calendar"></i> ${r.data}</p>
 
-                    </div>
-                    <div class="solic-desc">
-                        <strong><i class="fas fa-comment-dots"></i> Experiência</strong>
-                        ${r.descricao}
-                    </div>
-                    ${r.foto ? `<img src="${r.foto}" class="review-foto" alt="Foto da avaliação" style="max-width:100%;max-height:200px;border-radius:8px;margin-top:10px;">` : ''}
-                    <div class="solic-actions">
-                        <button class="btn-delete" onclick="deleteReview('${r.id}')" title="Excluir">
-                            <i class="fas fa-trash"></i>
-                        </button>
+                        </div>
+                        <div class="solic-desc">
+                            <strong><i class="fas fa-comment-dots"></i> Experiência</strong>
+                            ${r.descricao}
+                        </div>
+                        ${r.foto ? `<img src="${r.foto}" class="review-foto" alt="Foto da avaliação" style="max-width:100%;max-height:200px;border-radius:8px;margin-top:10px;">` : ''}
+                        <div class="solic-actions">
+                            <button class="btn-delete" onclick="deleteReview('${r.id}')" title="Excluir">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
             `).join('');
