@@ -473,43 +473,43 @@ function renderReviews() {
         const slice = reversed.slice(startIndex, startIndex + 2);
         const rowDiv = document.createElement('div');
         rowDiv.className = 'reviews-fixed-row';
-        slice.forEach((r) => {
+        slice.forEach((r, idx) => {
             const temp = document.createElement('div');
             temp.innerHTML = cardHTML(r);
             rowDiv.appendChild(temp.firstElementChild);
+            if (idx === 0 && reversed.length > 2) {
+                const arrowWrap = document.createElement('div');
+                arrowWrap.className = 'review-carousel-arrows';
+                const prevBtn = document.createElement('button');
+                prevBtn.className = 'review-carousel-arrow review-carousel-prev';
+                prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
+                arrowWrap.appendChild(prevBtn);
+                const nextBtn = document.createElement('button');
+                nextBtn.className = 'review-carousel-arrow review-carousel-next';
+                nextBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
+                arrowWrap.appendChild(nextBtn);
+                const counterSpan = document.createElement('span');
+                counterSpan.className = 'review-carousel-counter';
+                arrowWrap.appendChild(counterSpan);
+
+                const totalPages = Math.ceil(reversed.length / 2);
+                let currentPage = Math.floor(startIndex / 2) + 1;
+                counterSpan.textContent = `${currentPage} de ${totalPages}`;
+                prevBtn.style.opacity = currentPage === 1 ? '0.3' : '1';
+                nextBtn.style.opacity = currentPage === totalPages ? '0.3' : '1';
+
+                prevBtn.addEventListener('click', () => {
+                    const newStart = Math.max(0, startIndex - 2);
+                    renderPage(newStart);
+                });
+                nextBtn.addEventListener('click', () => {
+                    const newStart = Math.min(reversed.length - 2, startIndex + 2);
+                    if (newStart !== startIndex) renderPage(newStart);
+                });
+
+                rowDiv.appendChild(arrowWrap);
+            }
         });
-
-        if (reversed.length > 2) {
-            const arrowWrap = document.createElement('div');
-            arrowWrap.className = 'review-carousel-arrows';
-            const prevBtn = document.createElement('button');
-            prevBtn.className = 'review-carousel-arrow review-carousel-prev';
-            prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
-            arrowWrap.appendChild(prevBtn);
-            const nextBtn = document.createElement('button');
-            nextBtn.className = 'review-carousel-arrow review-carousel-next';
-            nextBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
-            arrowWrap.appendChild(nextBtn);
-            const counterSpan = document.createElement('span');
-            counterSpan.className = 'review-carousel-counter';
-            arrowWrap.appendChild(counterSpan);
-            rowDiv.appendChild(arrowWrap);
-
-            const totalPages = Math.ceil(reversed.length / 2);
-            let currentPage = Math.floor(startIndex / 2) + 1;
-            counterSpan.textContent = `${currentPage} de ${totalPages}`;
-            prevBtn.style.opacity = currentPage === 1 ? '0.3' : '1';
-            nextBtn.style.opacity = currentPage === totalPages ? '0.3' : '1';
-
-            prevBtn.addEventListener('click', () => {
-                const newStart = Math.max(0, startIndex - 2);
-                renderPage(newStart);
-            });
-            nextBtn.addEventListener('click', () => {
-                const newStart = Math.min(reversed.length - 2, startIndex + 2);
-                if (newStart !== startIndex) renderPage(newStart);
-            });
-        }
 
         container.appendChild(rowDiv);
     }
