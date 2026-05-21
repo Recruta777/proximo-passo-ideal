@@ -41,7 +41,7 @@
                             <span class="rec-sep">|</span>
                             <span><i class="fas fa-thumbs-down" style="color:#e74c3c;"></i> <strong id="header-rec-dislike-count">0</strong></span>
                         </span>
-                        <a href="admin.html" style="color:#fff;font-size:16px;transform:translate(-70px, -10px);"><i class="fas fa-lock"></i></a>
+                        <a href="#" onclick="event.preventDefault(); openAdminModal();" style="color:#fff;font-size:16px;transform:translate(-70px, -10px);"><i class="fas fa-lock"></i></a>
                     </li>
                 </ul>
             </div>
@@ -361,6 +361,51 @@
     </footer>
 
     <div id="toast" class="toast"></div>
+
+    <div id="admin-login-modal" class="modal-overlay" style="display:none;">
+        <div class="modal-content" style="max-width:400px;text-align:center;">
+            <div style="font-size:48px;color:#1B2A4A;margin-bottom:16px;"><i class="fas fa-shield-alt"></i></div>
+            <h3 style="margin-bottom:8px;">Acesso Restrito</h3>
+            <p style="color:#999;margin-bottom:20px;font-size:14px;">Digite a senha de administrador</p>
+            <input type="password" id="admin-senha" placeholder="Senha"
+                   style="width:100%;padding:12px;border:2px solid #ddd;border-radius:8px;font-size:16px;text-align:center;outline:none;"
+                   onkeydown="if(event.key==='Enter') checkAdminLogin()">
+            <button class="btn btn-primary btn-full" style="margin-top:16px;" onclick="checkAdminLogin()">Entrar</button>
+            <button class="btn btn-outline btn-full" style="margin-top:8px;" onclick="closeAdminModal()">Cancelar</button>
+        </div>
+    </div>
+
+    <script>
+        function openAdminModal() {
+            document.getElementById('admin-login-modal').style.display = 'flex';
+            setTimeout(() => document.getElementById('admin-senha').focus(), 100);
+        }
+        function closeAdminModal() {
+            document.getElementById('admin-login-modal').style.display = 'none';
+            document.getElementById('admin-senha').value = '';
+        }
+        async function checkAdminLogin() {
+            const senha = document.getElementById('admin-senha').value;
+            if (!senha) { showToast('Digite a senha.', 'error'); return; }
+            showLoading('Autenticando...');
+            try {
+                const res = await fetch('/api/admin-auth', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password: senha })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    window.location.href = 'admin.html';
+                } else {
+                    showToast('Senha incorreta!', 'error');
+                }
+            } catch (e) {
+                showToast('Erro de conexão com o servidor.', 'error');
+            }
+            hideLoading();
+        }
+    </script>
 
     <script src="js/script.js"></script>
     <script src="js/pix.js"></script>
