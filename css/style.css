@@ -1332,20 +1332,22 @@ section {
     background: #fef5e7;
 }
 
-.review-carousel {
-    margin-top: 20px;
-    border-top: 1px solid #eee;
-    padding-top: 20px;
-}
-.review-carousel-track {
+.reviews-fixed-row {
     display: flex;
     align-items: stretch;
     gap: 8px;
-    min-height: 100px;
 }
-.review-carousel-card {
+.reviews-fixed-row .review-card {
     flex: 1;
     min-width: 0;
+}
+.reviews-fixed-row .review-carousel-arrow {
+    flex-shrink: 0;
+    align-self: center;
+}
+
+.review-carousel-card {
+    margin-top: 16px;
 }
 .review-carousel-arrow {
     background: none;
