@@ -642,6 +642,7 @@
         // Usa as mesmas chaves do script.js (evita redeclarar const)
         const STORAGE_KEY = 'proximopasso_prestadores';
         const SOLIC_KEY = 'proximopasso_solicitacoes';
+        const REC_COUNTS_KEY = 'proximopasso_rec_counts';
         const API_DADOS = '/api/dados';
         let editingId = null;
 
@@ -1118,7 +1119,21 @@
             showToast('Solicitação excluída.');
         }
 
+        function preserveRecCounts() {
+            const lista = getReviews();
+            const likes = lista.filter(r => r.recomendou === 'like').length;
+            const dislikes = lista.filter(r => r.recomendou === 'dislike').length;
+            const current = JSON.parse(localStorage.getItem(REC_COUNTS_KEY) || '{"likes":0,"dislikes":0}');
+            if (likes > current.likes || dislikes > current.dislikes) {
+                localStorage.setItem(REC_COUNTS_KEY, JSON.stringify({
+                    likes: Math.max(current.likes, likes),
+                    dislikes: Math.max(current.dislikes, dislikes)
+                }));
+            }
+        }
+
         function deleteReview(id) {
+            preserveRecCounts();
             if (!confirm('Excluir esta avaliação?')) return;
             const lista = getReviews().filter(r => r.id !== id);
             localStorage.setItem(REVIEWS_KEY, JSON.stringify(lista));
@@ -1149,6 +1164,7 @@
         function limparTodasAvaliacoes() {
             const lista = getReviews();
             if (lista.length === 0) { showToast('Nenhuma avaliação para limpar.'); return; }
+            preserveRecCounts();
             if (!confirm(`Tem certeza que deseja excluir TODAS as ${lista.length} avaliações?`)) return;
             localStorage.setItem(REVIEWS_KEY, JSON.stringify([]));
             renderAdminReviews();
@@ -1216,6 +1232,7 @@
         function deleteSelectedReviews() {
             const ids = getChecked('.rev-item');
             if (ids.length === 0) return;
+            preserveRecCounts();
             if (!confirm(`Excluir ${ids.length} avaliação(ões) selecionada(s)?`)) return;
             const lista = getReviews().filter(r => !ids.includes(r.id));
             localStorage.setItem(REVIEWS_KEY, JSON.stringify(lista));
