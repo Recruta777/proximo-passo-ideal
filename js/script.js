@@ -277,7 +277,6 @@ if (providerForm) {
                             if (idx !== -1) {
                                 provs[idx].pago = true;
                                 localStorage.setItem(STORAGE_KEY, JSON.stringify(provs));
-                                // Save to API
                                 for (let tentativa = 0; tentativa < 3; tentativa++) {
                                     try {
                                         const resp = await fetch('/api/dados', {
@@ -297,7 +296,21 @@ if (providerForm) {
                             }
 
                             updateAdminBadge();
-                            showToast('Pagamento confirmado! Cadastro realizado com sucesso!');
+
+                            // Botão: verde com "Cadastro realizado!" por 5s, depois volta ao normal
+                            submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> Cadastro realizado!';
+                            submitBtn.style.background = '#27ae60';
+                            submitBtn.disabled = false;
+                            setTimeout(() => {
+                                submitBtn.innerHTML = 'Cadastrar';
+                                submitBtn.style.background = '';
+                                submitBtn.disabled = false;
+                            }, 5000);
+
+                            // Fecha overlay PIX após 3s
+                            setTimeout(() => {
+                                overlay.querySelector('.pix-close').click();
+                            }, 3000);
 
                             // WhatsApp depois do pagamento
                             setTimeout(() => {
@@ -314,10 +327,6 @@ if (providerForm) {
                                 const url = `whatsapp://send?phone=${whatsappNumber}&text=${encodeURIComponent(message)}`;
                                 window.location.href = url;
                             }, 2000);
-
-                            setTimeout(() => {
-                                overlay.querySelector('.pix-close').click();
-                            }, 4000);
 
                         } else if (status.status === 'rejected') {
                             statusEl.innerHTML = '<i class="fas fa-times-circle" style="color:#e74c3c;"></i> Pagamento rejeitado';
