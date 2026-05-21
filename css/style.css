@@ -1198,11 +1198,11 @@ section {
 
 /* Badge colors */
 .badge-pedreiro { background: #e8f0fe; color: #1B2A4A; }
-.badge-marcenaria { background: #fef3e0; color: #e67e22; }
-.badge-pintura { background: #e8f5e9; color: #2e7d32; }
-.badge-refrigeracao { background: #e0f7fa; color: #1B2A4A; }
-.badge-outro { background: #e0f2fe; color: #1B2A4A; }
-.badge-empresa { background: #fff7e6; color: #b8860b; }
+.badge-marcenaria { background: #e8f0fe; color: #1B2A4A; }
+.badge-pintura { background: #e8f0fe; color: #1B2A4A; }
+.badge-refrigeracao { background: #e8f0fe; color: #1B2A4A; }
+.badge-outro { background: #e8f0fe; color: #1B2A4A; }
+.badge-empresa { background: #e8f0fe; color: #1B2A4A; }
 
 /* PIX Modal */
 .pix-overlay {
