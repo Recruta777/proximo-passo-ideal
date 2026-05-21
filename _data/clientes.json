@@ -7,9 +7,7 @@
     "servico": "pedreiro",
     "descricao": "345y5uy",
     "data": "21/05/2026, 14:31:52",
-    "lida": false,
-    "criado_em": "21/05/2026, 17:31:50",
-    "timestamp": "2026-05-21T17:31:50.862Z"
+    "lida": false
   },
   {
     "id": "1779384905296",
@@ -19,9 +17,7 @@
     "servico": "pedreiro",
     "descricao": "WA4YWAY4",
     "data": "21/05/2026, 14:35:05",
-    "lida": false,
-    "criado_em": "21/05/2026, 17:35:04",
-    "timestamp": "2026-05-21T17:35:04.625Z"
+    "lida": false
   },
   {
     "id": "1779384958271",
@@ -31,8 +27,6 @@
     "servico": "pedreiro",
     "descricao": "aerjhsetj",
     "data": "21/05/2026, 14:35:58",
-    "lida": false,
-    "criado_em": "21/05/2026, 17:35:56",
-    "timestamp": "2026-05-21T17:35:56.958Z"
+    "lida": false
   }
 ]
