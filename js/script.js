@@ -466,7 +466,7 @@ function renderReviews() {
     container.innerHTML = primeiras.map(cardHTML).join('');
 
     if (restantes.length > 0) {
-        let slideIndex = 0;
+        let slideIndex = -1;
         const wrapper = document.createElement('div');
         wrapper.className = 'review-carousel';
         wrapper.innerHTML = `
@@ -494,10 +494,15 @@ function renderReviews() {
             nextBtn.style.opacity = slideIndex === restantes.length - 1 ? '0.3' : '1';
         }
 
-        showSlide(0);
+        counter.textContent = `0 de ${restantes.length}`;
+        prevBtn.style.opacity = '0.3';
+        nextBtn.style.opacity = '1';
 
+        nextBtn.addEventListener('click', () => {
+            if (slideIndex === -1) { showSlide(0); return; }
+            if (slideIndex < restantes.length - 1) showSlide(slideIndex + 1);
+        });
         prevBtn.addEventListener('click', () => { if (slideIndex > 0) showSlide(slideIndex - 1); });
-        nextBtn.addEventListener('click', () => { if (slideIndex < restantes.length - 1) showSlide(slideIndex + 1); });
     }
 }
 
