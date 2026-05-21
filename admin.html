@@ -463,10 +463,10 @@
             <!-- Admin Panel -->
             <div id="admin-panel" class="admin-panel">
                 <div class="admin-tabs">
-                    <button class="tab-btn active" onclick="switchTab('solicitacoes')" id="tab-solicitacoes">
+                    <button class="tab-btn" onclick="switchTab('solicitacoes')" id="tab-solicitacoes">
                         <i class="fas fa-clipboard-list"></i> Orçamento <span id="solicitacao-count" class="tab-count">0</span>
                     </button>
-                    <button class="tab-btn" onclick="switchTab('prestadores')" id="tab-prestadores">
+                    <button class="tab-btn active" onclick="switchTab('prestadores')" id="tab-prestadores">
                         <i class="fas fa-users"></i> Prestadores <span id="provider-count" class="tab-count">0</span>
                     </button>
                     <button class="tab-btn" onclick="switchTab('avaliacoes')" id="tab-avaliacoes">
@@ -475,7 +475,7 @@
                 </div>
 
                 <!-- Orçamento Tab -->
-                <div id="tab-content-solicitacoes" class="tab-content active">
+                <div id="tab-content-solicitacoes" class="tab-content">
                     <div class="admin-toolbar">
                         <h2>Orçamento <span>de Clientes</span></h2>
                         <div>
@@ -494,7 +494,7 @@
                 </div>
 
                 <!-- Prestadores Tab -->
-                <div id="tab-content-prestadores" class="tab-content">
+                <div id="tab-content-prestadores" class="tab-content active">
                     <div class="admin-toolbar">
                         <h2>Prestadores <span>Cadastrados</span></h2>
                         <div>
