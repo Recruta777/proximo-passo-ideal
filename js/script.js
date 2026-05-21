@@ -518,6 +518,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 };
                 reviews.push(novaRev);
                 saveReviews(reviews);
+                if (novaRev.recomendou) incrementRecCount(novaRev.recomendou);
                 updateHeaderRecBadge();
                 // Salva no banco
                 for (let tentativa = 0; tentativa < 3; tentativa++) {
@@ -545,18 +546,43 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // === Header Recommendation Badge (contagem das avaliações) ===
+    // === Header Recommendation Badge (contagem separada para não sumir ao limpar no admin) ===
+    const REC_COUNTS_KEY = 'proximopasso_rec_counts';
+    function getRecCounts() {
+        return JSON.parse(localStorage.getItem(REC_COUNTS_KEY) || '{"likes":0,"dislikes":0}');
+    }
+    function saveRecCounts(likes, dislikes) {
+        localStorage.setItem(REC_COUNTS_KEY, JSON.stringify({ likes, dislikes }));
+    }
     function updateHeaderRecBadge() {
         try {
-            const lista = getReviews();
-            const likes = lista.filter(r => r.recomendou === 'like').length;
-            const dislikes = lista.filter(r => r.recomendou === 'dislike').length;
+            const counts = getRecCounts();
             const likeEl = document.getElementById('header-rec-like-count');
             const dislikeEl = document.getElementById('header-rec-dislike-count');
-            if (likeEl) likeEl.textContent = likes;
-            if (dislikeEl) dislikeEl.textContent = dislikes;
+            if (likeEl) likeEl.textContent = counts.likes;
+            if (dislikeEl) dislikeEl.textContent = counts.dislikes;
         } catch(e) {}
     }
+    // Atualiza os contadores separados sempre que houver avaliações salvas
+    function syncRecCountsFromReviews() {
+        const lista = getReviews();
+        const likes = lista.filter(r => r.recomendou === 'like').length;
+        const dislikes = lista.filter(r => r.recomendou === 'dislike').length;
+        if (likes > 0 || dislikes > 0) {
+            const current = getRecCounts();
+            saveRecCounts(Math.max(current.likes, likes), Math.max(current.dislikes, dislikes));
+        }
+        updateHeaderRecBadge();
+    }
+    // Ao enviar avaliação, incrementa o contador separado
+    function incrementRecCount(tipo) {
+        const counts = getRecCounts();
+        if (tipo === 'like') counts.likes++;
+        if (tipo === 'dislike') counts.dislikes++;
+        saveRecCounts(counts.likes, counts.dislikes);
+        updateHeaderRecBadge();
+    }
+    syncRecCountsFromReviews();
     updateHeaderRecBadge();
 
     renderReviews();
