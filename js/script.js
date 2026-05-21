@@ -79,7 +79,7 @@ function showToast(message, type = 'success') {
     const toast = document.getElementById('toast');
     toast.textContent = message;
     toast.className = `toast ${type} show`;
-    if (type === 'success') playNotificationSound();
+    if (type === 'success') playCongratsSound();
     setTimeout(() => {
         toast.classList.remove('show');
     }, 5000);
