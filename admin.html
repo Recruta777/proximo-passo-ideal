@@ -877,6 +877,20 @@
             const totalRev = reviews.length;
             const revMax = Math.max(totalRev, 1);
 
+            const pagos = providers.filter(p => p.pago).length;
+            const naoPagos = providers.filter(p => !p.pago).length;
+
+            // Pontuação da empresa
+            let score = 0;
+            score += likes * 5;
+            score -= dislikes * 3;
+            score += providers.length * 10;
+            score += pagos * 5;
+            score -= naoPagos * 10;
+            score += solicitacoes.length * 2;
+
+            const scoreClass = score >= 50 ? 'score-good' : score >= 0 ? 'score-ok' : 'score-bad';
+
             container.innerHTML = `
                 <div class="dashboard-card">
                     <h3><i class="fas fa-tools"></i> Prestadores por Serviço</h3>
@@ -927,6 +941,18 @@
                                 <div class="bar-fill" style="width:100%;background:#f39c12;"></div>
                             </div>
                             <span class="bar-value">${solicitacoes.length}</span>
+                        </div>
+                    </div>
+                    <div class="score-box ${scoreClass}">
+                        <div class="score-label">Pontuação da Empresa</div>
+                        <div class="score-value">${score}</div>
+                        <div class="score-detail">
+                            <span>+${likes*5} likes</span>
+                            <span>${dislikes*3 > 0 ? '-'+dislikes*3 : '0'} dislikes</span>
+                            <span>+${providers.length*10} prestadores</span>
+                            <span>+${pagos*5} pagos</span>
+                            <span>${naoPagos*10 > 0 ? '-'+naoPagos*10 : '0'} não pagos</span>
+                            <span>+${solicitacoes.length*2} orçamentos</span>
                         </div>
                     </div>
                 </div>

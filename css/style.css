@@ -1479,3 +1479,49 @@ section {
     text-align: right;
     flex-shrink: 0;
 }
+
+.score-box {
+    margin-top: 20px;
+    padding: 16px;
+    border-radius: 12px;
+    text-align: center;
+    border: 2px solid;
+    transition: all 0.3s;
+}
+.score-box.score-good {
+    background: #e8f5e9;
+    border-color: #27ae60;
+}
+.score-box.score-ok {
+    background: #fff8e1;
+    border-color: #f39c12;
+}
+.score-box.score-bad {
+    background: #fde8e8;
+    border-color: #e74c3c;
+}
+.score-label {
+    font-size: 13px;
+    color: #666;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+}
+.score-value {
+    font-size: 48px;
+    font-weight: 800;
+    line-height: 1.1;
+}
+.score-good .score-value { color: #27ae60; }
+.score-ok .score-value { color: #f39c12; }
+.score-bad .score-value { color: #e74c3c; }
+.score-detail {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px 14px;
+    margin-top: 10px;
+    font-size: 12px;
+    color: #999;
+}
