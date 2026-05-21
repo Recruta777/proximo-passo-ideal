@@ -470,12 +470,13 @@ function renderReviews() {
         const wrapper = document.createElement('div');
         wrapper.className = 'review-carousel';
         wrapper.innerHTML = `
-            <div class="review-carousel-track">${cardHTML(restantes[0])}</div>
-            <div class="review-carousel-nav">
-                <button class="review-carousel-prev" ${restantes.length <= 1 ? 'disabled' : ''}><i class="fas fa-chevron-left"></i></button>
-                <span class="review-carousel-counter">${slideIndex + 1} de ${restantes.length}</span>
-                <button class="review-carousel-next" ${restantes.length <= 1 ? 'disabled' : ''}><i class="fas fa-chevron-right"></i></button>
+            <div class="review-carousel-track" style="display:none"></div>
+            <div class="review-carousel-nav" style="display:none">
+                <button class="review-carousel-prev"><i class="fas fa-chevron-left"></i></button>
+                <span class="review-carousel-counter"></span>
+                <button class="review-carousel-next"><i class="fas fa-chevron-right"></i></button>
             </div>
+            <button class="review-carousel-show btn btn-outline btn-sm" style="margin-top:12px;border-color:#ccc;color:#666;"><i class="fas fa-chevron-down"></i> Ver mais avaliações (${restantes.length})</button>
         `;
         container.appendChild(wrapper);
 
@@ -483,6 +484,7 @@ function renderReviews() {
         const counter = wrapper.querySelector('.review-carousel-counter');
         const prevBtn = wrapper.querySelector('.review-carousel-prev');
         const nextBtn = wrapper.querySelector('.review-carousel-next');
+        const showBtn = wrapper.querySelector('.review-carousel-show');
 
         function showSlide(i) {
             slideIndex = i;
@@ -491,6 +493,13 @@ function renderReviews() {
             prevBtn.disabled = slideIndex === 0;
             nextBtn.disabled = slideIndex === restantes.length - 1;
         }
+
+        showBtn.addEventListener('click', () => {
+            showBtn.style.display = 'none';
+            track.style.display = '';
+            wrapper.querySelector('.review-carousel-nav').style.display = 'flex';
+            showSlide(0);
+        });
 
         prevBtn.addEventListener('click', () => { if (slideIndex > 0) showSlide(slideIndex - 1); });
         nextBtn.addEventListener('click', () => { if (slideIndex < restantes.length - 1) showSlide(slideIndex + 1); });
