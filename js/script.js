@@ -437,25 +437,63 @@ function renderReviews() {
     }
 
     const labels = { pedreiro: 'Pedreiro', marcenaria: 'Marcenaria', pintura: 'Pintura', refrigeracao: 'Refrigeração', outro: 'Outro', empresa: '⭐ Empresa' };
-    container.innerHTML = [...lista].reverse().map(r => `
-        <div class="review-card">
-            <div class="review-header">
-                <span class="review-name"><i class="fas fa-user"></i> ${r.nome}</span>
-                <span class="review-stars">
-                    ${r.recomendou === 'like' ? '<i class="fas fa-thumbs-up" style="color:#27ae60;margin-right:6px;"></i>' : ''}
-                    ${r.recomendou === 'dislike' ? '<i class="fas fa-thumbs-down" style="color:#e74c3c;margin-right:6px;"></i>' : ''}
-                    ${'<i class="fas fa-star"></i>'.repeat(r.stars)}${'<i class="far fa-star"></i>'.repeat(5 - r.stars)}
-                </span>
+    function cardHTML(r) {
+        return `
+            <div class="review-card">
+                <div class="review-header">
+                    <span class="review-name"><i class="fas fa-user"></i> ${r.nome}</span>
+                    <span class="review-stars">
+                        ${r.recomendou === 'like' ? '<i class="fas fa-thumbs-up" style="color:#27ae60;margin-right:6px;"></i>' : ''}
+                        ${r.recomendou === 'dislike' ? '<i class="fas fa-thumbs-down" style="color:#e74c3c;margin-right:6px;"></i>' : ''}
+                        ${'<i class="fas fa-star"></i>'.repeat(r.stars)}${'<i class="far fa-star"></i>'.repeat(5 - r.stars)}
+                    </span>
+                </div>
+                <div class="review-meta">
+                    <span class="review-badge badge-${r.servico}">${labels[r.servico] || r.servico}</span>
+                    ${r.prestador ? `<i class="fas fa-tools"></i> ${r.prestador} · ` : ''}
+                    <i class="fas fa-calendar"></i> ${r.data}
+                </div>
+                <div class="review-text">${r.descricao}</div>
+                ${r.foto ? `<img src="${r.foto}" class="review-foto" alt="Foto da avaliação">` : ''}
             </div>
-            <div class="review-meta">
-                <span class="review-badge badge-${r.servico}">${labels[r.servico] || r.servico}</span>
-                ${r.prestador ? `<i class="fas fa-tools"></i> ${r.prestador} · ` : ''}
-                <i class="fas fa-calendar"></i> ${r.data}
+        `;
+    }
+    const reversed = [...lista].reverse();
+    const primeiras = reversed.slice(0, 2);
+    const restantes = reversed.slice(2);
+
+    container.innerHTML = primeiras.map(cardHTML).join('');
+
+    if (restantes.length > 0) {
+        let slideIndex = 0;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'review-carousel';
+        wrapper.innerHTML = `
+            <div class="review-carousel-track">${cardHTML(restantes[0])}</div>
+            <div class="review-carousel-nav">
+                <button class="review-carousel-prev" ${restantes.length <= 1 ? 'disabled' : ''}><i class="fas fa-chevron-left"></i></button>
+                <span class="review-carousel-counter">${slideIndex + 1} de ${restantes.length}</span>
+                <button class="review-carousel-next" ${restantes.length <= 1 ? 'disabled' : ''}><i class="fas fa-chevron-right"></i></button>
             </div>
-            <div class="review-text">${r.descricao}</div>
-            ${r.foto ? `<img src="${r.foto}" class="review-foto" alt="Foto da avaliação">` : ''}
-        </div>
-    `).join('');
+        `;
+        container.appendChild(wrapper);
+
+        const track = wrapper.querySelector('.review-carousel-track');
+        const counter = wrapper.querySelector('.review-carousel-counter');
+        const prevBtn = wrapper.querySelector('.review-carousel-prev');
+        const nextBtn = wrapper.querySelector('.review-carousel-next');
+
+        function showSlide(i) {
+            slideIndex = i;
+            track.innerHTML = cardHTML(restantes[slideIndex]);
+            counter.textContent = `${slideIndex + 1} de ${restantes.length}`;
+            prevBtn.disabled = slideIndex === 0;
+            nextBtn.disabled = slideIndex === restantes.length - 1;
+        }
+
+        prevBtn.addEventListener('click', () => { if (slideIndex > 0) showSlide(slideIndex - 1); });
+        nextBtn.addEventListener('click', () => { if (slideIndex < restantes.length - 1) showSlide(slideIndex + 1); });
+    }
 }
 
 // Star rating
