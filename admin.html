@@ -883,12 +883,12 @@
             // Pontuação da empresa (com baseline de reset)
             const baseline = parseInt(localStorage.getItem('proximopasso_score_baseline') || '0');
             let score = 0;
-            score += likes * 5;
-            score -= dislikes * 3;
-            score += providers.length * 10;
-            score += pagos * 5;
-            score -= naoPagos * 10;
-            score += solicitacoes.length * 2;
+            score += likes * 1;
+            score -= dislikes * 1;
+            score += providers.length * 1;
+            score += pagos * 1;
+            score -= naoPagos * 1;
+            score += solicitacoes.length * 1;
             let exibido = score - baseline;
             if (exibido > 100) exibido = 100;
 
@@ -958,12 +958,12 @@
                             <div class="score-value">${exibido}</div>
                             <div class="score-status">${scoreLabel}</div>
                             <div class="score-detail">
-                                <span>+${likes*5} likes</span>
-                                <span>${dislikes*3 > 0 ? '-'+dislikes*3 : '0'} dislikes</span>
-                                <span>+${providers.length*10} prestadores</span>
-                                <span>+${pagos*5} pagos</span>
-                                <span>${naoPagos*10 > 0 ? '-'+naoPagos*10 : '0'} não pagos</span>
-                                <span>+${solicitacoes.length*2} orçamentos</span>
+                                <span>+${likes} likes</span>
+                                <span>${dislikes > 0 ? '-'+dislikes : '0'} dislikes</span>
+                                <span>+${providers.length} prestadores</span>
+                                <span>+${pagos} pagos</span>
+                                <span>${naoPagos > 0 ? '-'+naoPagos : '0'} não pagos</span>
+                                <span>+${solicitacoes.length} orçamentos</span>
                             </div>
                             <div class="score-editor">
                                 <span class="score-editor-label">Testar pontuação:</span>
@@ -991,7 +991,7 @@
             const dislikes = reviews.filter(r => r.recomendou === 'dislike').length;
             const pagos = providers.filter(p => p.pago).length;
             const naoPagos = providers.filter(p => !p.pago).length;
-            let score = likes*5 - dislikes*3 + providers.length*10 + pagos*5 - naoPagos*10 + solicitacoes.length*2;
+            let score = likes*1 - dislikes*1 + providers.length*1 + pagos*1 - naoPagos*1 + solicitacoes.length*1;
             localStorage.setItem('proximopasso_score_baseline', String(score));
             renderDashboard();
             showToast('Pontuação resetada!');
@@ -1016,7 +1016,7 @@
             const dislikes = reviews.filter(r => r.recomendou === 'dislike').length;
             const pagos = providers.filter(p => p.pago).length;
             const naoPagos = providers.filter(p => !p.pago).length;
-            let scoreReal = likes*5 - dislikes*3 + providers.length*10 + pagos*5 - naoPagos*10 + solicitacoes.length*2;
+            let scoreReal = likes*1 - dislikes*1 + providers.length*1 + pagos*1 - naoPagos*1 + solicitacoes.length*1;
             let novoBaseline = scoreReal - val;
             localStorage.setItem('proximopasso_score_baseline', String(novoBaseline));
             renderDashboard();
