@@ -470,15 +470,14 @@ function renderReviews() {
         const wrapper = document.createElement('div');
         wrapper.className = 'review-carousel';
         wrapper.innerHTML = `
-            <div class="review-carousel-track" style="display:none">
+            <div class="review-carousel-track">
                 <button class="review-carousel-arrow review-carousel-prev"><i class="fas fa-chevron-left"></i></button>
                 <div class="review-carousel-card"></div>
                 <button class="review-carousel-arrow review-carousel-next"><i class="fas fa-chevron-right"></i></button>
             </div>
-            <div class="review-carousel-info" style="display:none">
+            <div class="review-carousel-info">
                 <span class="review-carousel-counter"></span>
             </div>
-            <button class="review-carousel-show btn btn-outline btn-sm" style="margin-top:12px;border-color:#ccc;color:#666;"><i class="fas fa-chevron-down"></i> Ver mais avaliações (${restantes.length})</button>
         `;
         container.appendChild(wrapper);
 
@@ -486,7 +485,6 @@ function renderReviews() {
         const counter = wrapper.querySelector('.review-carousel-counter');
         const prevBtn = wrapper.querySelector('.review-carousel-prev');
         const nextBtn = wrapper.querySelector('.review-carousel-next');
-        const showBtn = wrapper.querySelector('.review-carousel-show');
 
         function showSlide(i) {
             slideIndex = i;
@@ -496,12 +494,7 @@ function renderReviews() {
             nextBtn.style.opacity = slideIndex === restantes.length - 1 ? '0.3' : '1';
         }
 
-        showBtn.addEventListener('click', () => {
-            showBtn.style.display = 'none';
-            wrapper.querySelector('.review-carousel-track').style.display = 'flex';
-            wrapper.querySelector('.review-carousel-info').style.display = 'block';
-            showSlide(0);
-        });
+        showSlide(0);
 
         prevBtn.addEventListener('click', () => { if (slideIndex > 0) showSlide(slideIndex - 1); });
         nextBtn.addEventListener('click', () => { if (slideIndex < restantes.length - 1) showSlide(slideIndex + 1); });
