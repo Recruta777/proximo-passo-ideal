@@ -710,19 +710,18 @@
                 if (data.success) {
                     document.getElementById('login-area').style.display = 'none';
                     document.getElementById('admin-panel').classList.add('active');
-                    // Carrega contagens imediatamente do localStorage
+                    // Mostra dados do localStorage imediatamente
                     updateCount();
                     updateSolicitacaoCount();
                     updateReviewCount();
                     renderSolicitacoes();
                     renderProviders();
                     renderAdminReviews();
-                    // Sincroniza com API em segundo plano
-                    syncFromAPI(true).then(() => {
-                        renderSolicitacoes();
-                        renderProviders();
-                        renderAdminReviews();
-                    });
+                    // Sincroniza com API e atualiza tudo
+                    await syncFromAPI(true);
+                    renderSolicitacoes();
+                    renderProviders();
+                    renderAdminReviews();
                 } else {
                     showToast('Senha incorreta!', 'error');
                 }
