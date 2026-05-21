@@ -34,6 +34,24 @@ function playNotificationSound() {
     }
 }
 
+function playCongratsSound() {
+    try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        [523, 659].forEach((freq, i) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'triangle';
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.frequency.setValueAtTime(freq, ctx.currentTime + i * 0.15);
+            gain.gain.setValueAtTime(0.3, ctx.currentTime + i * 0.15);
+            gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + i * 0.15 + 0.2);
+            osc.start(ctx.currentTime + i * 0.15);
+            osc.stop(ctx.currentTime + i * 0.15 + 0.2);
+        });
+    } catch (e) {}
+}
+
 // Update admin badge with provider count
 function updateAdminBadge() {
     const badge = document.getElementById('nav-badge');
@@ -145,6 +163,7 @@ form.addEventListener('submit', async function (e) {
     const whatsappNumber = '5519983025082';
     const url = `whatsapp://send?phone=${whatsappNumber}&text=${encodeURIComponent(message)}`;
 
+    playCongratsSound();
     const btn = form.querySelector('button[type="submit"]');
     const btnHtml = btn.innerHTML;
     btn.disabled = true;
@@ -309,6 +328,7 @@ if (providerForm) {
                             updateAdminBadge();
 
                             // Botão: verde com "Cadastro realizado!" por 5s, depois volta ao normal
+                            playCongratsSound();
                             submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> Cadastro realizado!';
                             submitBtn.style.background = '#27ae60';
                             submitBtn.disabled = false;
@@ -544,6 +564,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         if (tentativa === 2) console.warn('API indisponível após 3 tentativas');
                     }
                 }
+                playCongratsSound();
                 const btn = reviewForm.querySelector('button[type="submit"]');
                 const btnHtml = btn.innerHTML;
                 btn.disabled = true;
