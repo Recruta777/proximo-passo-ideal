@@ -1405,3 +1405,13 @@ section {
     max-width: 400px;
     box-shadow: 0 20px 60px rgba(0,0,0,0.3);
 }
+.modal-overlay input[type="password"]::-ms-reveal,
+.modal-overlay input[type="password"]::-ms-clear {
+    display: none;
+}
+.modal-overlay input[type="password"]::-webkit-credentials-auto-fill-button {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    opacity: 0 !important;
+}
