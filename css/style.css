@@ -1540,3 +1540,48 @@ section {
     font-size: 12px;
     color: #999;
 }
+
+.score-editor {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid #eee;
+}
+.score-editor-label {
+    font-size: 12px;
+    color: #999;
+    display: block;
+    margin-bottom: 6px;
+}
+.score-editor-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+}
+.score-editor-btn {
+    background: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 13px;
+    cursor: pointer;
+    color: #555;
+    transition: all 0.2s;
+}
+.score-editor-btn:hover {
+    background: #e0e0e0;
+    border-color: #bbb;
+}
+.score-editor-controls input[type="number"] {
+    width: 64px;
+    text-align: center;
+    padding: 4px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 700;
+    outline: none;
+}
+.score-editor-controls input[type="number"]:focus {
+    border-color: #f39c12;
+}

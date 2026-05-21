@@ -961,6 +961,16 @@
                             <span>${naoPagos*10 > 0 ? '-'+naoPagos*10 : '0'} não pagos</span>
                             <span>+${solicitacoes.length*2} orçamentos</span>
                         </div>
+                        <div class="score-editor">
+                            <span class="score-editor-label">Testar pontuação:</span>
+                            <div class="score-editor-controls">
+                                <button class="score-editor-btn" onclick="ajustarScore(-10)">-10</button>
+                                <button class="score-editor-btn" onclick="ajustarScore(-1)">-1</button>
+                                <input type="number" id="score-editor-input" value="${exibido}" min="-999" max="999" onchange="definirScore(this.value)">
+                                <button class="score-editor-btn" onclick="ajustarScore(1)">+1</button>
+                                <button class="score-editor-btn" onclick="ajustarScore(10)">+10</button>
+                            </div>
+                        </div>
                         <button class="btn btn-outline btn-sm" style="margin-top:12px;color:#e74c3c;border-color:#e74c3c;" onclick="resetarPontuacao()"><i class="fas fa-undo"></i> Resetar Pontuação</button>
                     </div>
                 </div>
@@ -980,6 +990,29 @@
             localStorage.setItem('proximopasso_score_baseline', String(score));
             renderDashboard();
             showToast('Pontuação resetada!');
+        }
+
+        function ajustarScore(delta) {
+            const input = document.getElementById('score-editor-input');
+            let val = parseInt(input.value) || 0;
+            val += delta;
+            input.value = val;
+            definirScore(val);
+        }
+
+        function definirScore(val) {
+            val = parseInt(val) || 0;
+            const providers = getProviders();
+            const reviews = getReviews();
+            const solicitacoes = getSolicitacoes();
+            const likes = reviews.filter(r => r.recomendou === 'like').length;
+            const dislikes = reviews.filter(r => r.recomendou === 'dislike').length;
+            const pagos = providers.filter(p => p.pago).length;
+            const naoPagos = providers.filter(p => !p.pago).length;
+            let scoreReal = likes*5 - dislikes*3 + providers.length*10 + pagos*5 - naoPagos*10 + solicitacoes.length*2;
+            let novoBaseline = scoreReal - val;
+            localStorage.setItem('proximopasso_score_baseline', String(novoBaseline));
+            renderDashboard();
         }
 
         function switchTab(tab) {
