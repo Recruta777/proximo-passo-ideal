@@ -4,6 +4,10 @@
     box-sizing: border-box;
 }
 
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: #333;
