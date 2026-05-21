@@ -145,7 +145,6 @@ form.addEventListener('submit', async function (e) {
     const whatsappNumber = '5519983025082';
     const url = `whatsapp://send?phone=${whatsappNumber}&text=${encodeURIComponent(message)}`;
 
-    showToast('Novo orçamento recebido! Redirecionando para o WhatsApp...');
     const btn = form.querySelector('button[type="submit"]');
     const btnHtml = btn.innerHTML;
     btn.disabled = true;
@@ -545,7 +544,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         if (tentativa === 2) console.warn('API indisponível após 3 tentativas');
                     }
                 }
-                showToast('Avaliação enviada com sucesso! Obrigado!');
                 const btn = reviewForm.querySelector('button[type="submit"]');
                 const btnHtml = btn.innerHTML;
                 btn.disabled = true;
