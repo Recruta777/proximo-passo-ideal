@@ -710,11 +710,16 @@
                 if (data.success) {
                     document.getElementById('login-area').style.display = 'none';
                     document.getElementById('admin-panel').classList.add('active');
-                    // Aguarda sincronização com API
-                    await syncFromAPI(true);
+                    // Mostra dados do navegador imediatamente (zero espera)
                     renderSolicitacoes();
                     renderProviders();
                     renderAdminReviews();
+                    // Sincroniza com servidor em segundo plano e atualiza depois
+                    syncFromAPI(true).then(() => {
+                        renderSolicitacoes();
+                        renderProviders();
+                        renderAdminReviews();
+                    });
                 } else {
                     showToast('Senha incorreta!', 'error');
                 }
