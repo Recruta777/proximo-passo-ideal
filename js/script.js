@@ -305,12 +305,12 @@ if (providerForm) {
                                 submitBtn.innerHTML = 'Cadastrar';
                                 submitBtn.style.background = '';
                                 submitBtn.disabled = false;
-                            }, 10000);
+                            }, 5000);
 
-                            // Fecha overlay PIX após 3s
+                            // Fecha overlay PIX após 1s
                             setTimeout(() => {
                                 overlay.querySelector('.pix-close').click();
-                            }, 3000);
+                            }, 1000);
 
                             // WhatsApp depois do pagamento
                             setTimeout(() => {
