@@ -1503,14 +1503,7 @@ section {
 .score-box.score-excelente {
     background: linear-gradient(135deg, #fff8e1, #fff3cd);
     border-color: #d4a017;
-    animation: fire-border 0.8s ease-in-out infinite alternate;
-}
-@keyframes fire-border {
-    0% { box-shadow: 0 0 5px rgba(212, 160, 23, 0.3), 0 0 10px rgba(255, 69, 0, 0.2); border-color: #d4a017; }
-    25% { box-shadow: 0 0 8px rgba(255, 69, 0, 0.4), 0 0 16px rgba(255, 140, 0, 0.3); border-color: #ff4500; }
-    50% { box-shadow: 0 0 12px rgba(255, 140, 0, 0.5), 0 0 24px rgba(255, 69, 0, 0.3); border-color: #ff8c00; }
-    75% { box-shadow: 0 0 8px rgba(255, 69, 0, 0.4), 0 0 16px rgba(255, 215, 0, 0.3); border-color: #ff4500; }
-    100% { box-shadow: 0 0 5px rgba(212, 160, 23, 0.3), 0 0 10px rgba(255, 69, 0, 0.2); border-color: #d4a017; }
+    box-shadow: 0 0 20px rgba(212, 160, 23, 0.3);
 }
 .score-label {
     font-size: 13px;
