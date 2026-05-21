@@ -465,7 +465,7 @@ function renderReviews() {
 
     container.innerHTML = '';
 
-    // Row with 2 fixed cards side by side, arrows between them
+    // Wrapper for 2 fixed cards stacked, arrows between them
     const rowDiv = document.createElement('div');
     rowDiv.className = 'reviews-fixed-row';
     primeiras.forEach((r, idx) => {
@@ -473,14 +473,17 @@ function renderReviews() {
         temp.innerHTML = cardHTML(r);
         rowDiv.appendChild(temp.firstElementChild);
         if (idx === 0 && restantes.length > 0) {
+            const arrowWrap = document.createElement('div');
+            arrowWrap.className = 'review-carousel-arrows';
             const prevBtn = document.createElement('button');
             prevBtn.className = 'review-carousel-arrow review-carousel-prev';
             prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
-            rowDiv.appendChild(prevBtn);
+            arrowWrap.appendChild(prevBtn);
             const nextBtn = document.createElement('button');
             nextBtn.className = 'review-carousel-arrow review-carousel-next';
             nextBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
-            rowDiv.appendChild(nextBtn);
+            arrowWrap.appendChild(nextBtn);
+            rowDiv.appendChild(arrowWrap);
         }
     });
     container.appendChild(rowDiv);
@@ -497,8 +500,8 @@ function renderReviews() {
         container.appendChild(infoDiv);
 
         const counter = infoDiv.querySelector('.review-carousel-counter');
-        const prevBtn = rowDiv.querySelector('.review-carousel-prev');
-        const nextBtn = rowDiv.querySelector('.review-carousel-next');
+        const prevBtn = rowDiv.querySelector('.review-carousel-arrows .review-carousel-prev');
+        const nextBtn = rowDiv.querySelector('.review-carousel-arrows .review-carousel-next');
 
         function showSlide(i) {
             slideIndex = i;

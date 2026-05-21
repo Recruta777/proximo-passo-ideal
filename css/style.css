@@ -1334,16 +1334,15 @@ section {
 
 .reviews-fixed-row {
     display: flex;
-    align-items: stretch;
+    flex-direction: column;
     gap: 8px;
 }
-.reviews-fixed-row .review-card {
-    flex: 1;
-    min-width: 0;
-}
-.reviews-fixed-row .review-carousel-arrow {
-    flex-shrink: 0;
-    align-self: center;
+.reviews-fixed-row .review-carousel-arrows {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
 }
 
 .review-carousel-card {
