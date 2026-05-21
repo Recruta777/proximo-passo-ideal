@@ -534,6 +534,18 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 }
                 showToast('Avaliação enviada com sucesso! Obrigado!');
+                const btn = reviewForm.querySelector('button[type="submit"]');
+                const btnHtml = btn.innerHTML;
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-check-circle"></i> Avaliação Enviada';
+                btn.style.background = '#27ae60';
+                btn.style.borderColor = '#27ae60';
+                setTimeout(() => {
+                    btn.disabled = false;
+                    btn.innerHTML = btnHtml;
+                    btn.style.background = '';
+                    btn.style.borderColor = '';
+                }, 3000);
                 this.reset();
                 selectedStar = 0;
                 recomendou = null;
