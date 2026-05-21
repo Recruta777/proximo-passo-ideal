@@ -146,6 +146,18 @@ form.addEventListener('submit', async function (e) {
     const url = `whatsapp://send?phone=${whatsappNumber}&text=${encodeURIComponent(message)}`;
 
     showToast('Novo orçamento recebido! Redirecionando para o WhatsApp...');
+    const btn = form.querySelector('button[type="submit"]');
+    const btnHtml = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-check-circle"></i> Orçamento Enviado';
+    btn.style.background = '#27ae60';
+    btn.style.borderColor = '#27ae60';
+    setTimeout(() => {
+        btn.disabled = false;
+        btn.innerHTML = btnHtml;
+        btn.style.background = '';
+        btn.style.borderColor = '';
+    }, 3000);
     this.reset();
 
     setTimeout(() => {
