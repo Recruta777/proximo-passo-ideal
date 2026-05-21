@@ -367,9 +367,12 @@
             <div style="font-size:48px;color:#1B2A4A;margin-bottom:16px;"><i class="fas fa-shield-alt"></i></div>
             <h3 style="margin-bottom:8px;">Acesso Restrito</h3>
             <p style="color:#999;margin-bottom:20px;font-size:14px;">Digite a senha de administrador</p>
-            <input type="password" id="admin-senha" placeholder="Senha"
-                   style="width:100%;padding:12px;border:2px solid #ddd;border-radius:8px;font-size:16px;text-align:center;outline:none;"
-                   onkeydown="if(event.key==='Enter') checkAdminLogin()">
+            <div style="position:relative;">
+                <input type="password" id="admin-senha" placeholder="Senha"
+                       style="width:100%;padding:12px 44px 12px 12px;border:2px solid #ddd;border-radius:8px;font-size:16px;text-align:center;outline:none;"
+                       onkeydown="if(event.key==='Enter') checkAdminLogin()">
+                <i id="admin-senha-toggle" class="fas fa-eye" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);color:#999;cursor:pointer;font-size:18px;" onclick="toggleAdminSenha()"></i>
+            </div>
             <button class="btn btn-primary btn-full" style="margin-top:16px;" onclick="checkAdminLogin()">Entrar</button>
             <button class="btn btn-outline btn-full" style="margin-top:8px;" onclick="closeAdminModal()">Cancelar</button>
         </div>
@@ -378,11 +381,24 @@
     <script>
         function openAdminModal() {
             document.getElementById('admin-login-modal').style.display = 'flex';
+            document.getElementById('admin-senha').type = 'password';
+            document.getElementById('admin-senha-toggle').className = 'fas fa-eye';
             setTimeout(() => document.getElementById('admin-senha').focus(), 100);
         }
         function closeAdminModal() {
             document.getElementById('admin-login-modal').style.display = 'none';
             document.getElementById('admin-senha').value = '';
+        }
+        function toggleAdminSenha() {
+            const input = document.getElementById('admin-senha');
+            const icon = document.getElementById('admin-senha-toggle');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.className = 'fas fa-eye-slash';
+            } else {
+                input.type = 'password';
+                icon.className = 'fas fa-eye';
+            }
         }
         async function checkAdminLogin() {
             const senha = document.getElementById('admin-senha').value;
