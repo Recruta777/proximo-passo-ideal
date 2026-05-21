@@ -305,7 +305,7 @@ if (providerForm) {
                                 submitBtn.innerHTML = 'Cadastrar';
                                 submitBtn.style.background = '';
                                 submitBtn.disabled = false;
-                            }, 5000);
+                            }, 10000);
 
                             // Fecha overlay PIX após 3s
                             setTimeout(() => {
