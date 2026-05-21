@@ -501,17 +501,19 @@
         <div class="container">
             <!-- Login -->
             <div id="login-area" class="admin-login">
+                <form id="admin-login-form" onsubmit="event.preventDefault(); checkPassword();" style="display:contents;">
                 <div class="logo-icon"><i class="fas fa-shield-alt"></i></div>
                 <h2>Acesso Restrito</h2>
                 <p>Digite a senha para acessar o painel</p>
                 <div class="form-group">
                     <label for="senha">Senha</label>
-                    <input type="password" id="senha" placeholder="Digite a senha" onkeydown="if(event.key==='Enter') checkPassword()">
+                    <input type="password" id="senha" name="senha" placeholder="Digite a senha">
                 </div>
-                <button class="btn btn-primary btn-full" onclick="checkPassword()">Entrar</button>
+                <button type="submit" class="btn btn-primary btn-full">Entrar</button>
                 <div style="margin-top: 15px;">
                     <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Voltar</a>
                 </div>
+                </form>
             </div>
 
             <!-- Admin Panel -->
