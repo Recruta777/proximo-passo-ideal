@@ -751,7 +751,7 @@
 
             if (erros.length > 0) {
                 console.warn('Erros na sincronização:', erros);
-                showToast('Sincronização parcial. Alguns dados podem não estar disponíveis.', 'error');
+                if (!silent) showToast('Sincronização parcial. Alguns dados podem não estar disponíveis.', 'error');
             } else if (!silent) {
                 showToast('Sincronizado com o servidor!');
             }
